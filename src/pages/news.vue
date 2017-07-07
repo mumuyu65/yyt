@@ -1,0 +1,247 @@
+<template>
+  <div class="main news">
+    <div class="zj-list">
+      <div class="inner-container">
+        <ul class="list-inline">
+          <li><h4>新闻</h4></li>
+          <li class="pull-right">
+            <router-link to="/" style="color:#fff; text-decoration:none;"><h4 style="opacity:0.5;" exact>全部文章</h4></router-link></li>
+        </ul>
+        <ol class="list-unstyled">
+          <li v-for="report in economicNews " class="report-item" @click="showContent(report)" >
+              <div class="media">
+                  <a class="media-left">
+                      <img src="../../static/images/flag.png" alt="旗帜" class="flag"/>
+                  </a>
+                  <div class="media-body">
+                  <h4 class="media-heading">
+                      <a>{{report.title}}</a>
+                  </h4>
+                  <p v-html="report.content"></p>
+                  </div>
+              </div>
+          </li>
+        </ol>
+      </div>
+    </div>
+    <div class="zhibo">
+        <div id="player" class="player" style="width:740px; height:584px;">
+
+        </div>
+        <div class="zhibo-carousel">
+            <div id="myCarousel" class="carousel slide">
+                <!-- 轮播（Carousel）项目 -->
+                <div class="carousel-inner">
+                    <div class="item active">
+                        <img src="../../static/uploads/ads/20160725141644_285.png" alt="First slide">
+                    </div>
+                    <div class="item">
+                        <img src="../../static/uploads/ads/20160808175709_864.png" alt="Second slide">
+                    </div>
+                    <div class="item">
+                        <img src="../../static/uploads/ads/20160816171126_575.png" alt="Third slide">
+                    </div>
+                    <div class="item">
+                        <img src="../../static/uploads/ads/20160816171217_771.png" alt="Four slide">
+                    </div>
+                    <div class="item">
+                        <img src="../../static/uploads/ads/20170221121908_576.png" alt="Five slide">
+                    </div>
+                    <div class="item">
+                        <img src="../../static/uploads/ads/20170221121919_573.png" alt="Six slide">
+                    </div>
+                    <div class="item">
+                        <img src="../../static/uploads/ads/tanads001.png" alt="Seven slide">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import API from '@/api/API'
+//实例化api
+const api = new API();
+
+import Gift from '@/components/Gift'
+
+export default {
+  name: 'News',
+  data () {
+    return {
+        economicNews:[],
+        selectedNews:{},
+    }
+  },
+  filters: {
+      dateStamp (value){
+        //获取一个事件戳
+         let time = new Date(parseInt(value)*1000);
+         //获取年份信息
+         let y = time.getFullYear();
+         //获取月份信息，月份是从0开始的
+         let m =(time.getMonth()+1)<10?'0'+(time.getMonth()+1):(time.getMonth()+1);
+         let d = time.getDate();
+            d=d<10?'0'+d:d;
+
+         let H=time.getHours();
+            H=H<10?'0'+H:H
+
+         let M=time.getMinutes();
+            M=M<10?'0'+M:M
+            value=y+'-'+m + '-' + d+'  '+H+":"+M;
+         //返回拼接信息
+         return value;
+      }
+  },
+  mounted (){
+    this.initData();
+  },
+  components:{ Gift },
+  methods:{
+    initData (){
+        let that = this;
+
+        let params={
+            begidx: 0,
+            counts: 10,
+            type: 2
+        };
+
+        api.getNews(params).then(function(res){
+            if(res.data.Code ==3){
+                let templateObj = res.data.Data.Detail;
+
+                for(let i= 0; i<templateObj.length; i++){
+                     templateObj[i].isActive = false ;
+                }
+
+                that.economicNews = templateObj;
+
+                that.selectedNews = that.economicNews[0];
+
+                that.selectedNews.isActive = true;
+            }
+        }).catch(function(err){
+          console.log(err);
+        });
+
+
+        api.getZhibo().then(function(res){
+          if(res.data.Code ==3){
+            let url = res.data.Data[0].url;
+            let objectPlayer = new aodianPlayer({
+                container: 'player', //播放器容器ID，必要参数
+                rtmpUrl: url, //控制台开通的APP rtmp地址，必要参数
+                width: '740', //播放器宽度，可用数字、百分比等
+                height: '584', //播放器高度，可用数字、百分比等
+                autostart: true, //是否自动播放，默认为false
+                bufferlength: '3', //视频缓冲时间，默认为3秒。hls不支持！手机端不支持
+                maxbufferlength: '2', //最大视频缓冲时间，默认为2秒。hls不支持！手机端不支持
+                stretching: '1', //设置全屏模式,1代表按比例撑满至全屏,2代表铺满全屏,3代表视频原始大小,默认值为1。hls初始设置不支持，手机端不支持
+                controlbardisplay: 'enable', //是否显示控制栏，值为：disable、enable默认为disable。
+                isfullscreen: true, //是否双击全屏，默认为true
+            });
+          }else {
+                alert("无法请求到直播地址......");
+            }
+        }).catch(function(err){
+          console.log(err);
+        });
+
+        //轮播图
+         $('#myCarousel').carousel({
+            interval: 2000
+        });
+    },
+
+    showContent(item){
+        for(let i= 0; i<this.economicNews.length; i++){
+          this.economicNews[i].isActive = false ;
+        }
+        item.isActive = true ;
+        this.selectedNews= item;
+    },
+  }
+}
+</script>
+
+<style scoped>
+    .news .flag{
+        width:33px;
+        height:33px;
+    }
+
+    .news .inner-container{
+        background-color:#4B4B4B;
+        padding-right:20px;
+    }
+
+    .news .inner-container .report-item{
+        background-color:#000;
+        margin-bottom:10px;
+        cursor:pointer;
+    }
+
+    .news .report-item{
+        height:147px;
+        overflow:hidden;
+        padding:20px 10px;
+    }
+
+    .news .report-item.active{
+        background-color:#4B4B4B;
+    }
+
+    .news .report-item a{
+       color:#fff;
+       opacity:0.9;
+    }
+
+    .news .report-content{
+        padding:0 10px;
+    }
+
+    .news .report-divider{
+        width:100%;
+        height:2px;
+        background-color:#4B4B4B;
+        margin-top:40px;
+    }
+
+    .news .zhibo .report-text{
+        margin-top:30px;
+        padding:0 10px;
+        height:625px;
+        overflow-y:auto;
+    }
+
+    .news .zhibo .report-text::-webkit-scrollbar{
+        width:10px;
+        height:5px;
+        background-color: #000;
+    }
+
+    .news .zhibo .report-text::-webkit-scrollbar-thumb{
+        border-radius: 5px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+        background-color: #4b4b4b;
+        width:5px;
+    }
+
+    .news .zhibo .report-text>img{
+         margin: 0 10px 10px 10px;
+         width:506px;
+         height:370px;
+    }
+
+    .news .zhibo .report-text>h5{
+        opacity:0.9;
+    }
+
+    .zhibo-carousel .carousel-inner .item>img{
+      height:450px;
+    }
+</style>
