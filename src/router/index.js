@@ -6,6 +6,12 @@ import Login from '@/components/login'
 
 import Index from '@/pages/Index'
 
+import Home from '@/pages/accountManage'
+
+import EconomicNews from '@/pages/economicNews'
+
+import AddNew from '@/pages/addNew'
+
 Vue.use(Router)
 
 export default new Router({
@@ -16,6 +22,18 @@ export default new Router({
     }, {
         path: '/index',
         name: 'Index',
-        component: Index
+        component: Index,
+        redirectTo: '/home',
+        redirect: '/home',
+        children: [{
+            path: '/home',
+            component: Home
+        }, {
+            path: '/economicNews',
+            component: EconomicNews,
+        }, {
+            path: '/addNew',
+            component: AddNew
+        }]
     }]
 })

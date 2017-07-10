@@ -2,12 +2,16 @@
   <nav class="navbar-default navbar-side" role="navigation">
       <div class="sidebar-collapse">
           <ul class="nav" id="main-menu">
+              <li class="text-center">
+                    <img src="../../static/img/find_user.png" class="user-image img-responsive"/>
+                    <h5 style="color:#fff;">余洋洋</h5>
+                </li>
               <li>
                   <router-link to="/home" exact><i class="fa fa-dashboard fa-2x"></i> 账号管理</router-link>
               </li>
               <li>
-                  <a href="#"><i class="fa fa-file-video-o fa-2x"></i>直播管理<span class="fa arrow"></span></a>
-                  <ul class="nav nav-second-level collapse">
+                  <a href="#" ><i class="fa fa-file-video-o fa-2x"></i>直播管理<span class="fa arrow"></span></a>
+                  <ul class="nav nav-second-level collapse in">
                       <li>
                           <a href="#" exact>大厅直播</a>
                       </li>
@@ -18,7 +22,7 @@
               </li>
               <li>
                   <a href="#"><i class="fa fa-book fa-2x"></i>学习课件<span class="fa arrow"></span></a>
-                  <ul class="nav nav-second-level collapse">
+                  <ul class="nav nav-second-level collapse in">
                       <li>
                           <router-link  to="/classes" exact>基础课件</router-link>
                       </li>
@@ -32,7 +36,7 @@
               </li>
               <li>
                   <a href="#"><i class="fa fa-sitemap fa-2x"></i>操作建议<span class="fa arrow"></span></a>
-                  <ul class="nav nav-second-level collapse">
+                  <ul class="nav nav-second-level collapse in">
                       <li>
                           <a href="#" exact>建仓提醒</a>
                       </li>
@@ -43,7 +47,7 @@
                 </li>
                 <li>
                   <a href="#"><i class="fa fa-comments fa-2x"></i>老师点评<span class="fa arrow"></span></a>
-                  <ul class="nav nav-second-level collapse">
+                  <ul class="nav nav-second-level collapse in">
                       <li>
                           <a href="#" exact>早晚评</a>
                       </li>
@@ -52,6 +56,9 @@
                       </li>
                   </ul>
                 </li>
+              <li>
+              <router-link to="/economicNews" exact><i class="fa fa-hacker-news fa-2x"></i>新闻资讯</router-link>
+              </li>
               <li>
                   <a  href="tab-panel.html" exact><i class="fa fa-table fa-2x" ></i>课程安排</a>
               </li>
@@ -96,5 +103,7 @@ export default {
 }
 </script>
 <style scoped>
-
+  .router-link-active{
+    background-color:#C90000 !important;
+  }
 </style>
