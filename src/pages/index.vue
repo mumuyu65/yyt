@@ -2,6 +2,7 @@
   <div class="main">
     <cy-header></cy-header>
     <side-bar></side-bar>
+    <router-view></router-view>
   </div>
 </template>
 
