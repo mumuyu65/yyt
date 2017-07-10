@@ -12,6 +12,8 @@ import EconomicNews from '@/pages/economicNews'
 
 import AddNew from '@/pages/addNew'
 
+import ModifyNew from '@/pages/modifyNew'
+
 Vue.use(Router)
 
 export default new Router({
@@ -34,6 +36,9 @@ export default new Router({
         }, {
             path: '/addNew',
             component: AddNew
+        }, {
+            path: '/modifyNew',
+            component: ModifyNew
         }]
     }]
 })
