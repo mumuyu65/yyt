@@ -12,36 +12,5 @@ class API {
         return axios.post('/gusmrk/login', {}, config);
     }
 
-    getVcode(param) {
-        config.data = param;
-        return axios.post('/gusmrk/vcode/get', {}, config);
-    }
-
-    register(param) {
-        config.data = param;
-        return axios.post('/gusmrk/register', {}, config);
-    }
-
-    getGift(param) {
-        config.data = param;
-        return axios.post('/gusmrk/gift/query', {}, config);
-    }
-
-    getZhibo(param) {
-        config.data = param;
-        return axios.post('/gusmrk/liveinfo', {}, config);
-    }
-
-    userLevel(param) {
-        config.data = param;
-        return axios.post('/gusmrk/level/query', {}, config);
-    }
-
-    getNews(param) {
-        config.data = param;
-        return axios.post('https://api.yddtv.cn:9002/cctv/news/query', {}, config);
-    }
-
-
 }
 export default API;
