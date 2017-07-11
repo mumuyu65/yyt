@@ -34,7 +34,6 @@
             </table>
             <div class="row">
                 <div class="col-md-5 col-sm-5 col-lg-5">
-                        <img src="../../static/img/find_user.png" />
                         <h3 style="display:inline-block;">媒体标题</h3>
                         <h4>2017-7-10</h4>
                         <hr/>

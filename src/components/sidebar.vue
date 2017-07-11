@@ -3,15 +3,17 @@
       <div class="sidebar-collapse">
           <ul class="nav" id="main-menu">
               <li class="text-center">
-                    <img src="../../static/img/find_user.png" class="user-image img-responsive"/>
                     <h5 style="color:#fff;">余洋洋</h5>
-                </li>
+              </li>
               <li>
                   <router-link to="/home" exact><i class="fa fa-dashboard fa-2x"></i> 账号管理</router-link>
               </li>
               <li>
-                  <a href="#" ><i class="fa fa-file-video-o fa-2x"></i>直播管理<span class="fa arrow"></span></a>
-                  <ul class="nav nav-second-level collapse in">
+                  <router-link to="/settings" exact><i class="fa fa-user fa-2x"></i>个人中心</router-link>
+              </li>
+              <li>
+                  <a @click="toggleZhibo()" style="cursor:pointer;"><i class="fa fa-file-video-o fa-2x"></i>直播管理<span class="fa arrow"></span></a>
+                  <ul class="nav nav-second-level collapse" v-bind:class="{'in':zhiboManagement}">
                       <li>
                           <a href="#" exact>大厅直播</a>
                       </li>
@@ -21,8 +23,8 @@
                   </ul>
               </li>
               <li>
-                  <a href="#"><i class="fa fa-book fa-2x"></i>学习课件<span class="fa arrow"></span></a>
-                  <ul class="nav nav-second-level collapse in">
+                  <a @click="toggleStudy()" style="cursor:pointer;"><i class="fa fa-book fa-2x"></i>学习课件<span class="fa arrow"></span></a>
+                  <ul class="nav nav-second-level collapse" v-bind:class="{'in':studyManagement}">
                       <li>
                           <router-link  to="/classes" exact>基础课件</router-link>
                       </li>
@@ -35,19 +37,11 @@
                   </ul>
               </li>
               <li>
-                  <a href="#"><i class="fa fa-sitemap fa-2x"></i>操作建议<span class="fa arrow"></span></a>
-                  <ul class="nav nav-second-level collapse in">
-                      <li>
-                          <a href="#" exact>建仓提醒</a>
-                      </li>
-                      <li>
-                          <a href="#" exact>平仓提醒</a>
-                      </li>
-                  </ul>
+                  <router-link to="/handlesuggestion"><i class="fa fa-sitemap fa-2x"></i>操作建议</router-link>
                 </li>
                 <li>
-                  <a href="#"><i class="fa fa-comments fa-2x"></i>老师点评<span class="fa arrow"></span></a>
-                  <ul class="nav nav-second-level collapse in">
+                  <a @click="toggleSuggestion()" style="cursor:pointer;"><i class="fa fa-comments fa-2x"></i>老师点评<span class="fa arrow"></span></a>
+                  <ul class="nav nav-second-level collapse" v-bind:class="{'in':suggestionManagement}">
                       <li>
                           <a href="#" exact>早晚评</a>
                       </li>
@@ -97,8 +91,25 @@
 <script>
 export default {
   name:'Sidebar',
+  data (){
+    return {
+      zhiboManagement:false,
+      studyManagement:false,
+      suggestionManagement:false,
+    }
+  },
   methods:{
+    toggleZhibo(){
+      this.zhiboManagement = ! this.zhiboManagement;
+    },
 
+    toggleStudy(){
+      this.studyManagement = ! this.studyManagement;
+    },
+
+    toggleSuggestion(){
+      this.suggestionManagement = ! this.suggestionManagement;
+    },
   }
 }
 </script>

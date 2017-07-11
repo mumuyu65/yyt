@@ -28,7 +28,7 @@
                         简介:
                     </div>
                     <div class="col-sm-9 col-md-9 col-xs-6">
-                        <textarea cols='45' rows='10'></textarea>
+                        <textarea cols='40' rows='10'></textarea>
                         <div style="margin-top:20px;">
                                 <button class="btn btn-danger">提交</button>
                                 <button class="btn btn-default pull-right" @click="Cancel()">取消</button>
