@@ -55,7 +55,7 @@ export default {
   }
 
   .login_border h3{
-    color:#f00;
+    color:#d1201d;
     margin-bottom:50px;
   }
 
@@ -68,7 +68,7 @@ export default {
   }
 
   .login_border .row  input[type=submit]{
-    background-color:#f00;
+    background-color:#d1201d;
     color:#fff;
     border:1px solid transparent;
   }
