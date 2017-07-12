@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar-default navbar-side" role="navigation">
+  <nav class="navbar-side" role="navigation">
       <div class="sidebar-collapse">
           <ul class="nav" id="main-menu">
               <li class="text-center">
@@ -12,15 +12,7 @@
                   <router-link to="/settings" exact><i class="fa fa-user fa-2x"></i>个人中心</router-link>
               </li>
               <li>
-                  <a @click="toggleZhibo()" style="cursor:pointer;"><i class="fa fa-file-video-o fa-2x"></i>直播管理<span class="fa arrow"></span></a>
-                  <ul class="nav nav-second-level collapse" v-bind:class="{'in':zhiboManagement}">
-                      <li>
-                          <a href="#" exact>大厅直播</a>
-                      </li>
-                      <li>
-                          <a href="#" exact>战队直播</a>
-                      </li>
-                  </ul>
+                  <router-link to="/zhibomanage" exact><i class="fa fa-file-video-o fa-2x"></i>直播管理</router-link>
               </li>
               <li>
                   <a @click="toggleStudy()" style="cursor:pointer;"><i class="fa fa-book fa-2x"></i>学习课件<span class="fa arrow"></span></a>
@@ -93,16 +85,11 @@ export default {
   name:'Sidebar',
   data (){
     return {
-      zhiboManagement:false,
       studyManagement:false,
       suggestionManagement:false,
     }
   },
   methods:{
-    toggleZhibo(){
-      this.zhiboManagement = ! this.zhiboManagement;
-    },
-
     toggleStudy(){
       this.studyManagement = ! this.studyManagement;
     },

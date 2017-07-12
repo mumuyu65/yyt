@@ -14,6 +14,12 @@ import AddNew from '@/pages/addNew'
 
 import ModifyNew from '@/pages/modifyNew'
 
+//操作建议
+import HandleSuggestion from '@/pages/handlesuggestion'
+
+//直播管理
+import ZhiboManage from '@/pages/zhibomanage'
+
 Vue.use(Router)
 
 export default new Router({
@@ -25,7 +31,6 @@ export default new Router({
         path: '/index',
         name: 'Index',
         component: Index,
-        redirectTo: '/home',
         redirect: '/home',
         children: [{
             path: '/home',
@@ -39,6 +44,12 @@ export default new Router({
         }, {
             path: '/modifyNew',
             component: ModifyNew
+        }, {
+            path: '/zhibomanage',
+            component: ZhiboManage
+        }, {
+            path: '/handlesuggestion',
+            component: HandleSuggestion
         }]
     }]
 })

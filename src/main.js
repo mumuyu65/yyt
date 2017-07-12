@@ -2,9 +2,8 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+
 import $ from 'jquery'
-//import './assets/bootstrap/css/bootstrap.min.css'
-import './assets/bootstrap/js/bootstrap.min'
 
 import store from './store/store'
 
