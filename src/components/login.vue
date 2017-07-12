@@ -28,20 +28,42 @@
 </template>
 
 <script>
+import API from '@/api/API'
+//实例化api
+const api = new API();
+
 export default {
   name:'Login',
   data (){
     return {
         user:{
-          name:'18516074685',
-          pwd:'yu123456',
+          name:'18668800630',
+          pwd:'123456',
         },
     }
   },
   methods: {
     doLogin() {
-      this.$router.push('index');
-    }
+      let params={
+        account:this.user.name,
+        pwd:this.user.pwd
+      };
+
+      let that= this;
+
+      api.login(params).then(function(res){
+          console.log(res.data);
+          if(res.data.Code ==3){
+              window.localStorage.setItem('user',JSON.stringify(res.data));
+              that.$router.push('index');
+          }
+      }).catch(function(err){
+          console.log(err);
+        });
+    },
+
+
+
   },
 }
 </script>

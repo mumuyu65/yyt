@@ -5,6 +5,8 @@ import router from './router'
 
 import $ from 'jquery'
 
+import 'bootstrap-table'
+
 import store from './store/store'
 
 //关闭生产模式下给出的提示

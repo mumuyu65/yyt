@@ -9,7 +9,7 @@ import config from './config'
 class API {
     login(param) {
         config.data = param;
-        return axios.post('/gusmrk/login', {}, config);
+        return axios.post('/cycj/login', {}, config);
     }
 
 }
