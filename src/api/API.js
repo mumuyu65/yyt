@@ -63,6 +63,12 @@ class API {
         return axios.post('/cycj/upload/head', {}, config);
     }
 
+    //查询特定用户信息
+    querySpecifyuser(param) {
+        config.data = param;
+        return axios.post('/cycj/admin/specifyuser', {}, config);
+    }
+
     //资讯管理
     addNews(param) {
         config.data = param;

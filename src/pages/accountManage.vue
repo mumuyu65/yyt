@@ -87,7 +87,7 @@ export default {
                             field: 'account',
                             title: '用户名'
                         }, {
-                            field: 'nice',
+                            field: 'nick',
                             title: '用户昵称'
                         }, {
                             field: 'flag',
@@ -117,7 +117,7 @@ export default {
                         }, {
                             title: '用户操作',
                             formatter:function(value,row,index){
-                            return '<a href="#/modifyUser"><button class="btn btn-danger">修改</button></a>'
+                            return '<a href="#/modifyUser?account='+row.account+'&id='+row.id+'&img='+row.headurl+'"><button class="btn btn-danger">修改</button></a>'
                             }
                         }],
                 });
