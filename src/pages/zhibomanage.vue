@@ -7,24 +7,23 @@
 </template>
 
 <script>
-import API from '@/api/API'
-//实例化api
-const api = new API();
+  import API from '@/api/API'
+  const api = new API()
 
-export default {
-  name: 'ZhiboManage',
-  mounted(){
-    this.initData();
-  },
-  methods:{
-    initData (){
-      console.log('zhibomanage.....');
+  export default {
+    name: 'ZhiboManage',
+    mounted(){
+      this.initData()
+    },
+    methods: {
+      initData() {
+        console.log('zhibomanage.....')
+      }
     }
   }
-}
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     .zhibo input,.zhibo select{
         width:auto;
         height:30px;
