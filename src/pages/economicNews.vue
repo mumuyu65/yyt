@@ -122,7 +122,7 @@ export default {
                         },{
                             title: '用户操作',
                             formatter:function(value,row,index){
-                              return '<a href="#/modifyNews?id='+row.id+'&img='+row.imgurl+'"><button class="btn btn-danger">修改</button></a>'
+                              return '<a href="#/modifyNews?id='+row.id+'&img='+row.imgurl+'&title='+row.title+'&content='+row.content+'&type='+row.type+'"><button class="btn btn-danger">修改</button></a>'
                             }
                         }],
                 });

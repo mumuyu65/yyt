@@ -54,7 +54,7 @@ export default new Router({
             path: '/addNew',
             component: AddNew
         }, {
-            path: '/modifyNew',
+            path: '/modifyNews',
             component: ModifyNew
         }, {
             path: '/zhibomanage',
