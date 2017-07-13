@@ -43,7 +43,7 @@
                   </ul>
                 </li>
               <li>
-              <router-link to="/economicNews" exact><i class="fa fa-hacker-news fa-2x"></i>新闻资讯</router-link>
+                <router-link to="/economicNews" exact><i class="fa fa-hacker-news fa-2x"></i>新闻资讯</router-link>
               </li>
               <li>
                   <a  href="tab-panel.html" exact><i class="fa fa-table fa-2x" ></i>课程安排</a>

@@ -9,47 +9,11 @@
                 </div>
             </div>
             <div id="toolbar">
-                <button id="remove" class="btn btn-danger" disabled>
-                    <i class="glyphicon glyphicon-remove"></i>批量删除
+                <button id="remove" class="btn btn-danger">
+                    批量删除
                 </button>
             </div>
-            <table id="table"
-                   data-toolbar="#toolbar"
-                   data-search="true"
-                   data-show-refresh="true"
-                   data-show-toggle="true"
-                   data-show-columns="true"
-                   data-show-export="true"
-                   data-detail-view="true"
-                   data-detail-formatter="detailFormatter"
-                   data-minimum-count-columns="2"
-                   data-show-pagination-switch="true"
-                   data-pagination="true"
-                   data-id-field="id"
-                   data-page-list="[10, 25, 50, 100, ALL]"
-                   data-show-footer="false"
-                   data-side-pagination="server"
-                   data-url="/examples/bootstrap_table/data"
-                   data-response-handler="responseHandler">
-            </table>
-            <div class="row">
-                <div class="col-md-5 col-sm-5 col-lg-5">
-                        <h3 style="display:inline-block;">媒体标题</h3>
-                        <h4>2017-7-10</h4>
-                        <hr/>
-                        <p>这是一些示例文本。这是一些示例文本。
-                            这是一些示例文本。这是一些示例文本。
-                            这是一些示例文本。这是一些示例文本。
-                            这是一些示例文本。这是一些示例文本。
-                            这是一些示例文本。这是一些示例文本。
-                            </p>
-                        <div class="text-center" style="margin-top:20px;">
-                                <button class="btn btn-danger" style="margin-right:50px;" @click="modifyNews()">修改</button>
-                                <button class="btn btn-primary" style="margin-right:50px;" @click="previewNews()">预览</button>
-                                <button class="btn btn-default" @click="deleteNew()">删除</button>
-                        </div>
-                </div>
-            </div>
+            <table id="newsTable"></table>
         </div>
     </div>
 </template>
@@ -59,65 +23,34 @@ import API from '@/api/API'
 //实例化api
 const api = new API();
 
-import bootstrapTable from 'bootstrap-table'
+import 'bootstrap-table'
 
 export default {
   name: 'economicNews',
+  data(){
+    return{
+      Sid:'',
+      newsType:[],
+    }
+  },
   mounted(){
+    this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
     this.initData();
   },
   methods:{
     initData(){
-        console.log(Data);
-        let options={
-            url:'',
-            columns: [
-                    {
-                        field: 'state',
-                        checkbox: true,
-                        rowspan: 2,
-                        align: 'center',
-                        valign: 'middle'
-                    }, {
-                        field: 'id',
-                        title: '序列号',
-                        rowspan: 2,
-                        align: 'center',
-                        valign: 'middle',
-                        sortable: true,
-                    },
-                    {
-                        field: 'name',
-                        title: '标题',
-                        sortable: true,
-                        editable: true,
-                        align: 'center'
-                    }, {
-                        field: 'price',
-                        title: '图片',
-                        sortable: true,
-                        align: 'center',
-                    }, {
-                        field: 'operate',
-                        title: 'Item Operate',
-                        align: 'center',
-                        formatter:this.operateFormatter
-                    }
-            ]
-        };
+      let that = this;
+      api.newsType().then(function(res){
+            if(res.data.Code ==3){
+                that.newsType = res.data.Data;
+                that.queryNews();
+            }else{
+                alert(res.data.Msg);
+            }
+        }).catch(function(err){
+            console.log(err);
+        });
 
-        //$('#table').bootstrapTable(options);
-    },
-
-    operateFormatter(value, row, index) {
-        return [
-            '<a class="like" href="javascript:void(0)" title="Like">',
-            '<i class="glyphicon glyphicon-heart"></i>',
-            '</a>  ',
-            '<a class="remove" href="javascript:void(0)" title="Remove">',
-            '<i class="glyphicon glyphicon-remove"></i>',
-            '</a>'
-        ].join('');
     },
 
     //新增资讯
@@ -125,20 +58,102 @@ export default {
         this.$router.push('/addNew');
     },
 
-    //修改资讯
-    modifyNews(){
-       this.$router.push('/modifyNew');
+    queryNews(){
+      let that = this;
+      let params={
+          begidx:0,
+          counts:100,
+          type:1,
+        };
+      api.queryNews(params).then(function(res){
+          console.log(res);
+          if(res.data.Code ==3){
+            $('#newsTable').bootstrapTable({
+                        data:res.data.Data.Detail,
+                        striped:true,
+                        toolbar:'#toolbar',
+                        pagination:'true',
+                        sidePagination:'server',
+                        pageNumber:1,
+                        pageSize:10,
+                        pageList:[10,15,20,25,30],
+                        search:true,
+                        searchOnEnterKey:true,
+                        showColumns:false,
+                        showRefresh:false,
+                        showToggle:false,
+                        showPaginationSwitch:false,
+                        searchAlign:'right',
+                        toolbarAlign:'left',
+                        sortable:true,
+                        searchFormatter:true,
+                        columns: [{
+                            checkbox:true,
+                        },{
+                            field: 'id',
+                            title: '序列号',
+                            formatter:function(value,row,index){
+                                return index+1;
+                            }
+                        },{
+                            field: 'type',
+                            title: '资讯类型',
+                            formatter:function(value,row,index){
+                              let obj=that.newsType;
+                              for(let i =0; i<obj.length;i++){
+                                if(value == obj[i].type){
+                                  return obj[i].text;
+                                }
+                              }
+                            }
+                        }, {
+                            field: 'title',
+                            title: '资讯标题'
+                        }, {
+                            field: 'content',
+                            title: '资讯内容',
+                        },{
+                            field: 'imgurl',
+                            title: '资讯图片',
+                        },  {
+                            field: 'unix',
+                            title: '创建时间',
+                            formatter:that.operateDate
+                        },{
+                            title: '用户操作',
+                            formatter:function(value,row,index){
+                              return '<a href="#/modifyNews?id='+row.id+'&img='+row.imgurl+'"><button class="btn btn-danger">修改</button></a>'
+                            }
+                        }],
+                });
+          }
+      });
     },
 
-    //删除资讯
-    deleteNew(){
-        //TODO
+    operateDate(value,row,index){
+        return this.time(value*1000);
     },
 
-    //预览资讯
-    previewNews(){
-        alert("预览。。。");
-    },
+    add(m) {
+         return m<10?'0'+m:m
+     },
+    time(tm) {
+         //获取一个事件戳
+         var time = new Date(tm);
+         //获取年份信息
+         var y = time.getFullYear();
+         //获取月份信息，月份是从0开始的
+         var m = time.getMonth()+1;
+         //获取天数信息
+         //获取天数信息
+         var d = time.getDate();
+
+         var H=time.getHours();
+
+         var M=time.getMinutes();
+         //返回拼接信息
+         return y+'-'+this.add(m) + '-' + this.add(d)+'&nbsp;&nbsp;'+this.add(H)+":"+this.add(M);
+     },
 
   }
 }

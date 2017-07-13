@@ -69,6 +69,23 @@ class API {
         return axios.post('/cycj/admin/specifyuser', {}, config);
     }
 
+    //资讯类型管理
+    newsType(param) {
+        config.data = param;
+        return axios.post('/cycj/news/type/query', {}, config);
+    }
+
+    addnewsType(param) {
+        config.data = param;
+        return axios.post('/cycj/news/type/add', {}, config);
+    }
+
+    delnewsType(param) {
+        config.data = param;
+        return axios.post('/cycj/news/type/del', {}, config);
+    }
+
+
     //资讯管理
     addNews(param) {
         config.data = param;
@@ -86,11 +103,10 @@ class API {
     }
 
     delNews(param) {
-        config.data = param;
-        return axios.post('/cycj/news/del', {}, config);
-    }
-
-    //品类管理---针对产品
+            config.data = param;
+            return axios.post('/cycj/news/del', {}, config);
+        }
+        //品类管理---针对产品
     addCategory(param) {
         config.data = param;
         return axios.post('/cycj/category/add', {}, config);

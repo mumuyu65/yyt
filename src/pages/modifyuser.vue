@@ -61,8 +61,6 @@ import API from '@/api/API'
 //实例化api
 const api = new API();
 
-import '../../static/pictrueHandle/tools.js';
-
 export default {
   name: 'AddUser',
   data (){
