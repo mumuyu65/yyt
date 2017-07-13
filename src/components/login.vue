@@ -52,9 +52,8 @@ export default {
       let that= this;
 
       api.login(params).then(function(res){
-          console.log(res.data);
           if(res.data.Code ==3){
-              window.localStorage.setItem('user',JSON.stringify(res.data));
+              window.localStorage.setItem('user',JSON.stringify(res.data.Data));
               that.$router.push('index');
           }
       }).catch(function(err){

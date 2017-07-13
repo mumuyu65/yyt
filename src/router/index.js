@@ -6,8 +6,12 @@ import Login from '@/components/login'
 
 import Index from '@/pages/Index'
 
+//用户管理
 import Home from '@/pages/accountManage'
 
+import addUser from '@/pages/adduser'
+
+//新闻资讯
 import EconomicNews from '@/pages/economicNews'
 
 import AddNew from '@/pages/addNew'
@@ -35,6 +39,9 @@ export default new Router({
         children: [{
             path: '/home',
             component: Home
+        }, {
+            path: '/addUser',
+            component: addUser
         }, {
             path: '/economicNews',
             component: EconomicNews,
