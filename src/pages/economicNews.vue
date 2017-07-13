@@ -9,7 +9,7 @@
                 </div>
             </div>
             <div id="toolbar">
-                <button id="remove" class="btn btn-danger">
+                <button id="remove" class="btn btn-danger" @click="delNews()">
                     批量删除
                 </button>
             </div>
@@ -128,6 +128,33 @@ export default {
                 });
           }
       });
+    },
+
+    getIdSelections() {
+        return $.map($("#newsTable").bootstrapTable('getSelections'), function (row) {
+            return row.id
+        });
+    },
+
+    delNews(){
+        let Id = this.getIdSelections();
+
+         $("#newsTable").bootstrapTable('remove', {
+                field: 'id',
+                values: Id
+            });
+        let params={
+            sid:this.Sid,
+            id:Id[0]
+        };
+
+        console.log(params);
+
+        api.delNews(params).then(function(res){
+            alert(res.data.Msg);
+        }).catch(function(err){
+            console.log(err);
+        });
     },
 
     operateDate(value,row,index){

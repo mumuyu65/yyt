@@ -72,7 +72,7 @@ export default {
   methods:{
     initData(){
         let that = this;
-       api.newsType().then(function(res){
+        api.newsType().then(function(res){
             if(res.data.Code ==3){
                 that.options = res.data.Data;
             }else{
