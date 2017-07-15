@@ -35,8 +35,15 @@
                        <span class="required">*</span>头像:
                     </div>
                     <div class="col-sm-9 col-md-9 col-xs-6">
-                        <img v-bind:src="user.img"/>
-                        <input type="file" @change="onFileChange" value="上传图片"/>
+                         <ul class="list-inline">
+                          <li><img v-bind:src="user.img" id="file" class="profile img-circle"/></li>
+                          <li style="position:relative;">
+                            <input type="file" @change="onFileChange" value="上传图片" style="position:absolute; opacity:0;"/>
+                            <button style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
+                                上传图片
+                            </button>
+                          </li>
+                      </ul>
                     </div>
                 </div>
                 <div class="row">
@@ -164,6 +171,8 @@ export default {
 
           reader.onload = (e) => {
             that.user.img = e.target.result;
+            //预览
+            $("#file").attr("src",that.user.img);
           };
             reader.readAsDataURL(file);
     },
