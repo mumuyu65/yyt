@@ -67,7 +67,7 @@
                   <a  href="blank.html"><i class="fa fa-qq fa-2x"></i>qq号码管理</a>
               </li>
                <li>
-                  <a  href="blank.html"><i class="fa fa-joomla fa-2x"></i>果蔬产品</a>
+                  <router-link to="/productsManage"><i class="fa fa-joomla fa-2x"></i>产品管理</router-link>
               </li>
                <li>
                   <a  href="blank.html"><i class="fa fa-file-image-o fa-2x"></i>聊天室图片管理</a>

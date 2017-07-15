@@ -26,6 +26,9 @@ import ModifyNew from '@/pages/modifyNew'
 //操作建议
 import HandleSuggestion from '@/pages/handlesuggestion'
 
+//产品管理
+import productsManage from '@/pages/productsManage'
+
 //直播管理
 import ZhiboManage from '@/pages/zhibomanage'
 
@@ -68,6 +71,9 @@ export default new Router({
         }, {
             path: '/handlesuggestion',
             component: HandleSuggestion
+        }, {
+            path: '/productsManage',
+            component: productsManage
         }]
     }]
 })
