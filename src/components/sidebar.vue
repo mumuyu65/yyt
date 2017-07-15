@@ -58,7 +58,10 @@
                   <router-link to="/qrcode" exact><i class="fa  fa-qrcode fa-2x"></i>微信二维码</router-link>
               </li>
               <li>
-                  <a  href="table.html" exact><i class="fa fa-codepen fa-2x"></i>产品介绍</a>
+                  <router-link to="/productsintro" exact><i class="fa fa-codepen fa-2x"></i>产品介绍</router-link>
+              </li>
+              <li>
+                  <router-link to="/clan" exact><i class="fa fa-cubes fa-2x"></i>战队介绍</router-link>
               </li>
               <li>
                   <a  href="form.html" exact><i class="fa fa-download fa-2x"></i> 下载中心 </a>

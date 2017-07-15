@@ -2,17 +2,17 @@
     <div id="page-wrapper" >
         <div id="page-inner">
           <ul class="list-inline">
-              <li><h3>微信二维码管理</h3></li>
+              <li><h3>产品介绍</h3></li>
           </ul>
           <hr/>
           <div style="width:700px;margin:0 auto; margin-top:50px;">
              <div class="row">
                     <div class="col-sm-3 col-md-3 col-xs-6">
-                       <span class="required">*</span>二维码:
+                       <span class="required">*</span>产品介绍:
                     </div>
                     <div class="col-sm-9 col-md-9 col-xs-6">
                          <ul class="list-inline">
-                          <li><img v-bind:src="qrcodes.img_url" id="file" class="profile"/></li>
+                          <li><img v-bind:src="productIntro.img_url" id="file" class="profile"/></li>
                           <li style="position:relative;">
                             <input type="file" @change="onFileChange" value="上传图片" style="position:absolute; opacity:0;"/>
                             <button style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
@@ -33,11 +33,11 @@ import API from '@/api/API'
 const api = new API();
 
 export default {
-  name: 'qrcode',
+  name: 'productIntro',
   data (){
     return {
         Sid:'',
-        qrcodes:{},
+        productIntro:{},
     }
   },
   mounted (){
@@ -47,11 +47,10 @@ export default {
   methods:{
     initData(){
       let that = this;
-      api.qrcodeQuery().then(function(res){
+      api.productIntroQuery().then(function(res){
+        console.log(res.data);
         if(res.data.Code ==3){
              let templateObj= res.data.Data;
-
-
              that.qrcodes= templateObj[0];
         }
       }).catch(function(err){
@@ -72,16 +71,16 @@ export default {
           var that = this;
 
           reader.onload = (e) => {
-            that.qrcodes.img_url = e.target.result;
+            that.productIntro.img_url = e.target.result;
             //预览
-            $("#file").attr("src",that.qrcodes.img_url);
+            $("#file").attr("src",that.productIntro.img_url);
 
             let params={
                 sid:that.Sid,
-                img:that.qrcodes.img_url
+                img:that.productIntro.img_url
             };
 
-            api.qrcodeUpdate(params).then(function(res){
+            api.productIntroUpdate(params).then(function(res){
               alert(res.data.Msg);
             }).catch(function(err){
               console.log(err);

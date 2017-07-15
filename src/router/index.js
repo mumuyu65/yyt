@@ -41,6 +41,12 @@ import levelIcon from '@/pages/levelIcon'
 //微信二维码管理
 import qrcode from '@/pages/qrcode'
 
+//产品介绍
+import productIntro from '@/pages/productsIntro'
+
+//产品介绍
+import Clan from '@/pages/clan'
+
 Vue.use(Router)
 
 export default new Router({
@@ -92,6 +98,12 @@ export default new Router({
         }, {
             path: '/qrcode',
             component: qrcode
+        }, {
+            path: '/productsintro',
+            component: productIntro
+        }, {
+            path: '/clan',
+            component: Clan
         }]
     }]
 })

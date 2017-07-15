@@ -196,5 +196,28 @@ class API {
         config.data = param;
         return axios.post('/cycj/wxcode/update', {}, config);
     }
+
+    //产品介绍管理
+    productIntroQuery(param) {
+        config.data = param;
+        return axios.post('/cycj/product/query', {}, config);
+    }
+
+    productIntroUpdate(param) {
+        config.data = param;
+        return axios.post('/cycj/product/update', {}, config);
+    }
+
+    //战队介绍
+    ClanQuery(param) {
+        config.data = param;
+        return axios.post('/cycj/clan/query', {}, config);
+    }
+
+    ClanUpdate(param) {
+        config.data = param;
+        return axios.post('/cycj/clan/update', {}, config);
+    }
+
 }
 export default API;
