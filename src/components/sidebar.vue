@@ -24,10 +24,10 @@
                   <a @click="toggleStudy()" style="cursor:pointer;"><i class="fa fa-book fa-2x"></i>学习课件<span class="fa arrow"></span></a>
                   <ul class="nav nav-second-level collapse" v-bind:class="{'in':studyManagement}">
                       <li>
-                          <router-link  to="/classes" exact>基础课件</router-link>
+                          <router-link  to="/juniorClasses" exact>基础课件</router-link>
                       </li>
                       <li>
-                          <router-link  to="/classes" exact>高级课件</router-link>
+                          <router-link  to="/seniorClasses" exact>高级课件</router-link>
                       </li>
                   </ul>
               </li>
@@ -41,10 +41,10 @@
                   <a @click="toggleSuggestion()" style="cursor:pointer;"><i class="fa fa-comments fa-2x"></i>老师点评<span class="fa arrow"></span></a>
                   <ul class="nav nav-second-level collapse" v-bind:class="{'in':suggestionManagement}">
                       <li>
-                          <a href="#" exact>早晚评</a>
+                          <router-link to="/dayComment" exact>早晚评</router-link>
                       </li>
                       <li>
-                          <a href="#" exact>果蔬预测</a>
+                          <router-link to="/productsComment" exact>果蔬预测</router-link>
                       </li>
                   </ul>
                 </li>

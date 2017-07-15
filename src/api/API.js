@@ -219,5 +219,36 @@ class API {
         return axios.post('/cycj/clan/update', {}, config);
     }
 
+    //早晚评
+    dayCommentQuery(param) {
+        config.data = param;
+        return axios.post('/cycj/comment/query', {}, config);
+    }
+
+    dayCommentAdd(param) {
+        config.data = param;
+        return axios.post('/cycj/comment/add', {}, config);
+    }
+
+    dayCommentModify(param) {
+        config.data = param;
+        return axios.post('/cycj/comment/modify', {}, config);
+    }
+
+    dayCommentDel(param) {
+        config.data = param;
+        return axios.post('/cycj/comment/del', {}, config);
+    }
+
+    dayCommentCheck(param) {
+        config.data = param;
+        return axios.post('/cycj/comment/check', {}, config);
+    }
+
+    dayCommentAll(param) {
+        config.data = param;
+        return axios.post('/cycj/comment/cliquery', {}, config);
+    }
+
 }
 export default API;

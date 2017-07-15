@@ -47,6 +47,11 @@ import productIntro from '@/pages/productsIntro'
 //产品介绍
 import Clan from '@/pages/clan'
 
+//早晚评
+import DayComment from '@/pages/daycomment'
+
+//果蔬预测
+
 Vue.use(Router)
 
 export default new Router({
@@ -104,6 +109,9 @@ export default new Router({
         }, {
             path: '/clan',
             component: Clan
+        }, {
+            path: '/dayComment',
+            component: DayComment
         }]
     }]
 })
