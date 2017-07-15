@@ -13,6 +13,9 @@ import addUser from '@/pages/adduser'
 
 import modifyUser from '@/pages/modifyuser'
 
+//个人设置
+import Settings from '@/pages/settings'
+
 //新闻资讯
 import EconomicNews from '@/pages/economicNews'
 
@@ -47,6 +50,9 @@ export default new Router({
         }, {
             path: '/modifyUser',
             component: modifyUser
+        }, {
+            path: '/settings',
+            component: Settings
         }, {
             path: '/economicNews',
             component: EconomicNews,

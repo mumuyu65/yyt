@@ -25,6 +25,12 @@ class API {
         return axios.post('/cycj/logout', {}, config);
     }
 
+    //个人中心
+    personSettings(param) {
+        config.data = param;
+        return axios.post('/cycj/userinfo/update', {}, config);
+    }
+
     //用户管理
     addUser(param) {
         config.data = param;
