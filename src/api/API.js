@@ -31,6 +31,12 @@ class API {
         return axios.post('/cycj/userinfo/update', {}, config);
     }
 
+    //在线用户信息查询
+    userInfo(param) {
+        config.data = param;
+        return axios.post('', {}, config);
+    }
+
     //用户管理
     addUser(param) {
         config.data = param;

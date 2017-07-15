@@ -15,8 +15,15 @@
                        <span class="required">*</span>头像:
                     </div>
                     <div class="col-sm-9 col-md-9 col-xs-6">
-                        <img v-bind:src="user.img"/>
-                        <input type="file" @change="onFileChange" value="上传图片"/>
+                      <ul class="list-inline">
+                          <li><img v-bind:src="user.img" id="file" src="../../static/images/course_t.png" class="profile img-circle"/></li>
+                          <li style="position:relative;">
+                            <input type="file" @change="onFileChange" value="上传图片" style="position:absolute; opacity:0;"/>
+                            <button style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
+                                上传图片
+                            </button>
+                          </li>
+                      </ul>
                     </div>
                 </div>
                 <div class="row">
@@ -50,6 +57,7 @@ export default {
   },
    mounted (){
     this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
+    this.userInformation(this.Sid);
   },
   methods:{
     //上传头像
@@ -67,25 +75,35 @@ export default {
 
           reader.onload = (e) => {
             that.user.img = e.target.result;
+            //预览
+            $("#file").attr("src",that.user.img);
           };
-            reader.readAsDataURL(file);
+          reader.readAsDataURL(file);
     },
     //提交
     changeUser(){
         let params={
             sid:this.Sid,
-            nick:user.nick,
-            intro:user.intro,
-            file:user.img
+            nick:this.user.nick,
+            intro:this.user.intro,
+            file:this.user.img
         };
 
         let that = this;
 
         api.personSettings(params).then(function(res){
-            console.log(res.data);
+            alert(res.data.Msg);
         }).catch(function(err){
             console.log(err);
         });
+    },
+    //下载用户信息
+    userInformation(Sid){
+       let params={
+        sid:Sid,
+       };
+
+       let that = this;
     }
   },
 }
@@ -101,5 +119,9 @@ export default {
     .required{
         color:#e60000;
         margin-right:5px;
+    }
+
+    .profile{
+      height:64px;
     }
 </style>
