@@ -185,5 +185,16 @@ class API {
         config.data = param;
         return axios.post('/cycj/level/del', {}, config);
     }
+
+    //微信二维码管理
+    qrcodeQuery(param) {
+        config.data = param;
+        return axios.post('/cycj/wxcode/query', {}, config);
+    }
+
+    qrcodeUpdate(param) {
+        config.data = param;
+        return axios.post('/cycj/wxcode/update', {}, config);
+    }
 }
 export default API;

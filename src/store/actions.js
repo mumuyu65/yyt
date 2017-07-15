@@ -48,9 +48,3 @@ export const changeGifts = ({
 }, value) => {
     commit('CHANGE_GIFTS', value)
 }
-
-export const changeProducts = ({
-    commit
-}, value) => {
-    commit('CHANGE_PRODUCTS', value)
-}

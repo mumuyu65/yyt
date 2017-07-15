@@ -9,6 +9,12 @@
                   <router-link to="/home" exact><i class="fa fa-dashboard fa-2x"></i> 账号管理</router-link>
               </li>
               <li>
+                  <router-link to="/userlevel" exact><i class="fa fa-gear fa-2x"></i>用户等级管理</router-link>
+              </li>
+              <li>
+                  <router-link to="/levelIcon"><i class="fa fa-square-o fa-2x"></i>用户等级图标管理</router-link>
+              </li>
+              <li>
                   <router-link to="/settings" exact><i class="fa fa-user fa-2x"></i>个人中心</router-link>
               </li>
               <li>
@@ -23,11 +29,11 @@
                       <li>
                           <router-link  to="/classes" exact>高级课件</router-link>
                       </li>
-                      <li>
-                          <router-link  to="/classes" exact>讲师风采</router-link>
-                      </li>
                   </ul>
               </li>
+               <li>
+                    <router-link  to="/classes" exact><i class="fa fa-users fa-2x"></i>讲师风采</router-link>
+               </li>
               <li>
                   <router-link to="/handlesuggestion"><i class="fa fa-sitemap fa-2x"></i>操作建议</router-link>
                 </li>
@@ -49,7 +55,7 @@
                   <a  href="tab-panel.html" exact><i class="fa fa-table fa-2x" ></i>课程安排</a>
               </li>
               <li>
-                  <a  href="chart.html" exact><i class="fa  fa-qrcode fa-2x"></i>微信二维码</a>
+                  <router-link to="/qrcode" exact><i class="fa  fa-qrcode fa-2x"></i>微信二维码</router-link>
               </li>
               <li>
                   <a  href="table.html" exact><i class="fa fa-codepen fa-2x"></i>产品介绍</a>
@@ -64,16 +70,13 @@
                   <a href="registeration.html" exact><i class="fa fa-coffee fa-2x"></i> 兑奖记录</a>
               </li>
                 <li>
-                  <a  href="blank.html"><i class="fa fa-qq fa-2x"></i>qq号码管理</a>
+                  <router-link to="/qqManage"><i class="fa fa-qq fa-2x"></i>qq号码管理</router-link>
               </li>
                <li>
                   <router-link to="/productsManage"><i class="fa fa-joomla fa-2x"></i>产品管理</router-link>
               </li>
                <li>
                   <a  href="blank.html"><i class="fa fa-file-image-o fa-2x"></i>聊天室图片管理</a>
-              </li>
-              <li>
-                  <a  href="blank.html"><i class="fa fa-square-o fa-2x"></i>用户等级图标管理</a>
               </li>
           </ul>
       </div>

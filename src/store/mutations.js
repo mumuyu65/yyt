@@ -34,8 +34,5 @@ export default {
             state.gifts = value;
         },
 
-        CHANGE_PRODUCTS(state, value) {
-            state.currentItems = value;
-        }
 
 }

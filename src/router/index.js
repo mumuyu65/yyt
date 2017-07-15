@@ -32,6 +32,15 @@ import productsManage from '@/pages/productsManage'
 //直播管理
 import ZhiboManage from '@/pages/zhibomanage'
 
+//用户等级管理
+import userLevel from '@/pages/userlevel'
+
+//用户等级图标的管理
+import levelIcon from '@/pages/levelIcon'
+
+//微信二维码管理
+import qrcode from '@/pages/qrcode'
+
 Vue.use(Router)
 
 export default new Router({
@@ -74,6 +83,15 @@ export default new Router({
         }, {
             path: '/productsManage',
             component: productsManage
+        }, {
+            path: '/userlevel',
+            component: userLevel
+        }, {
+            path: '/levelIcon',
+            component: levelIcon
+        }, {
+            path: '/qrcode',
+            component: qrcode
         }]
     }]
 })

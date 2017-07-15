@@ -148,4 +148,12 @@ export default {
         border:1px solid #ececec;
    }
 
+    #productsTable tr:hover{
+        background-color:#f7f7f7;
+    }
+
+   #productsTable tr:nth-child(odd){
+        background-color:#f7f7f7;
+   }
+
 </style>
