@@ -250,5 +250,26 @@ class API {
         return axios.post('/cycj/comment/cliquery', {}, config);
     }
 
+    //课程表管理
+    scheduleQuery(param) {
+        config.data = param;
+        return axios.post('/cycj/schedule/query', {}, config);
+    }
+
+    scheduleAdd(param) {
+        config.data = param;
+        return axios.post('/cycj/schedule/add', {}, config);
+    }
+
+    scheduleModify(param) {
+        config.data = param;
+        return axios.post('/cycj/schedule/modify', {}, config);
+    }
+
+    scheduleDel(param) {
+        config.data = param;
+        return axios.post('/cycj/schedule/del', {}, config);
+    }
+
 }
 export default API;

@@ -52,7 +52,7 @@
                 <router-link to="/economicNews" exact><i class="fa fa-hacker-news fa-2x"></i>新闻资讯</router-link>
               </li>
               <li>
-                  <a  href="tab-panel.html" exact><i class="fa fa-table fa-2x" ></i>课程安排</a>
+                  <router-link to="/classArrange" exact><i class="fa fa-table fa-2x" ></i>课程安排</router-link>
               </li>
               <li>
                   <router-link to="/qrcode" exact><i class="fa  fa-qrcode fa-2x"></i>微信二维码</router-link>

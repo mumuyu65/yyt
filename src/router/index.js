@@ -52,6 +52,11 @@ import DayComment from '@/pages/daycomment'
 
 //果蔬预测
 
+
+//课程安排
+
+import ClassArrange from '@/pages/classArrange'
+
 Vue.use(Router)
 
 export default new Router({
@@ -112,6 +117,9 @@ export default new Router({
         }, {
             path: '/dayComment',
             component: DayComment
+        }, {
+            path: '/classArrange',
+            component: ClassArrange
         }]
     }]
 })
