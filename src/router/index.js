@@ -23,6 +23,9 @@ import AddNew from '@/pages/addNew'
 
 import ModifyNew from '@/pages/modifyNew'
 
+//新闻资讯类型管理
+import EconomicNewsType from '@/pages/economicNewsType'
+
 //操作建议
 import HandleSuggestion from '@/pages/handlesuggestion'
 
@@ -81,6 +84,9 @@ export default new Router({
         }, {
             path: '/settings',
             component: Settings
+        }, {
+            path: '/economicNewsType',
+            component: EconomicNewsType,
         }, {
             path: '/economicNews',
             component: EconomicNews,

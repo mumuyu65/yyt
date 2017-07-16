@@ -36,8 +36,8 @@
                </li>
               <li>
                   <router-link to="/handlesuggestion"><i class="fa fa-sitemap fa-2x"></i>操作建议</router-link>
-                </li>
-                <li>
+              </li>
+              <li>
                   <a @click="toggleSuggestion()" style="cursor:pointer;"><i class="fa fa-comments fa-2x"></i>老师点评<span class="fa arrow"></span></a>
                   <ul class="nav nav-second-level collapse" v-bind:class="{'in':suggestionManagement}">
                       <li>
@@ -47,7 +47,10 @@
                           <router-link to="/productsComment" exact>果蔬预测</router-link>
                       </li>
                   </ul>
-                </li>
+              </li>
+              <li>
+                <router-link to="/economicNewsType" exact><i class="fa fa-hacker-news fa-2x"></i>新闻资讯类型管理</router-link>
+              </li>
               <li>
                 <router-link to="/economicNews" exact><i class="fa fa-hacker-news fa-2x"></i>新闻资讯</router-link>
               </li>
