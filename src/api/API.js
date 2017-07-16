@@ -115,10 +115,11 @@ class API {
     }
 
     delNews(param) {
-            config.data = param;
-            return axios.post('/cycj/news/del', {}, config);
-        }
-        //品类管理---针对产品
+        config.data = param;
+        return axios.post('/cycj/news/del', {}, config);
+    }
+
+    //品类管理---针对产品
     addCategory(param) {
         config.data = param;
         return axios.post('/cycj/category/add', {}, config);
@@ -248,6 +249,32 @@ class API {
     dayCommentAll(param) {
         config.data = param;
         return axios.post('/cycj/comment/cliquery', {}, config);
+    }
+
+    //品类预测管理
+    productsForecastQuery(param) {
+        config.data = param;
+        return axios.post('/cycj/forecast/query', {}, config);
+    }
+
+    productsForecastAdd(param) {
+        config.data = param;
+        return axios.post('/cycj/forecast/add', {}, config);
+    }
+
+    productsForecastModify(param) {
+        config.data = param;
+        return axios.post('/cycj/forecast/modify', {}, config);
+    }
+
+    productsForecastDel(param) {
+        config.data = param;
+        return axios.post('/cycj/forecast/del', {}, config);
+    }
+
+    productsForecastCheck(param) {
+        config.data = param;
+        return axios.post('/cycj/forecast/check', {}, config);
     }
 
     //课程表管理

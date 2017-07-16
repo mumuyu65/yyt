@@ -55,6 +55,8 @@ import DayComment from '@/pages/daycomment'
 
 //果蔬预测
 
+import productsComment from '@/pages/productsComment'
+
 
 //课程安排
 
@@ -123,6 +125,9 @@ export default new Router({
         }, {
             path: '/dayComment',
             component: DayComment
+        }, {
+            path: '/productsComment',
+            component: productsComment
         }, {
             path: '/classArrange',
             component: ClassArrange
