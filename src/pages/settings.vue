@@ -1,0 +1,127 @@
+<template>
+    <div id="page-wrapper" >
+        <div id="page-inner">
+            <div style="width:700px;margin:0 auto; margin-top:50px;">
+                <div class="row">
+                    <div class="col-sm-3 col-md-3 col-xs-6">
+                         <span class="required">*</span>用户昵称：
+                    </div>
+                    <div class="col-sm-9 col-md-9 col-xs-6">
+                       <input type='text' value="" style="height:30px;" v-model="user.nick"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3 col-md-3 col-xs-6">
+                       <span class="required">*</span>头像:
+                    </div>
+                    <div class="col-sm-9 col-md-9 col-xs-6">
+                      <ul class="list-inline">
+                          <li><img v-bind:src="user.img" id="file" src="../../static/images/course_t.png" class="profile img-circle"/></li>
+                          <li style="position:relative;">
+                            <input type="file" @change="onFileChange" value="上传图片" style="position:absolute; opacity:0;"/>
+                            <button style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
+                                上传图片
+                            </button>
+                          </li>
+                      </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3 col-md-3 col-xs-6">
+                        简介:
+                    </div>
+                    <div class="col-sm-9 col-md-9 col-xs-6">
+                        <textarea cols='40' rows='10' class="form-control" v-model="user.intro"></textarea>
+                        <div style="margin-top:20px;" class="text-center">
+                                <button class="btn btn-danger" @click="changeUser()">提交</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         </div>
+    </div>
+</template>
+
+<script>
+import API from '@/api/API'
+//实例化api
+const api = new API();
+
+export default {
+  name: 'Settings',
+  data (){
+    return {
+        user:{},
+        Sid:'',
+    }
+  },
+   mounted (){
+    this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
+    this.userInformation(this.Sid);
+  },
+  methods:{
+    //上传头像
+    onFileChange(e) {
+          var files = e.target.files || e.dataTransfer.files;
+          if (!files.length)
+           return;
+           this.createImage(files[0]);
+     },
+
+     createImage(file) {
+          var image = new Image();
+          var reader = new FileReader();
+          var that = this;
+
+          reader.onload = (e) => {
+            that.user.img = e.target.result;
+            //预览
+            $("#file").attr("src",that.user.img);
+          };
+          reader.readAsDataURL(file);
+    },
+    //提交
+    changeUser(){
+        let params={
+            sid:this.Sid,
+            nick:this.user.nick,
+            intro:this.user.intro,
+            file:this.user.img
+        };
+
+        let that = this;
+
+        api.personSettings(params).then(function(res){
+            alert(res.data.Msg);
+        }).catch(function(err){
+            console.log(err);
+        });
+    },
+    //下载用户信息
+    userInformation(Sid){
+       let params={
+        sid:Sid,
+       };
+
+       let that = this;
+    }
+  },
+}
+</script>
+
+<style scoped>
+    #page-inner .row{
+        padding:20px;
+        background-color:#F3F3F3;
+        margin-bottom:10px;
+    }
+
+    .required{
+        color:#e60000;
+        margin-right:5px;
+    }
+
+    .profile{
+      height:64px;
+    }
+</style>

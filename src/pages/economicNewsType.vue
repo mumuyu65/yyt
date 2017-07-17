@@ -1,40 +1,41 @@
 <template>
-    <div id="page-wrapper" >
-        <div id="page-inner" class="economics">
-          <div>
+     <div id="page-wrapper" >
+        <div id="page-inner">
             <div class="row">
-                <div class="col-md-12">
-                    <button class="pull-right" @click="addNewEconomicsType()"
-                    style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
-                    <i class="fa fa-plus fa-1x"></i>新增资讯</button>
+                    <div class="col-md-12">
+                        <ul class="list-inline">
+                            <li><h3>新闻资讯类型管理</h3></li>
+                            <li class="pull-right" style="margin-top:15px;">
+                                <input type="text" value="" v-model="newData" style="height:35px; vertical-align:top;"/>
+                                <button @click="addType()"
+                                    style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
+                                    <i class="fa fa-plus fa-1x"></i>新增资讯类型
+                                </button>
+                            </li>
+                        </ul>
+                    <hr/>
+                    <table id="productsTable" class="text-center" border="1" width="100%">
+                        <thead>
+                            <th  class="text-center">编号</th>
+                            <th  class="text-center">类型名称</th>
+                            <th  class="text-center">操作</th>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(item, index) in currentItems">
+                                <td>{{index +1}}</td>
+                                <td>
+                                    <span v-show="!item.flag">{{item.text}} </span>
+                                    <span v-show="item.flag"><input type="text" :name="index" v-model="item.name" style="height:35px;"></span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger" @click="removeType(item.type,index)">删除</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <div id="toolbar">
-                <button id="remove" class="btn btn-danger">
-                    批量删除
-                </button>
-            </div>
-            <table id="newsTypeTable"></table>
-          </div>
-        </div>
-        <div v-if="newsEconomicsType">
-            <div class="row">
-                <div class="col-sm-3 col-md-3 col-xs-6">
-                    资讯类型：
-                </div>
-                <div class="col-sm-9 col-md-9 col-xs-6">
-                    <input type="text" value='' placeholder="请输入资讯类型" class="form-control" v-model="news.type"/>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-3 col-md-3 col-xs-6">
-                    类型简介：
-                </div>
-                <div class="col-sm-9 col-md-9 col-xs-6">
-                    <input type="text" value='' placeholder="请输入资讯类型简介" v-model="news.text" class="form-control"/>
-                </div>
-            </div>
-        </div>
+         </div>
     </div>
 </template>
 
@@ -50,11 +51,9 @@ export default {
   data(){
     return{
       Sid:'',
-      newsEconomicsType:false,
-      news:{
-        type:'',
-        text:'',
-      },
+      currentItems:[],
+      newData:'',
+      Num:0,
     }
   },
   mounted(){
@@ -65,31 +64,67 @@ export default {
     initData(){
       let that = this;
       api.newsType().then(function(res){
-        console.log(res);
+        if(res.data.Code ==3){
+            that.currentItems = res.data.Data;
+            that.Num = parseInt(that.currentItems[that.currentItems.length-1].type) +1;
+        }else{
+             alert(res.data.Msg);
+            }
       }).catch(function(err){
         console.log(err);
       });
     },
 
-    addNewEconomicsType(){
-      this.newsEconomicsType = !this.newsEconomicsType;
-      console.log(this.newsEconomicsType);
+    removeType(Type,idx){
+        let params={
+          sid:this.Sid,
+          type:Type,
+        };
+
+        let that = this;
+
+        api.delnewsType(params).then(function(res){
+            if(res.data.Code ==3){
+              that.currentItems.splice(idx, 1);
+            }
+            alert(res.data.Msg);
+        }).catch(function(err){
+            console.log(err);
+        });
     },
 
+    addType(){
+      let params={
+        sid:this.Sid,
+        type:this.Num,
+        text:this.newData
+      };
+      let that = this;
+      api.addnewsType(params).then(function(res){
+        if(res.data.Code ==3){
+            that.newData ='';
+            that.initData();
+          }
+        alert(res.data.Msg);
+      }).catch(function(err){
+        console.log(err);
+      });
+    },
 
   },
 }
 </script>
-
 <style scoped>
-   .economics>.row{
-           margin:0 auto;
-        margin-bottom:20px;
+   #productsTable th,#productsTable td{
+        padding:5px 0;
+        border:1px solid #ececec;
    }
 
-   .economics>.row .col-md-5{
-        background-color:#f3f3f3;
-        margin:20px;
-        padding:20px;
+    #productsTable tr:hover{
+        background-color:#f7f7f7;
+    }
+
+   #productsTable tr:nth-child(odd){
+        background-color:#f7f7f7;
    }
 </style>

@@ -25,6 +25,18 @@ class API {
         return axios.post('/cycj/logout', {}, config);
     }
 
+    //个人中心
+    personSettings(param) {
+        config.data = param;
+        return axios.post('/cycj/userinfo/update', {}, config);
+    }
+
+    //在线用户信息查询
+    userInfo(param) {
+        config.data = param;
+        return axios.post('', {}, config);
+    }
+
     //用户管理
     addUser(param) {
         config.data = param;
@@ -103,10 +115,11 @@ class API {
     }
 
     delNews(param) {
-            config.data = param;
-            return axios.post('/cycj/news/del', {}, config);
-        }
-        //品类管理---针对产品
+        config.data = param;
+        return axios.post('/cycj/news/del', {}, config);
+    }
+
+    //品类管理---针对产品
     addCategory(param) {
         config.data = param;
         return axios.post('/cycj/category/add', {}, config);
@@ -173,5 +186,117 @@ class API {
         config.data = param;
         return axios.post('/cycj/level/del', {}, config);
     }
+
+    //微信二维码管理
+    qrcodeQuery(param) {
+        config.data = param;
+        return axios.post('/cycj/wxcode/query', {}, config);
+    }
+
+    qrcodeUpdate(param) {
+        config.data = param;
+        return axios.post('/cycj/wxcode/update', {}, config);
+    }
+
+    //产品介绍管理
+    productIntroQuery(param) {
+        config.data = param;
+        return axios.post('/cycj/product/query', {}, config);
+    }
+
+    productIntroUpdate(param) {
+        config.data = param;
+        return axios.post('/cycj/product/update', {}, config);
+    }
+
+    //战队介绍
+    ClanQuery(param) {
+        config.data = param;
+        return axios.post('/cycj/clan/query', {}, config);
+    }
+
+    ClanUpdate(param) {
+        config.data = param;
+        return axios.post('/cycj/clan/update', {}, config);
+    }
+
+    //早晚评
+    dayCommentQuery(param) {
+        config.data = param;
+        return axios.post('/cycj/comment/query', {}, config);
+    }
+
+    dayCommentAdd(param) {
+        config.data = param;
+        return axios.post('/cycj/comment/add', {}, config);
+    }
+
+    dayCommentModify(param) {
+        config.data = param;
+        return axios.post('/cycj/comment/modify', {}, config);
+    }
+
+    dayCommentDel(param) {
+        config.data = param;
+        return axios.post('/cycj/comment/del', {}, config);
+    }
+
+    dayCommentCheck(param) {
+        config.data = param;
+        return axios.post('/cycj/comment/check', {}, config);
+    }
+
+    dayCommentAll(param) {
+        config.data = param;
+        return axios.post('/cycj/comment/cliquery', {}, config);
+    }
+
+    //品类预测管理
+    productsForecastQuery(param) {
+        config.data = param;
+        return axios.post('/cycj/forecast/query', {}, config);
+    }
+
+    productsForecastAdd(param) {
+        config.data = param;
+        return axios.post('/cycj/forecast/add', {}, config);
+    }
+
+    productsForecastModify(param) {
+        config.data = param;
+        return axios.post('/cycj/forecast/modify', {}, config);
+    }
+
+    productsForecastDel(param) {
+        config.data = param;
+        return axios.post('/cycj/forecast/del', {}, config);
+    }
+
+    productsForecastCheck(param) {
+        config.data = param;
+        return axios.post('/cycj/forecast/check', {}, config);
+    }
+
+    //课程表管理
+    scheduleQuery(param) {
+        config.data = param;
+        return axios.post('/cycj/schedule/query', {}, config);
+    }
+
+    scheduleAdd(param) {
+        config.data = param;
+        return axios.post('/cycj/schedule/add', {}, config);
+    }
+
+    scheduleModify(param) {
+        config.data = param;
+        return axios.post('/cycj/schedule/modify', {}, config);
+    }
+
+    scheduleDel(param) {
+        config.data = param;
+        return axios.post('/cycj/schedule/del', {}, config);
+    }
+
 }
 export default API;
