@@ -292,5 +292,26 @@ class API {
         return axios.post('/cycj/schedule/del', {}, config);
     }
 
+    //客服管理
+    qqQuery(param) {
+        config.data = param;
+        return axios.post('/cycj/customer/query', {}, config);
+    }
+
+    qqAdd(param) {
+        config.data = param;
+        return axios.post('/cycj/customer/add', {}, config);
+    }
+
+    qqModify(param) {
+        config.data = param;
+        return axios.post('/cycj/customer/modify', {}, config);
+    }
+
+    qqDel(param) {
+        config.data = param;
+        return axios.post('/cycj/customer/del', {}, config);
+    }
+
 }
 export default API;

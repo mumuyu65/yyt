@@ -43,6 +43,8 @@ const zhibo = resolve => require(['@/pages/zhibo'], resolve)
 
 const operational = resolve => require(['@/pages/operational'], resolve)
 
+import qqManage from '@/pages/qqManage'
+
 //用户等级管理
 import userLevel from '@/pages/userlevel'
 
@@ -152,6 +154,9 @@ export default new Router({
         }, {
             path: '/classArrange',
             component: ClassArrange
+        }, {
+            path: '/qqManage',
+            component: qqManage
         }]
     }]
 })
