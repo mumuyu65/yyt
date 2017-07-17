@@ -18,7 +18,7 @@
                   <router-link to="/settings" exact><i class="fa fa-user fa-2x"></i>个人中心</router-link>
               </li>
               <li>
-                  <router-link to="/zhibomanage" exact><i class="fa fa-file-video-o fa-2x"></i>直播管理</router-link>
+                  <router-link to="/live" exact><i class="fa fa-file-video-o fa-2x"></i>直播管理</router-link>
               </li>
               <li>
                   <a @click="toggleStudy()" style="cursor:pointer;"><i class="fa fa-book fa-2x"></i>学习课件<span class="fa arrow"></span></a>
