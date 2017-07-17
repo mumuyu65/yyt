@@ -100,9 +100,9 @@
                          <span class="required">*</span>产品类别：
                     </div>
                     <div class="col-sm-9 col-md-9 col-xs-6">
-                        <select v-model="ModifySelected">
-                            <option v-for="option in ModifyOptions" v-bind:value="option.id">
-                                    {{ option.name }}
+                        <select v-model="modifySelected">
+                            <option v-for="modifyOption in ModifyOptions" v-bind:value="modifyOption.cgid">
+                                    {{ modifyOption.name }}
                             </option>
                         </select>
                     </div>
@@ -172,11 +172,11 @@ export default {
         ModifyOptions:[],
         //修改
         modifyComments:false,
-        ModifySelected:'',
+        modifySelected:'',
         modifyTitle:'',
         modifyImg:'',
         modifyIntro:'',
-        modifyCgid:'',
+        modifyId:'',
     }
   },
   filters: {
@@ -227,6 +227,8 @@ export default {
                   }
                 }
                 that.productComments = templateComments;
+
+                console.log(that.productComments);
             }
             else{
                 alert(res.data.Msg);
@@ -318,23 +320,24 @@ export default {
     modifyComment(item){
       console.log(item);
       this.modifyComments =!this.modifyComments;
-      this.ModifySelected = item.id;
+      this.modifySelected = item.cgid;
       this.modifyTitle = item.title;
       this.modifyImg = item.cover_img;
       this.modifyIntro = item.intro;
-      this.modifyCgid = item.cgid;
+      this.modifyId = item.id;
     },
 
     modifyProductsComment(){
       let input = this.$refs.uploadmodify;
       let data = new FormData();
       data.append('sid',this.Sid);
-      data.append('id',this.ModifySelected);
+      data.append('cgid',this.modifySelected);
       data.append('title',this.modifyTitle);
       data.append('img', input.files[0]);
-      data.append('cgid',this.modifyCgid);
+      data.append('id',this.modifyId);
       data.append('intro',this.modifyIntro);
       let that = this;
+      console.log(that.modifySelected);
       axios.post(env.baseUrl+'/cycj/forecast/modify', data, {
           headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -344,7 +347,7 @@ export default {
         alert(res.data.Msg);
         if(res.data.Code ==3){
           that.modifyComments =!that.modifyComments;
-          window.localtion.reload();
+          window.location.reload();
         }
       })
       .catch(function (error) {
@@ -363,7 +366,6 @@ export default {
       api.productsForecastDel(params).then(function(res){
           alert(res.data.Msg);
           if(res.data.Code ==3){
-            that.modifyComments =!that.modifyComments;
             that.productComments.splice(idx,1);
           }
       }).catch(function(err){
