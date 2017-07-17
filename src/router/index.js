@@ -37,6 +37,12 @@ import ZhiboManage from '@/pages/zhibomanage'
 
 const AddLive = resolve => require(['@/pages/addlive'], resolve)
 
+const ModifyLive = resolve => require(['@/pages/modifylive'], resolve)
+
+const zhibo = resolve => require(['@/pages/zhibo'], resolve)
+
+const operational = resolve => require(['@/pages/operational'], resolve)
+
 //用户等级管理
 import userLevel from '@/pages/userlevel'
 
@@ -102,14 +108,23 @@ export default new Router({
             path: '/modifyNews',
             component: ModifyNew
         }, {
-            path: '/zhibomanage',
+            path: '/live',
             component: ZhiboManage
         }, {
             path: '/handlesuggestion',
             component: HandleSuggestion
         }, {
-            path: '/addlive',
+            path: '/live/add',
             component: AddLive
+        }, {
+            path: '/live/modify',
+            component: ModifyLive
+        }, {
+            path: '/live/room',
+            component: zhibo
+        }, {
+            path: '/live/operational',
+            component: operational
         }, {
             path: '/productsManage',
             component: productsManage
