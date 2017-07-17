@@ -71,7 +71,7 @@
                       <ul class="list-inline">
                           <li><img id="file" v-bind:src="Img" class="profile"/></li>
                           <li style="position:relative;">
-                            <input type="file" @change="onFileChange" value="上传图片" style="position:absolute; opacity:0;"/>
+                            <input type="file" @change="onFileChange" ref="upload"  value="上传图片" style="position:absolute; opacity:0;"/>
                             <button style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
                                 上传图片
                             </button>
@@ -121,7 +121,7 @@
                       <ul class="list-inline">
                           <li><img id="modifyFile" v-bind:src="modifyImg" class="profile"/></li>
                           <li style="position:relative;">
-                            <input type="file" @change="modifyFileChange" value="上传图片" style="position:absolute; opacity:0;"/>
+                            <input type="file" @change="modifyFileChange" ref="uploadmodify" value="上传图片" style="position:absolute; opacity:0;"/>
                             <button style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
                                 上传图片
                             </button>
@@ -151,8 +151,12 @@ import API from '@/api/API'
 //实例化api
 const api = new API();
 
+import axios from 'axios'
+
+import env from '@/config/env'
+
 export default {
-  name: 'Clan',
+  name: 'dayComments',
   data (){
     return {
         Sid:'',
@@ -259,25 +263,31 @@ export default {
 
     //提交
     addDayComment(){
-      let params={
-        sid:this.Sid,
-        title:this.Title,
-        img:this.Img,
-        flag:this.selected,
-        intro:this.Intro
-      };
+      let input = this.$refs.upload;
+      let data = new FormData();
+      data.append('sid',this.Sid);
+      data.append('title', this.Title);
+      data.append('img', input.files[0]);
+      data.append('flag',this.selected);
+      data.append('intro',this.Intro);
 
       let that = this;
 
-      api.dayCommentAdd(params).then(function(res){
+      axios.post(env.baseUrl+'/cycj/comment/add', data, {
+            headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        })
+        .then(function (res) {
           alert(res.data.Msg);
           if(res.data.Code ==3){
             that.AddComments = !that.AddComments;
             window.location.reload();
           }
-      }).catch(function(err){
-          console.log(err);
-      });
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     },
 
     Cancel(){
@@ -299,25 +309,32 @@ export default {
     },
 
     modifyDayComment(){
-      let params={
-        sid:this.Sid,
-        id:this.modifyId,
-        title:this.modifyTitle,
-        img:this.modifyImg,
-        flag:this.ModifySelected,
-        intro:this.modifyIntro
-      };
+      let input = this.$refs.uploadmodify;
+      let data = new FormData();
+      data.append('sid',this.Sid);
+      data.append('id',this.modifyId);
+      data.append('title',this.modifyTitle);
+      data.append('img', input.files[0]);
+      data.append('flag',this.ModifySelected);
+      data.append('intro',this.modifyIntro);
 
       let that = this;
 
-      api.dayCommentModify(params).then(function(res){
+      axios.post(env.baseUrl+'/cycj/comment/modify', data, {
+            headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        })
+        .then(function (res) {
           alert(res.data.Msg);
           if(res.data.Code ==3){
-             that.modifyComments = !that.modifyComments;
+            that.modifyComments = !that.modifyComments;
+            window.location.reload();
           }
-      }).catch(function(err){
-          console.log(err);
-      });
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     },
 
     //删除
