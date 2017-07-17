@@ -26,6 +26,8 @@ import HandleSuggestion from '@/pages/handlesuggestion'
 //直播管理
 import ZhiboManage from '@/pages/zhibomanage'
 
+const AddLive = resolve => require(['@/pages/addlive'], resolve)
+
 Vue.use(Router)
 
 export default new Router({
@@ -62,6 +64,9 @@ export default new Router({
         }, {
             path: '/handlesuggestion',
             component: HandleSuggestion
+        }, {
+            path: '/addlive',
+            component: AddLive
         }]
     }]
 })
