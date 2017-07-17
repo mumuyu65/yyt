@@ -25,12 +25,6 @@ class API {
         return axios.post('/cycj/logout', {}, config);
     }
 
-    //个人中心
-    personSettings(param) {
-        config.data = param;
-        return axios.post('/cycj/userinfo/update', {}, config);
-    }
-
     //在线用户信息查询
     userInfo(param) {
         config.data = param;

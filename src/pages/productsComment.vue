@@ -190,7 +190,6 @@ export default {
         let that = this;
         //产品管理类别
         api.queryCategory().then(function(res){
-            console.log(res.data);
             if(res.data.Code ==3){
                 that.options = res.data.Data;
                 that.CommentsList();
@@ -211,7 +210,9 @@ export default {
         api.productsForecastQuery(params).then(function(res){
             if(res.data.Code ==3){
                 console.log(res.data);
-                that.productComments = res.data.Data;
+                let templateComments = res.data.Data;
+                let len= templateComments.length;
+                console.log(that.options);
             }
             else{
                 alert(res.data.Msg);
@@ -265,12 +266,12 @@ export default {
     },
 
     //修改
-     modifyFileChange(e) {
+    modifyFileChange(e) {
           var files = e.target.files || e.dataTransfer.files;
           if (!files.length)
            return;
            this.modifyImage(files[0]);
-     },
+    },
 
     modifyImage(file) {
           var image = new Image();
@@ -283,6 +284,10 @@ export default {
             $("#modifyFile").attr("src",that.modifyImg);
           };
           reader.readAsDataURL(file);
+    },
+
+    Cancel(){
+        this.AddComments = !this.AddComments;
     },
   },
 }

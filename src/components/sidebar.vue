@@ -31,9 +31,6 @@
                       </li>
                   </ul>
               </li>
-               <li>
-                    <router-link  to="/classes" exact><i class="fa fa-users fa-2x"></i>讲师风采</router-link>
-               </li>
               <li>
                   <router-link to="/handlesuggestion"><i class="fa fa-sitemap fa-2x"></i>操作建议</router-link>
               </li>
@@ -49,7 +46,7 @@
                   </ul>
               </li>
               <li>
-                <router-link to="/economicNewsType" exact><i class="fa fa-hacker-news fa-2x"></i>新闻资讯类型管理</router-link>
+                <router-link to="/economicNewsType" exact><i class="fa fa-users fa-2x"></i>新闻资讯类型管理</router-link>
               </li>
               <li>
                 <router-link to="/economicNews" exact><i class="fa fa-hacker-news fa-2x"></i>新闻资讯</router-link>
