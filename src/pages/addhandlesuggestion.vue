@@ -1,8 +1,8 @@
 <template>
     <div id="page-wrapper">
         <div id="page-inner">
-            <div class="add-handlesuggestion">
-                <div class="form-group col-md-12">
+            <div class="add-handlesuggestion col-md-6 col-md-offset-3">
+                <div class="form-group">
                     <label>投放地</label>
                     <select class="form-control" v-model="handlesuggestion.place">
                         <option value="">-- 请选择 --</option>
@@ -10,16 +10,14 @@
                         <option value="战队">战队</option>
                     </select>
                 </div>
-                <div class="form-group col-md-12">
+                <div class="form-group">
                     <label>商品</label>
                     <select class="form-control" v-model="handlesuggestion.category_id">
                         <option value="">-- 请选择 --</option>
-                        <option value="1">果蔬1</option>
-                        <option value="2">果蔬2</option>
-                        <option value="3">股票</option>
+                        <option v-for="item in category" :value="item.id">{{item.name}}</option>
                     </select>
                 </div>
-                <div class="form-group col-md-12">
+                <div class="form-group">
                     <label>类型</label>
                     <select class="form-control" v-model="handlesuggestion.order_type">
                         <option value="">-- 请选择 --</option>
@@ -27,23 +25,23 @@
                         <option value="2">卖出</option>
                     </select>
                 </div>
-                <div class="form-group col-md-6">
+                <div class="form-group">
                     <label>开仓时间</label>
                     <input type="date" class="form-control" @blur="isCurrentTime" v-model="handlesuggestion.open_time">
                 </div>
-                <div class="form-group col-md-6">
+                <div class="form-group">
                     <label>仓位</label>
                     <input type="text" class="form-control" v-model="handlesuggestion.entry_price">
                 </div>
-                <div class="form-group col-md-6">
+                <div class="form-group">
                     <label>止盈价</label>
                     <input type="text" class="form-control" v-model="handlesuggestion.win_price">
                 </div>
-                <div class="form-group col-md-6">
+                <div class="form-group">
                     <label>止损价</label>
                     <input type="text" class="form-control" v-model="handlesuggestion.loss_price">
                 </div>
-                <div class="form-group col-md-12">
+                <div class="form-group">
                     <label>结果</label>
                     <select class="form-control" v-model="handlesuggestion.result">
                         <option value="">-- 请选择 --</option>
@@ -51,14 +49,14 @@
                         <option value="输单">输单</option>
                     </select>
                 </div>
-                <div class="form-group col-md-12">
+                <div class="form-group">
                     <label>麦单类型</label>
                     <select class="form-control" v-model="handlesuggestion.wheat_type">
                         <option value="麦下单">麦下单</option>
                     </select>
                 </div>
-                <div class="btn btn-primary col-md-1 col-md-offset-4" @click="addHandleSuggestion">提交</div>
-                <router-link :to="{ path: '/handlesuggestion' }" class="btn btn-default col-md-1 col-md-offset-1">取消</router-link>
+                <div class="btn btn-primary col-md-4" @click="addHandleSuggestion">提交</div>
+                <router-link :to="{ path: '/handlesuggestion' }" class="btn btn-default col-md-4 col-md-offset-4">取消</router-link>
             </div>
         </div>
     </div>
@@ -82,13 +80,29 @@
                     loss_price: '', // 止损价
                     result: '', // 结果
                     wheat_type: '' // 麦单类型
-                }
+                },
+                category: []
             }
         },
         mounted() {
             this.sid = JSON.parse(window.localStorage.getItem('user')).SessionId
+            this.getCategory()
         },
         methods: {
+            getCategory() {
+                let _this = this
+                api.queryCategory().then(function(res) {
+                    if (res.data.Code != 3) {
+                        if (res.data.Code == 6) {
+                            alert('登录状态已过期, 请重新登录!')
+                            _this.$router.push('/')
+                        }
+                        alert(res.data.Msg)
+                    } else {
+                        _this.category = res.data.Data
+                    }
+                })
+            },
             addHandleSuggestion() {
                 let hs = this.handlesuggestion
                 let ot = hs.open_time
@@ -109,10 +123,6 @@
                 let _this = this
                 api.addHandleSuggestion(param).then(function(res) {
                     if (res.data.Code != 3) {
-                        if (res.data.Code == 6) {
-                            alert('登录状态已过期, 请重新登录!')
-                            _this.$router.push('/')
-                        }
                         alert(res.data.Msg)
                     } else {
                         alert('添加成功!')
