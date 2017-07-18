@@ -43,6 +43,7 @@ const zhibo = resolve => require(['@/pages/zhibo'], resolve)
 
 const operational = resolve => require(['@/pages/operational'], resolve)
 
+//高级助理管理
 import qqManage from '@/pages/qqManage'
 
 //用户等级管理
@@ -64,14 +65,15 @@ import Clan from '@/pages/clan'
 import DayComment from '@/pages/daycomment'
 
 //果蔬预测
-
 import productsComment from '@/pages/productsComment'
 
-
 //课程安排
-
 import ClassArrange from '@/pages/classArrange'
 
+//学习课件
+import juniorclasses from '@/pages/juniorclasses'
+
+//import seniorclasses from '@/pages/seniorclasses'
 
 Vue.use(Router)
 
@@ -157,6 +159,9 @@ export default new Router({
         }, {
             path: '/qqManage',
             component: qqManage
+        }, {
+            path: '/juniorclasses',
+            component: juniorclasses
         }]
     }]
 })

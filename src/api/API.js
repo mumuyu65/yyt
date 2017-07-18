@@ -313,5 +313,30 @@ class API {
         return axios.post('/cycj/customer/del', {}, config);
     }
 
+    //学习课件
+    coursesQuery(param) {
+        config.data = param;
+        return axios.post('/cycj/courware/query', {}, config);
+    }
+
+    coursesAdd(param) {
+        config.data = param;
+        return axios.post('/cycj/courware/add', {}, config);
+    }
+
+    coursesModify(param) {
+        config.data = param;
+        return axios.post('/cycj/courware/modify', {}, config);
+    }
+
+    coursesDel(param) {
+        config.data = param;
+        return axios.post('/cycj/courware/del', {}, config);
+    }
+
+    coursesCheck(param) {
+        config.data = param;
+        return axios.post('/cycj/courware/check', {}, config);
+    }
 }
 export default API;
