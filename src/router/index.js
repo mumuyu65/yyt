@@ -80,6 +80,9 @@ import juniorclasses from '@/pages/juniorclasses'
 
 import seniorclasses from '@/pages/seniorclasses'
 
+//下载中心
+import download from '@/pages/download'
+
 Vue.use(Router)
 
 export default new Router({
@@ -176,6 +179,9 @@ export default new Router({
         }, {
             path: '/seniorclasses',
             component: seniorclasses
+        }, {
+            path: '/download',
+            component: download
         }]
     }]
 })

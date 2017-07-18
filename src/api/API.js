@@ -338,5 +338,16 @@ class API {
         config.data = param;
         return axios.post('/cycj/courware/check', {}, config);
     }
+
+    //应用上传
+    appAdd(param) {
+        config.data = param;
+        return axios.post('/cycj/app/add', {}, config);
+    }
+
+    appQuery(param) {
+        config.data = param;
+        return axios.post('/cycj/app/query', {}, config);
+    }
 }
 export default API;
