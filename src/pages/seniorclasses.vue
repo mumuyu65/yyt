@@ -2,7 +2,7 @@
     <div id="page-wrapper" >
         <div id="page-inner">
           <ul class="list-inline">
-              <li><h3>初级课件</h3></li>
+              <li><h3>高级课件</h3></li>
               <li class="pull-right" style="margin-top:15px;">
                   <button @click="addComment()"
                       style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
@@ -164,7 +164,7 @@ import axios from 'axios'
 import env from '@/config/env'
 
 export default {
-  name: 'juniorclasses',
+  name: 'seniorclasses',
   data (){
     return {
         Sid:'',
@@ -198,7 +198,7 @@ export default {
   methods:{
     initData(){
       let params={
-        flag:'1',
+        flag:'2',
         begidx:0,
         counts:30,
       };
@@ -288,7 +288,7 @@ export default {
       data.append('title', this.Title);
       data.append('img', input_img.files[0]);
       data.append('file',input_file.files[0]);
-      data.append('flag','1');
+      data.append('flag','2');
       data.append('intro',this.Intro);
 
       let that = this;
@@ -340,7 +340,7 @@ export default {
       data.append('title',this.modifyTitle);
       data.append('img', input_img.files[0]);
       data.append('file', input_file.files[0]);
-      data.append('flag',1);
+      data.append('flag',2);
       data.append('intro',this.modifyIntro);
 
       let that = this;

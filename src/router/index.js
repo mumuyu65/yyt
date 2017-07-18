@@ -73,7 +73,7 @@ import ClassArrange from '@/pages/classArrange'
 //学习课件
 import juniorclasses from '@/pages/juniorclasses'
 
-//import seniorclasses from '@/pages/seniorclasses'
+import seniorclasses from '@/pages/seniorclasses'
 
 Vue.use(Router)
 
@@ -162,6 +162,9 @@ export default new Router({
         }, {
             path: '/juniorclasses',
             component: juniorclasses
+        }, {
+            path: '/seniorclasses',
+            component: seniorclasses
         }]
     }]
 })
