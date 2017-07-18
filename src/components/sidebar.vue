@@ -12,9 +12,6 @@
                   <router-link to="/userlevel" exact><i class="fa fa-gear fa-2x"></i>用户等级管理</router-link>
               </li>
               <li>
-                  <router-link to="/levelIcon"><i class="fa fa-square-o fa-2x"></i>用户等级图标管理</router-link>
-              </li>
-              <li>
                   <router-link to="/settings" exact><i class="fa fa-user fa-2x"></i>个人中心</router-link>
               </li>
               <li>
@@ -64,7 +61,7 @@
                   <router-link to="/clan" exact><i class="fa fa-cubes fa-2x"></i>战队介绍</router-link>
               </li>
               <li>
-                  <a  href="form.html" exact><i class="fa fa-download fa-2x"></i> 下载中心 </a>
+                  <router-link to="/download" exact><i class="fa fa-download fa-2x"></i> 下载中心 </router-link>
               </li>
               <li>
                   <a href="registeration.html" exact><i class="fa fa-bullhorn fa-2x"></i> 活动专区</a>
