@@ -1,18 +1,18 @@
 <template>
     <div id="page-wrapper" >
         <div id="page-inner">
-            <ul class="list-inline">
-                <li><h3>果蔬预测管理</h3></li>
-                <li class="pull-right" style="margin-top:15px;">
-                    <button @click="addProductComment()"
-                        style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
-                        <i class="fa fa-plus fa-1x"></i>新增产品预测
-                    </button>
-                </li>
-            </ul>
-            <hr/>
             <div v-show="!AddComments">
               <div v-show="!modifyComments">
+                <ul class="list-inline">
+                    <li><h3>果蔬预测管理</h3></li>
+                    <li class="pull-right" style="margin-top:15px;">
+                        <button @click="addProductComment()"
+                            style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
+                            <i class="fa fa-plus fa-1x"></i>新增产品预测
+                        </button>
+                    </li>
+                </ul>
+                <hr/>
                 <table class="text-center" border="1" width="100%" id="productsTable">
                     <thead>
                         <th  class="text-center">编号</th>

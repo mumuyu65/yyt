@@ -175,5 +175,4 @@ export default {
         color:#e60000;
         margin-right:5px;
     }
-
 </style>
