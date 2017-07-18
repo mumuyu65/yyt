@@ -29,6 +29,9 @@
                   </ul>
               </li>
               <li>
+                  <router-link to="/category"><i class="fa fa-sitemap fa-2x"></i>品类管理</router-link>
+              </li>
+              <li>
                   <router-link to="/handlesuggestion"><i class="fa fa-sitemap fa-2x"></i>操作建议</router-link>
               </li>
               <li>

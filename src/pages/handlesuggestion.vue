@@ -1,40 +1,34 @@
 <template>
    <div id="page-wrapper">
-       <div id="page-inner" class="zhibo">
-            <ul class="list-inline" style="padding:20px;">
-                <li>开始时间：
-                    <div class="input-append date" id="datetimepicker_start">
-                      <input class="span2" size="16" type="text" value="" />
-                      <span class="add-on" ><i class="icon-th"></i></span>
-                    </div>
-                </li>
-                <li>结束时间：
-                    <div class="input-append date" id="datetimepicker_end" >
-                      <input class="span2" size="16" type="text" value="">
-                      <span class="add-on"><i class="icon-th"></i></span>
-                    </div>
-                </li>
-                <li>商品类别：
-                    <select>
-                        <option value="">---请选择商品----</option>
-                        <option value="果蔬1">果蔬1</option>
-                        <option value="果蔬2">果蔬2</option>
-                        <option value="果蔬3">果蔬3</option>
-                    </select>
-                </li>
-                <li>分析师：
-                    <select>
-                        <option value="">---请选择分析师----</option>
-                        <option value="果蔬1">果蔬1</option>
-                        <option value="果蔬2">果蔬2</option>
-                        <option value="果蔬3">果蔬3</option>
-                    </select>
-                </li>
-                <li class="pull-right">
-                    搜索：<input type="text" placeholder="search......"/>
-                </li>
-            </ul>
-            <hr/>
+        <div id="page-inner">
+            <div class="handlesuggestion">
+                <div class="tools">
+                    <form class="form-inline">
+                        <div class="form-group col-md-3">
+                            <label>起始时间</label>
+                            <input type="date" class="form-control" v-model="start_time">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label>结束时间</label>
+                            <input type="date" class="form-control" v-model="end_time">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <select class="form-control" style="width: 100%;" v-model="prize">
+                                <option value="">所有商品</option>
+                                <option v-for="p in all_prizes" :value="p.id">{{p.title}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <select class="form-control" style="width: 100%;" v-model="teacher">
+                                <option value="">所有分析师</option>
+                                <option v-for="t in all_teachers" :value="t.nick">{{t.nick}}</option>
+                            </select>
+                        </div>
+                        <div class="btn btn-primary" @click="getHandleSuggestion">搜索</div>
+                        <router-link class="btn btn-info" :to="{ path: '/handlesuggestion/add' }">新增</router-link>
+                    </form>
+                </div>
+            </div>
         </div>
    </div>
 </template>
@@ -49,55 +43,76 @@ import '../../static/bootstrap-datetimepicker/bootstrap-datetimepicker.js';
 import '../../static/bootstrap-datetimepicker/bootstrap-datetimepicker.zh-CN.js';
 
 export default {
-  name: 'ZhiboManage',
-  mounted(){
-    this.initData();
-  },
-  data (){
-    return {
-    }
-  },
-  methods:{
-    initData (){
-        //初始化
-        $('#datetimepicker_start').datetimepicker({
-          language: 'zh-CN',
-          format: 'yyyy-mm-dd hh:ii:ss',
-          todayBtn: 1,
-          autoclose: 1,
-          minView:0,
-        });
-
-        //初始化
-        $('#datetimepicker_end').datetimepicker({
-          language: 'zh-CN',
-          format: 'yyyy-mm-dd hh:ii:ss',
-          todayBtn: 1,
-          autoclose: 1,
-          minView:0,
-        });
+    name: 'handlesuggestion',
+    mounted(){
+        this.user = JSON.parse(window.localStorage.getItem('user'))
+        this.initData();
     },
-  }
+    data (){
+        return {
+            user: '',
+            start_time: '',
+            end_time: '',
+            prize: '',
+            teacher: '',
+            all_prizes: [
+                { title: '果蔬1', id: '1' },
+                { title: '果蔬2', id: '2' },
+                { title: '果蔬3', id: '3' }
+            ],
+            all_teachers: [
+                { nick: '王老师' },
+                { nick: '李老师' },
+                { nick: '张老师' }
+            ]
+        }
+    },
+    methods:{
+        initData() {
+
+        },
+        getHandleSuggestion() {
+            let param = {
+                bdt: this.dateToUnix(this.start_time),
+                edt: this.dateToUnix(this.end_time),
+                category_id: this.prize,
+                analysts: this.teacher,
+                begidx: 0,
+                countes: 100
+            }
+            if (param.bdt < param.edt) {
+                api.queryHandleSuggestion(param).then(function(res) {
+                    console.log(res)
+                    if (res.data.Code == 3) {
+                        if (res.data.Data == null) {
+                            alert('暂无数据')
+                        }
+                    }
+                }).catch(function(err) {
+                    console.log(err)
+                })
+            } else {
+                alert('结束时间不得小于开始时间')
+            }
+        },
+        dateToUnix(time) {
+            let oTime = time.split('-')
+            let oDate = new Date(Date.UTC(
+                parseInt(oTime[0]),
+                parseInt(oTime[1]),
+                parseInt(oTime[2])
+            ))
+            return (oDate.getTime() / 1000)
+        }
+    }
 }
 </script>
 
-<style scoped>
-    .zhibo>ul input,.zhibo>ul select{
-        height:30px;
-        padding-left:5px;
-        outline:none;
-        border:1px solid #ececec;
-        position:relative;
-        display:inline-block;
-        width:200px;
-    }
-
-    .zhibo>ul .input-append{
-      display:inline-block;
-      vertical-align:middle;
-    }
-
-    .zhibo>ul .add-on{
-      height:30px;
+<style scoped lang="scss">
+    .handlesuggestion {
+        padding: 3rem;
+        .tools {
+            border-bottom: 1px solid #c0c0c0;
+        }
     }
 </style>
