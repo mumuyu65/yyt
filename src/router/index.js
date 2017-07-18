@@ -26,13 +26,15 @@ import ModifyNew from '@/pages/modifyNew'
 //新闻资讯类型管理
 import EconomicNewsType from '@/pages/economicNewsType'
 
-//操作建议
+// 操作建议
 import HandleSuggestion from '@/pages/handlesuggestion'
+
+const AddHandleSuggestion = resolve => require(['@/pages/addhandlesuggestion'], resolve)
 
 //产品管理
 import productsManage from '@/pages/productsManage'
 
-//直播管理
+// 直播管理
 import ZhiboManage from '@/pages/zhibomanage'
 
 const AddLive = resolve => require(['@/pages/addlive'], resolve)
@@ -113,6 +115,9 @@ export default new Router({
         }, {
             path: '/handlesuggestion',
             component: HandleSuggestion
+        }, {
+            path: '/handlesuggestion/add',
+            component: AddHandleSuggestion
         }, {
             path: '/live/add',
             component: AddLive
