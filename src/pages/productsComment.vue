@@ -371,6 +371,33 @@ export default {
       }).catch(function(err){
         console.log(err);
       });
+    },
+
+    //审核
+    Check(item){
+      let temp_status;
+      if(item.status == 0){
+          temp_status = 1;
+      }else{
+          temp_status = 0;
+      }
+
+      let params={
+        sid:this.Sid,
+        id:item.id,
+        status:temp_status
+      };
+
+
+      api.productsForecastCheck(params).then(function(res){
+          alert(res.data.Msg);
+          if(res.data.Code ==3){
+              item.status = temp_status;
+              window.location.reload();
+          }
+      }).catch(function(err){
+          console.log(err);
+      });
     }
   },
 }

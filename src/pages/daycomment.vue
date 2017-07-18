@@ -206,7 +206,7 @@ export default {
 
       let that = this;
 
-      api.dayCommentAll(params).then(function(res){
+      api.dayCommentQuery(params).then(function(res){
         if(res.data.Code ==3){
             that.dayComments = res.data.Data;
         }else{
@@ -375,6 +375,7 @@ export default {
           alert(res.data.Msg);
           if(res.data.Code ==3){
               item.status = temp_status;
+              window.location.reload();
           }
       }).catch(function(err){
           console.log(err);

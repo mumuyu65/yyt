@@ -69,6 +69,9 @@
                   <router-link to="/qrcode" exact><i class="fa  fa-qrcode fa-2x"></i>微信二维码</router-link>
               </li>
               <li>
+                  <router-link to="/productsManage"><i class="fa fa-joomla fa-2x"></i>产品管理</router-link>
+              </li>
+              <li>
                   <router-link to="/productsintro" exact><i class="fa fa-codepen fa-2x"></i>产品介绍</router-link>
               </li>
               <li>
@@ -82,9 +85,6 @@
               </li>
               <li>
                   <router-link to="/qqManage"><i class="fa fa-qq fa-2x"></i>qq号码管理</router-link>
-              </li>
-               <li>
-                  <router-link to="/productsManage"><i class="fa fa-joomla fa-2x"></i>产品管理</router-link>
               </li>
                <li>
                   <a  href="blank.html"><i class="fa fa-file-image-o fa-2x"></i>聊天室图片管理</a>
