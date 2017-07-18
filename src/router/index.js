@@ -26,9 +26,6 @@ import ModifyNew from '@/pages/modifyNew'
 //新闻资讯类型管理
 import EconomicNewsType from '@/pages/economicNewsType'
 
-// 品类管理
-const Category = resolve => require(['@/pages/category'], resolve)
-
 // 操作建议
 import HandleSuggestion from '@/pages/handlesuggestion'
 
@@ -83,6 +80,13 @@ import seniorclasses from '@/pages/seniorclasses'
 //下载中心
 import download from '@/pages/download'
 
+//小游戏
+import prizemall from '@/pages/prizemall'
+
+import exchangerecord from '@/pages/exchangerecord'
+
+import beansrecord from '@/pages/beansrecord'
+
 Vue.use(Router)
 
 export default new Router({
@@ -122,9 +126,6 @@ export default new Router({
         }, {
             path: '/live',
             component: ZhiboManage
-        }, {
-            path: '/category',
-            component: Category
         }, {
             path: '/handlesuggestion',
             component: HandleSuggestion
@@ -182,6 +183,15 @@ export default new Router({
         }, {
             path: '/download',
             component: download
+        }, {
+            path: '/prizemall',
+            component: prizemall
+        }, {
+            path: '/exchangerecord',
+            component: exchangerecord
+        }, {
+            path: '/beansrecord',
+            component: beansrecord
         }]
     }]
 })

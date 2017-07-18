@@ -29,10 +29,21 @@
                   </ul>
               </li>
               <li>
-                  <router-link to="/category"><i class="fa fa-sitemap fa-2x"></i>品类管理</router-link>
+                  <router-link to="/handlesuggestion"><i class="fa fa-sitemap fa-2x"></i>操作建议</router-link>
               </li>
               <li>
-                  <router-link to="/handlesuggestion"><i class="fa fa-sitemap fa-2x"></i>操作建议</router-link>
+                  <a @click="toggleGame()" style="cursor:pointer;"><i class="fa fa-book fa-2x"></i>小游戏<span class="fa arrow"></span></a>
+                  <ul class="nav nav-second-level collapse" v-bind:class="{'in':gameManagement}">
+                      <li>
+                          <router-link  to="/prizemall" exact>奖品商城</router-link>
+                      </li>
+                      <li>
+                          <router-link  to="/exchangerecord" exact>兑换记录</router-link>
+                      </li>
+                      <li>
+                          <router-link  to="/beansrecord" exact>赢豆记录</router-link>
+                      </li>
+                  </ul>
               </li>
               <li>
                   <a @click="toggleSuggestion()" style="cursor:pointer;"><i class="fa fa-comments fa-2x"></i>老师点评<span class="fa arrow"></span></a>
@@ -70,9 +81,6 @@
                   <a href="registeration.html" exact><i class="fa fa-bullhorn fa-2x"></i> 活动专区</a>
               </li>
               <li>
-                  <a href="registeration.html" exact><i class="fa fa-coffee fa-2x"></i> 兑奖记录</a>
-              </li>
-                <li>
                   <router-link to="/qqManage"><i class="fa fa-qq fa-2x"></i>qq号码管理</router-link>
               </li>
                <li>
@@ -93,6 +101,7 @@ export default {
     return {
       studyManagement:false,
       suggestionManagement:false,
+      gameManagement:false,
     }
   },
   methods:{
@@ -102,6 +111,10 @@ export default {
 
     toggleSuggestion(){
       this.suggestionManagement = ! this.suggestionManagement;
+    },
+
+    toggleGame(){
+      this.gameManagement = ! this.gameManagement;
     },
   }
 }
