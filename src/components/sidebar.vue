@@ -24,16 +24,13 @@
                   <a @click="toggleStudy()" style="cursor:pointer;"><i class="fa fa-book fa-2x"></i>学习课件<span class="fa arrow"></span></a>
                   <ul class="nav nav-second-level collapse" v-bind:class="{'in':studyManagement}">
                       <li>
-                          <router-link  to="/juniorClasses" exact>基础课件</router-link>
+                          <router-link  to="/juniorclasses" exact>基础课件</router-link>
                       </li>
                       <li>
-                          <router-link  to="/seniorClasses" exact>高级课件</router-link>
+                          <router-link  to="/seniorclasses" exact>高级课件</router-link>
                       </li>
                   </ul>
               </li>
-               <li>
-                    <router-link  to="/classes" exact><i class="fa fa-users fa-2x"></i>讲师风采</router-link>
-               </li>
               <li>
                   <router-link to="/handlesuggestion"><i class="fa fa-sitemap fa-2x"></i>操作建议</router-link>
               </li>
@@ -49,7 +46,7 @@
                   </ul>
               </li>
               <li>
-                <router-link to="/economicNewsType" exact><i class="fa fa-hacker-news fa-2x"></i>新闻资讯类型管理</router-link>
+                <router-link to="/economicNewsType" exact><i class="fa fa-users fa-2x"></i>新闻资讯类型管理</router-link>
               </li>
               <li>
                 <router-link to="/economicNews" exact><i class="fa fa-hacker-news fa-2x"></i>新闻资讯</router-link>

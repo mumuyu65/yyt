@@ -14,7 +14,7 @@
                          <ul class="list-inline">
                           <li><img v-bind:src="clan.img_url" id="file" class="profile"/></li>
                           <li style="position:relative;">
-                            <input type="file" @change="onFileChange" value="上传图片" style="position:absolute; opacity:0;"/>
+                            <input type="file" @change="onFileChange" ref="upload" value="上传图片" style="position:absolute; opacity:0;"/>
                             <button style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
                                 上传图片
                             </button>
@@ -31,6 +31,10 @@
 import API from '@/api/API'
 //实例化api
 const api = new API();
+
+import axios from 'axios'
+
+import env from '@/config/env'
 
 export default {
   name: 'Clan',
@@ -74,15 +78,21 @@ export default {
             //预览
             $("#file").attr("src",that.clan.img_url);
 
-            let params={
-                sid:that.Sid,
-                img:that.clan.img_url
-            };
+            let input = that.$refs.upload;
+            let data = new FormData();
+            data.append('img', input.files[0]);
+            data.append('sid',that.Sid);
 
-            api.ClanUpdate(params).then(function(res){
+            axios.post(env.baseUrl+'/cycj/clan/update', data, {
+                headers: {
+                      'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            })
+            .then(function (res) {
               alert(res.data.Msg);
-            }).catch(function(err){
-              console.log(err);
+            })
+            .catch(function (error) {
+              console.log(error);
             });
           };
           reader.readAsDataURL(file);

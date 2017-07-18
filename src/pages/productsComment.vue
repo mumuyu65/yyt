@@ -16,8 +16,8 @@
                 <table class="text-center" border="1" width="100%" id="productsTable">
                     <thead>
                         <th  class="text-center">编号</th>
-                        <th  class="text-center">分类</th>
-                        <th  class="text-center">标题</th>
+                        <th  class="text-center">产品类别</th>
+                        <th  class="text-center">产品名称</th>
                         <th  class="text-center">封面图片</th>
                         <th  class="text-center">简介</th>
                         <th  class="text-center">审核</th>
@@ -26,10 +26,10 @@
                     <tbody>
                         <tr v-for="(item,index) in productComments" v-if="item.status">
                           <td>{{index+1}}</td>
-                          <td>{{item.cgid}}</td>
+                          <td>{{item.productName}}</td>
                           <td>{{item.title}}</td>
                           <td>
-                            <img v-bind:src='item.cover_img' />
+                            <img v-bind:src='item.cover_img' style="height:50px;" />
                           </td>
                           <td>{{item.intro}}</td>
                           <td><button class="btn btn-default" @click="Check(item)">{{item.status | filterCheck }}</button></td>
@@ -42,6 +42,7 @@
                 </table>
               </div>
             </div>
+            <!-- 添加 -->
             <div style="width:700px;margin:0 auto; margin-top:50px;" v-show="AddComments">
                 <div class="row">
                     <div class="col-sm-3 col-md-3 col-xs-6">
@@ -71,7 +72,7 @@
                       <ul class="list-inline">
                           <li><img id="file" v-bind:src="Img" class="profile"/></li>
                           <li style="position:relative;">
-                            <input type="file" @change="onFileChange" value="上传图片" style="position:absolute; opacity:0;"/>
+                            <input type="file" @change="onFileChange" ref="uploadadd" value="上传图片" style="position:absolute; opacity:0;"/>
                             <button style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
                                 上传图片
                             </button>
@@ -92,15 +93,16 @@
                     </div>
                 </div>
             </div>
+            <!-- 修改 -->
             <div style="width:700px;margin:0 auto; margin-top:50px;" v-show="modifyComments">
                 <div class="row">
                     <div class="col-sm-3 col-md-3 col-xs-6">
-                         <span class="required">*</span>早晚评：
+                         <span class="required">*</span>产品类别：
                     </div>
                     <div class="col-sm-9 col-md-9 col-xs-6">
-                        <select v-model="ModifySelected">
-                            <option v-for="option in options" v-bind:value="option.value">
-                                    {{ option.text }}
+                        <select v-model="modifySelected">
+                            <option v-for="modifyOption in ModifyOptions" v-bind:value="modifyOption.cgid">
+                                    {{ modifyOption.name }}
                             </option>
                         </select>
                     </div>
@@ -121,7 +123,7 @@
                       <ul class="list-inline">
                           <li><img id="modifyFile" v-bind:src="modifyImg" class="profile"/></li>
                           <li style="position:relative;">
-                            <input type="file" @change="modifyFileChange" value="上传图片" style="position:absolute; opacity:0;"/>
+                            <input type="file" @change="modifyFileChange" ref="uploadmodify" value="上传图片" style="position:absolute; opacity:0;"/>
                             <button style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
                                 上传图片
                             </button>
@@ -136,7 +138,7 @@
                     <div class="col-sm-9 col-md-9 col-xs-6">
                         <textarea cols='40' rows='10' class="form-control" v-model="modifyIntro"></textarea>
                         <div style="margin-top:20px;">
-                                <button class="btn btn-danger" @click="modifyDayComment()">提交</button>
+                                <button class="btn btn-danger" @click="modifyProductsComment()">提交</button>
                                 <button style="margin-left:50px;" class="btn btn-default" @click="modifyCancel()">取消</button>
                         </div>
                     </div>
@@ -151,6 +153,10 @@ import API from '@/api/API'
 //实例化api
 const api = new API();
 
+import axios from 'axios'
+
+import env from '@/config/env'
+
 export default {
   name: 'productsManage',
   data (){
@@ -163,9 +169,10 @@ export default {
         AddComments:false,
         options:[],
         productComments:[],
+        ModifyOptions:[],
         //修改
         modifyComments:false,
-        ModifySelected:'',
+        modifySelected:'',
         modifyTitle:'',
         modifyImg:'',
         modifyIntro:'',
@@ -190,9 +197,9 @@ export default {
         let that = this;
         //产品管理类别
         api.queryCategory().then(function(res){
-            console.log(res.data);
             if(res.data.Code ==3){
                 that.options = res.data.Data;
+                that.ModifyOptions = res.data.Data;
                 that.CommentsList();
             }else{
                 alert(res.data.Msg);
@@ -210,8 +217,18 @@ export default {
         let that = this;
         api.productsForecastQuery(params).then(function(res){
             if(res.data.Code ==3){
-                console.log(res.data);
-                that.productComments = res.data.Data;
+                let templateComments = res.data.Data;
+                let len= templateComments.length;
+                for(var i = 0; i<len; i++){
+                  for(var j=0; j<that.options.length;j++){
+                     if(templateComments[i].cgid == that.options[j].id){
+                        templateComments[i].productName=that.options[j].name;
+                      }
+                  }
+                }
+                that.productComments = templateComments;
+
+                console.log(that.productComments);
             }
             else{
                 alert(res.data.Msg);
@@ -225,22 +242,29 @@ export default {
         this.AddComments = !this.AddComments;
     },
     addComment(){
-        let params={
-            sid:this.Sid,
-            title:this.Title,
-            img:this.Img,
-            cgid:this.selected,
-            intro:this.Intro
-        };
+        let input = this.$refs.uploadadd;
+        let data = new FormData();
+        data.append('sid',this.Sid);
+        data.append('title',this.Title);
+        data.append('img', input.files[0]);
+        data.append('cgid',this.selected);
+        data.append('intro',this.Intro);
 
-        api.productsForecastAdd(params).then(function(res){
-             alert(res.data.Msg);
-              if(res.data.Code ==3){
-                that.AddComments = !that.AddComments;
-                window.location.reload();
-              }
-        }).catch(function(err){
-             console.log(err);
+        let that = this;
+        axios.post(env.baseUrl+'/cycj/forecast/add', data, {
+            headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        })
+        .then(function (res) {
+          alert(res.data.Msg);
+          if(res.data.Code ==3){
+            that.AddComments = !that.AddComments;
+            window.location.reload();
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
         });
     },
 
@@ -265,12 +289,12 @@ export default {
     },
 
     //修改
-     modifyFileChange(e) {
+    modifyFileChange(e) {
           var files = e.target.files || e.dataTransfer.files;
           if (!files.length)
            return;
            this.modifyImage(files[0]);
-     },
+    },
 
     modifyImage(file) {
           var image = new Image();
@@ -284,6 +308,70 @@ export default {
           };
           reader.readAsDataURL(file);
     },
+
+    Cancel(){
+        this.AddComments = !this.AddComments;
+    },
+
+    modifyCancel(){
+      this.modifyComments =!this.modifyComments;
+    },
+
+    modifyComment(item){
+      console.log(item);
+      this.modifyComments =!this.modifyComments;
+      this.modifySelected = item.cgid;
+      this.modifyTitle = item.title;
+      this.modifyImg = item.cover_img;
+      this.modifyIntro = item.intro;
+      this.modifyId = item.id;
+    },
+
+    modifyProductsComment(){
+      let input = this.$refs.uploadmodify;
+      let data = new FormData();
+      data.append('sid',this.Sid);
+      data.append('cgid',this.modifySelected);
+      data.append('title',this.modifyTitle);
+      data.append('img', input.files[0]);
+      data.append('id',this.modifyId);
+      data.append('intro',this.modifyIntro);
+      let that = this;
+      console.log(that.modifySelected);
+      axios.post(env.baseUrl+'/cycj/forecast/modify', data, {
+          headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+          }
+      })
+      .then(function (res) {
+        alert(res.data.Msg);
+        if(res.data.Code ==3){
+          that.modifyComments =!that.modifyComments;
+          window.location.reload();
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    },
+
+    removeComment(item,idx){
+      let params={
+        sid:this.Sid,
+        id:item.cgid
+      };
+
+      let that = this;
+
+      api.productsForecastDel(params).then(function(res){
+          alert(res.data.Msg);
+          if(res.data.Code ==3){
+            that.productComments.splice(idx,1);
+          }
+      }).catch(function(err){
+        console.log(err);
+      });
+    }
   },
 }
 </script>

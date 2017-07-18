@@ -14,7 +14,7 @@
                          <ul class="list-inline">
                           <li><img v-bind:src="qrcodes.img_url" id="file" class="profile"/></li>
                           <li style="position:relative;">
-                            <input type="file" @change="onFileChange" value="上传图片" style="position:absolute; opacity:0;"/>
+                            <input type="file" @change="onFileChange" ref="upload" value="上传图片" style="position:absolute; opacity:0;"/>
                             <button style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
                                 上传图片
                             </button>
@@ -31,6 +31,10 @@
 import API from '@/api/API'
 //实例化api
 const api = new API();
+
+import axios from 'axios'
+
+import env from '@/config/env'
 
 export default {
   name: 'qrcode',
@@ -50,8 +54,6 @@ export default {
       api.qrcodeQuery().then(function(res){
         if(res.data.Code ==3){
              let templateObj= res.data.Data;
-
-
              that.qrcodes= templateObj[0];
         }
       }).catch(function(err){
@@ -67,27 +69,38 @@ export default {
      },
 
      createImage(file) {
-          var image = new Image();
-          var reader = new FileReader();
-          var that = this;
+        var image = new Image();
+        var reader = new FileReader();
+        var that = this;
 
-          reader.onload = (e) => {
-            that.qrcodes.img_url = e.target.result;
-            //预览
-            $("#file").attr("src",that.qrcodes.img_url);
+        reader.onload = (e) => {
+          that.qrcodes.img_url = e.target.result;
+          //预览
+          $("#file").attr("src",that.qrcodes.img_url);
 
-            let params={
-                sid:that.Sid,
-                img:that.qrcodes.img_url
-            };
+          that.changeqrcode();
 
-            api.qrcodeUpdate(params).then(function(res){
-              alert(res.data.Msg);
-            }).catch(function(err){
-              console.log(err);
-            });
-          };
-          reader.readAsDataURL(file);
+        };
+      reader.readAsDataURL(file);
+    },
+
+    changeqrcode(){
+        let input = this.$refs.upload;
+        let data = new FormData();
+        data.append('img', input.files[0]);
+        data.append('sid',this.Sid);
+
+        axios.post(env.baseUrl+'/cycj/wxcode/update', data, {
+            headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        })
+        .then(function (res) {
+          alert(res.data.Msg);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     },
   },
 }

@@ -71,11 +71,12 @@ export default {
             flag:this.selected,
         };
 
+        let that = this;
+
         api.addUser(params).then(function(res){
+            alert(res.data.Msg);
             if(res.data.Code ==3){
-                alert(res.data.Msg);
-            }else{
-                alert(res.data.Msg);
+                that.$router.push('index');
             }
         }).catch(function(err){
             console.log(err);

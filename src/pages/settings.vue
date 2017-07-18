@@ -18,7 +18,7 @@
                       <ul class="list-inline">
                           <li><img v-bind:src="user.img" id="file" src="../../static/images/course_t.png" class="profile img-circle"/></li>
                           <li style="position:relative;">
-                            <input type="file" @change="onFileChange" value="上传图片" style="position:absolute; opacity:0;"/>
+                            <input type="file" @change="onFileChange"  ref="upload" value="上传图片" style="position:absolute; opacity:0;"/>
                             <button style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
                                 上传图片
                             </button>
@@ -47,6 +47,10 @@ import API from '@/api/API'
 //实例化api
 const api = new API();
 
+import axios from 'axios'
+
+import env from '@/config/env'
+
 export default {
   name: 'Settings',
   data (){
@@ -74,7 +78,7 @@ export default {
           var that = this;
 
           reader.onload = (e) => {
-            that.user.img = e.target.result;
+            that.user.img =e.target.result;
             //预览
             $("#file").attr("src",that.user.img);
           };
@@ -82,21 +86,26 @@ export default {
     },
     //提交
     changeUser(){
-        let params={
-            sid:this.Sid,
-            nick:this.user.nick,
-            intro:this.user.intro,
-            file:this.user.img
-        };
-
+        let input = this.$refs.upload;
+        let data = new FormData();
+        data.append('file', input.files[0]);
+        data.append('sid',this.Sid);
+        data.append('nick',this.user.nick);
+        data.append('intro',this.user.intro);
         let that = this;
-
-        api.personSettings(params).then(function(res){
-            alert(res.data.Msg);
-        }).catch(function(err){
-            console.log(err);
+        axios.post(env.baseUrl+'/cycj/userinfo/update', data, {
+            headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        })
+        .then(function (res) {
+          alert(res.data.Msg);
+        })
+        .catch(function (error) {
+          console.log(error);
         });
     },
+
     //下载用户信息
     userInformation(Sid){
        let params={

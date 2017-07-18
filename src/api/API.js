@@ -25,12 +25,6 @@ class API {
         return axios.post('/cycj/logout', {}, config);
     }
 
-    //个人中心
-    personSettings(param) {
-        config.data = param;
-        return axios.post('/cycj/userinfo/update', {}, config);
-    }
-
     //在线用户信息查询
     userInfo(param) {
         config.data = param;
@@ -298,5 +292,51 @@ class API {
         return axios.post('/cycj/schedule/del', {}, config);
     }
 
+    //客服管理
+    qqQuery(param) {
+        config.data = param;
+        return axios.post('/cycj/customer/query', {}, config);
+    }
+
+    qqAdd(param) {
+        config.data = param;
+        return axios.post('/cycj/customer/add', {}, config);
+    }
+
+    qqModify(param) {
+        config.data = param;
+        return axios.post('/cycj/customer/modify', {}, config);
+    }
+
+    qqDel(param) {
+        config.data = param;
+        return axios.post('/cycj/customer/del', {}, config);
+    }
+
+    //学习课件
+    coursesQuery(param) {
+        config.data = param;
+        return axios.post('/cycj/courware/query', {}, config);
+    }
+
+    coursesAdd(param) {
+        config.data = param;
+        return axios.post('/cycj/courware/add', {}, config);
+    }
+
+    coursesModify(param) {
+        config.data = param;
+        return axios.post('/cycj/courware/modify', {}, config);
+    }
+
+    coursesDel(param) {
+        config.data = param;
+        return axios.post('/cycj/courware/del', {}, config);
+    }
+
+    coursesCheck(param) {
+        config.data = param;
+        return axios.post('/cycj/courware/check', {}, config);
+    }
 }
 export default API;

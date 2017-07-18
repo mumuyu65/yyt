@@ -92,6 +92,7 @@ export default {
    mounted (){
     this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
     let urlargs=this.getUrlParams();
+    console.log(urlargs);
     this.user.account = urlargs.account;
     this.Uid = urlargs.id;
     this.user.img =urlargs.img;
@@ -184,15 +185,4 @@ export default {
 }
 </script>
 
-<style scoped>
-    #page-inner .row{
-        padding:20px;
-        background-color:#F3F3F3;
-        margin-bottom:10px;
-    }
 
-    .required{
-        color:#e60000;
-        margin-right:5px;
-    }
-</style>

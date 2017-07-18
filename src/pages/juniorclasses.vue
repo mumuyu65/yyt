@@ -2,11 +2,11 @@
     <div id="page-wrapper" >
         <div id="page-inner">
           <ul class="list-inline">
-              <li><h3>早晚评</h3></li>
+              <li><h3>初级课件</h3></li>
               <li class="pull-right" style="margin-top:15px;">
                   <button @click="addComment()"
                       style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
-                      <i class="fa fa-plus fa-1x"></i>添加评论
+                      <i class="fa fa-plus fa-1x"></i>添加课件
                   </button>
               </li>
           </ul>
@@ -16,45 +16,36 @@
                 <table class="text-center" border="1" width="100%" id="productsTable">
                     <thead>
                         <th  class="text-center">编号</th>
-                        <th  class="text-center">分类</th>
+                        <th  class="text-center">负责人</th>
                         <th  class="text-center">标题</th>
                         <th  class="text-center">封面图片</th>
+                        <th  class="text-center">附件信息</th>
                         <th  class="text-center">简介</th>
                         <th  class="text-center">审核</th>
                         <th  class="text-center">操作</th>
                     </thead>
                     <tbody>
-                        <tr v-for="(item,index) in dayComments" v-if="item.status">
+                        <tr v-for="(item,index) in courses" v-if="item.status">
                           <td>{{index+1}}</td>
-                          <td>{{item.flag | filterValue}}</td>
+                          <td>{{item.owner}}</td>
                           <td>{{item.title}}</td>
+                          <td><img v-bind:src="item.cover_url" style="height:50px;"/></td>
                           <td>
-                            <img v-bind:src='item.cover_img' />
+                            <a v-bind:href="item.annex_url" target="_blank">{{item.annex_url}}</a>
                           </td>
                           <td>{{item.intro}}</td>
                           <td><button class="btn btn-default" @click="Check(item)">{{item.status | filterCheck }}</button></td>
                           <td>
                             <button class="btn btn-primary" @click="modifyComment(item)">修改</button>
-                            <button class="btn btn-danger" @click="removeComment(item,index)">删除</button>
+                            <button class="btn btn-danger" @click="removeClasses(item,index)">删除</button>
                           </td>
                         </tr>
                     </tbody>
                 </table>
               </div>
           </div>
+          <!--添加 -->
           <div style="width:700px;margin:0 auto; margin-top:50px;" v-show="AddComments">
-                <div class="row">
-                    <div class="col-sm-3 col-md-3 col-xs-6">
-                         <span class="required">*</span>早晚评：
-                    </div>
-                    <div class="col-sm-9 col-md-9 col-xs-6">
-                        <select v-model="selected">
-                            <option v-for="option in options" v-bind:value="option.value">
-                                    {{ option.text }}
-                            </option>
-                        </select>
-                    </div>
-                </div>
                 <div class="row">
                     <div class="col-sm-3 col-md-3 col-xs-6">
                         <span class="required">*</span> 标题:
@@ -71,12 +62,26 @@
                       <ul class="list-inline">
                           <li><img id="file" v-bind:src="Img" class="profile"/></li>
                           <li style="position:relative;">
-                            <input type="file" @change="onFileChange" ref="upload"  value="上传图片" style="position:absolute; opacity:0;"/>
+                            <input type="file" @change="onImgChange" ref="uploadImg"  value="上传图片" style="position:absolute; opacity:0;"/>
                             <button style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
                                 上传图片
                             </button>
                           </li>
                       </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3 col-md-3 col-xs-6">
+                         <span class="required">*</span>上传附件:
+                    </div>
+                    <div class="col-sm-9 col-md-9 col-xs-6">
+                        <div style="position:relative;">
+                            <input type="file" @change="onFileChange" ref="uploadFile"  value="上传图片" style="position:absolute; opacity:0;"/>
+                            <button style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
+                                上传附件
+                            </button>
+                            <span>{{file}}</span>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
@@ -92,19 +97,8 @@
                     </div>
                 </div>
           </div>
+          <!--修改 -->
           <div style="width:700px;margin:0 auto; margin-top:50px;" v-show="modifyComments">
-                <div class="row">
-                    <div class="col-sm-3 col-md-3 col-xs-6">
-                         <span class="required">*</span>早晚评：
-                    </div>
-                    <div class="col-sm-9 col-md-9 col-xs-6">
-                        <select v-model="ModifySelected">
-                            <option v-for="option in options" v-bind:value="option.value">
-                                    {{ option.text }}
-                            </option>
-                        </select>
-                    </div>
-                </div>
                 <div class="row">
                     <div class="col-sm-3 col-md-3 col-xs-6">
                         <span class="required">*</span> 标题:
@@ -119,9 +113,9 @@
                     </div>
                     <div class="col-sm-9 col-md-9 col-xs-6">
                       <ul class="list-inline">
-                          <li><img id="modifyFile" v-bind:src="modifyImg" class="profile"/></li>
+                          <li><img v-bind:src="modifyImg" class="profile"/></li>
                           <li style="position:relative;">
-                            <input type="file" @change="modifyFileChange" ref="uploadmodify" value="上传图片" style="position:absolute; opacity:0;"/>
+                            <input type="file" @change="modifyImgChange" ref="uploadmodifyImg" value="上传图片" style="position:absolute; opacity:0;"/>
                             <button style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
                                 上传图片
                             </button>
@@ -131,12 +125,26 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-3 col-md-3 col-xs-6">
+                         <span class="required">*</span>上传附件：
+                    </div>
+                    <div class="col-sm-9 col-md-9 col-xs-6">
+                        <div style="position:relative;">
+                            <span>{{JuniormodifyFile}}</span>
+                            <input type="file" @change="modifyFileChange" ref="uploadmodifyFile" value="上传图片" style="position:absolute; opacity:0;"/>
+                            <button style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
+                                上传附件
+                            </button>
+                          </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3 col-md-3 col-xs-6">
                        <span class="required">*</span>简介 :
                     </div>
                     <div class="col-sm-9 col-md-9 col-xs-6">
                         <textarea cols='40' rows='10' class="form-control" v-model="modifyIntro"></textarea>
                         <div style="margin-top:20px;">
-                                <button class="btn btn-danger" @click="modifyDayComment()">提交</button>
+                                <button class="btn btn-danger" @click="modifyJuniorClasses()">提交</button>
                                 <button style="margin-left:50px;" class="btn btn-default" @click="modifyCancel()">取消</button>
                         </div>
                     </div>
@@ -156,21 +164,19 @@ import axios from 'axios'
 import env from '@/config/env'
 
 export default {
-  name: 'dayComments',
+  name: 'juniorclasses',
   data (){
     return {
         Sid:'',
-        selected:1,
+        file:'',
         Intro:'',
         Img:'',
         Title:'',
         AddComments:false,
-        options:[{ text: '早评', value: '1' },
-          { text: '晚评', value: '2' }],
-        dayComments:[],
+        courses:[],
         //修改
         modifyComments:false,
-        ModifySelected:'',
+        JuniormodifyFile:'',
         modifyTitle:'',
         modifyImg:'',
         modifyIntro:'',
@@ -178,13 +184,6 @@ export default {
     }
   },
   filters: {
-        filterValue : function(value){
-             switch(value){
-                case '1': return '早评'; break;
-                case '2': return '晚评'; break;
-             }
-        },
-
         filterCheck:function(value){
             switch(value){
                 case '0': return '关闭'; break;
@@ -199,16 +198,16 @@ export default {
   methods:{
     initData(){
       let params={
-        flag:'',
+        flag:'1',
         begidx:0,
         counts:30,
       };
 
       let that = this;
 
-      api.dayCommentAll(params).then(function(res){
+      api.coursesQuery(params).then(function(res){
         if(res.data.Code ==3){
-            that.dayComments = res.data.Data;
+            that.courses = res.data.Data;
         }else{
           alert(res.data.Msg);
         }
@@ -217,7 +216,8 @@ export default {
       });
     },
 
-    onFileChange(e) {
+    //上传图片
+    onImgChange(e) {
           var files = e.target.files || e.dataTransfer.files;
           if (!files.length)
            return;
@@ -237,12 +237,21 @@ export default {
           reader.readAsDataURL(file);
     },
 
-    modifyFileChange(e) {
+    //上传文件
+    onFileChange(e) {
+          var files = e.target.files || e.dataTransfer.files;
+          if (!files.length)
+           return;
+           this.file=files[0].name;
+    },
+
+     //修改图片
+    modifyImgChange(e) {
           var files = e.target.files || e.dataTransfer.files;
           if (!files.length)
            return;
            this.modifyImage(files[0]);
-     },
+    },
 
     modifyImage(file) {
           var image = new Image();
@@ -251,29 +260,40 @@ export default {
 
           reader.onload = (e) => {
             that.modifyImg = e.target.result;
-            //预览
-            $("#modifyFile").attr("src",that.modifyImg);
           };
           reader.readAsDataURL(file);
     },
 
+    //修改已上传的文件
+    modifyFileChange(e) {
+          var files = e.target.files || e.dataTransfer.files;
+          if (!files.length)
+           return;
+           this.JuniormodifyFile=files[0].name;
+     },
+
+    //添加
     addComment(){
       this.AddComments = !this.AddComments;
     },
 
     //提交
     addDayComment(){
-      let input = this.$refs.upload;
+      let input_img = this.$refs.uploadImg;
+
+      let input_file = this.$refs.uploadFile;
+
       let data = new FormData();
       data.append('sid',this.Sid);
       data.append('title', this.Title);
-      data.append('img', input.files[0]);
-      data.append('flag',this.selected);
+      data.append('img', input_img.files[0]);
+      data.append('file',input_file.files[0]);
+      data.append('flag','1');
       data.append('intro',this.Intro);
 
       let that = this;
 
-      axios.post(env.baseUrl+'/cycj/comment/add', data, {
+      axios.post(env.baseUrl+'/cycj/courware/add', data, {
             headers: {
                   'Content-Type': 'application/x-www-form-urlencoded'
             }
@@ -296,10 +316,11 @@ export default {
 
 
     modifyComment(item){
+      console.log(item);
       this.modifyComments = !this.modifyComments;
-      this.ModifySelected = item.flag;
       this.modifyTitle = item.title;
-      this.modifyImg = item.cover_img;
+      this.modifyImg = item.cover_url;
+      this.JuniormodifyFile = item.annex_url;
       this.modifyIntro = item.intro;
       this.modifyId = item.id;
     },
@@ -308,19 +329,23 @@ export default {
       this.modifyComments = !this.modifyComments;
     },
 
-    modifyDayComment(){
-      let input = this.$refs.uploadmodify;
+    modifyJuniorClasses(){
+      let input_img = this.$refs.uploadmodifyImg;
+
+      let input_file = this.$refs.uploadmodifyFile;
+
       let data = new FormData();
       data.append('sid',this.Sid);
       data.append('id',this.modifyId);
       data.append('title',this.modifyTitle);
-      data.append('img', input.files[0]);
-      data.append('flag',this.ModifySelected);
+      data.append('img', input_img.files[0]);
+      data.append('file', input_file.files[0]);
+      data.append('flag',1);
       data.append('intro',this.modifyIntro);
 
       let that = this;
 
-      axios.post(env.baseUrl+'/cycj/comment/modify', data, {
+      axios.post(env.baseUrl+'/cycj/courware/modify', data, {
             headers: {
                   'Content-Type': 'application/x-www-form-urlencoded'
             }
@@ -338,17 +363,17 @@ export default {
     },
 
     //删除
-    removeComment(item,index){
+    removeClasses(item,index){
       let params={
         sid:this.Sid,
         id:item.id
       };
 
       let that = this;
-      api.dayCommentDel(params).then(function(res){
+      api.coursesDel(params).then(function(res){
         alert(res.data.Msg);
         if(res.data.Code ==3){
-            that.dayComments.splice(index,1);
+            that.courses.splice(index,1);
         }
       }).catch(function(err){
           console.log(err);
@@ -371,7 +396,7 @@ export default {
       };
 
 
-      api.dayCommentCheck(params).then(function(res){
+      api.coursesCheck(params).then(function(res){
           alert(res.data.Msg);
           if(res.data.Code ==3){
               item.status = temp_status;
