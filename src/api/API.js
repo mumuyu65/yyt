@@ -349,5 +349,27 @@ class API {
         config.data = param;
         return axios.post('/cycj/app/query', {}, config);
     }
+
+    // 小游戏
+    // 奖品管理
+    getAward(param) {
+        config.data = param
+        return axios.post('/cycj/award/query', {}, config)
+    }
+
+    addAward(param) {
+        config.data = param
+        return axios.post('/cycj/award/add', {}, config)
+    }
+
+    delAward(param) {
+        config.data = param
+        return axios.post('/cycj/award/del', {}, config)
+    }
+
+    modifyAward(param) {
+        config.data = param
+        return axios.post('/cycj/award/modify', {}, config)
+    }
 }
 export default API;

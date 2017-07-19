@@ -113,10 +113,10 @@ export default new Router({
             component: Settings
         }, {
             path: '/economicNewsType',
-            component: EconomicNewsType,
+            component: EconomicNewsType
         }, {
             path: '/economicNews',
-            component: EconomicNews,
+            component: EconomicNews
         }, {
             path: '/addNew',
             component: AddNew
