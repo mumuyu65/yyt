@@ -101,8 +101,8 @@
                     </div>
                     <div class="col-sm-9 col-md-9 col-xs-6">
                         <select v-model="modifySelected">
-                            <option v-for="modifyOption in ModifyOptions" v-bind:value="modifyOption.cgid">
-                                    {{ modifyOption.name }}
+                            <option v-for="option in options" v-bind:value="option.id">
+                                    {{ option.name }}
                             </option>
                         </select>
                     </div>
@@ -169,7 +169,6 @@ export default {
         AddComments:false,
         options:[],
         productComments:[],
-        ModifyOptions:[],
         //修改
         modifyComments:false,
         modifySelected:'',
@@ -199,7 +198,6 @@ export default {
         api.queryCategory().then(function(res){
             if(res.data.Code ==3){
                 that.options = res.data.Data;
-                that.ModifyOptions = res.data.Data;
                 that.CommentsList();
             }else{
                 alert(res.data.Msg);
@@ -218,17 +216,16 @@ export default {
         api.productsForecastQuery(params).then(function(res){
             if(res.data.Code ==3){
                 let templateComments = res.data.Data;
+                console.log(templateComments);
                 let len= templateComments.length;
                 for(var i = 0; i<len; i++){
                   for(var j=0; j<that.options.length;j++){
-                     if(templateComments[i].cgid == that.options[j].id){
+                     if(templateComments[i].id == that.options[j].id){
                         templateComments[i].productName=that.options[j].name;
                       }
                   }
                 }
                 that.productComments = templateComments;
-
-                console.log(that.productComments);
             }
             else{
                 alert(res.data.Msg);
@@ -303,8 +300,6 @@ export default {
 
           reader.onload = (e) => {
             that.modifyImg = e.target.result;
-            //预览
-            $("#modifyFile").attr("src",that.modifyImg);
           };
           reader.readAsDataURL(file);
     },
@@ -320,24 +315,23 @@ export default {
     modifyComment(item){
       console.log(item);
       this.modifyComments =!this.modifyComments;
-      this.modifySelected = item.cgid;
+      this.modifySelected = item.id;
       this.modifyTitle = item.title;
       this.modifyImg = item.cover_img;
       this.modifyIntro = item.intro;
-      this.modifyId = item.id;
+      this.modifyId = item.cgid;
     },
 
     modifyProductsComment(){
       let input = this.$refs.uploadmodify;
       let data = new FormData();
       data.append('sid',this.Sid);
-      data.append('cgid',this.modifySelected);
+      data.append('id',this.modifySelected);
+      data.append('cgid',this.modifyId);
       data.append('title',this.modifyTitle);
       data.append('img', input.files[0]);
-      data.append('id',this.modifyId);
       data.append('intro',this.modifyIntro);
       let that = this;
-      console.log(that.modifySelected);
       axios.post(env.baseUrl+'/cycj/forecast/modify', data, {
           headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'

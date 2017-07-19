@@ -6,10 +6,18 @@
                   <ul class="list-inline">
                       <li><h3>资讯管理</h3></li>
                       <li class="pull-right" style="margin-top:15px;">
-                          <button @click="addNewEconomics()"
+                        <ol class="list-inline">
+                          <li>搜索：</li>
+                          <li><select v-model="searchId" class="form-control">
+                              <option v-for="option in newsType" v-bind:value="option.type">
+                                      {{ option.text }}
+                              </option>
+                          </select></li>
+                          <li><button @click="addNewEconomics()"
                               style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
                               <i class="fa fa-plus fa-1x"></i>新增资讯
-                          </button>
+                          </button></li>
+                        </ol>
                       </li>
                   </ul>
                   <hr/>
@@ -20,6 +28,7 @@
                         <th  class="text-center">资讯标题</th>
                         <th  class="text-center">资讯图片</th>
                         <th  class="text-center">资讯内容</th>
+                        <th  class="text-center">时间</th>
                         <th  class="text-center">操作</th>
                     </thead>
                     <tbody>
@@ -29,8 +38,9 @@
                           <td>{{item.title}}</td>
                           <td><img v-bind:src="item.imgurl" style="height:50px;"/></td>
                           <td>{{item.content}}</td>
+                          <td>{{item.unix | dateStamp }}</td>
                           <td>
-                            <button class="btn btn-primary" @click="modifyNews(item)">修改</button>
+                            <button class="btn btn-primary" @click="modifyEconomics(item)">修改</button>
                             <button class="btn btn-danger" @click="delNew(item,index)">删除</button>
                           </td>
                         </tr>
@@ -97,7 +107,7 @@
                   </div>
                   <div class="col-sm-9 col-md-9 col-xs-6">
                       <select v-model="modifyType" class="form-control">
-                          <option v-for="option in newsType" v-bind:value="newsType.type">
+                          <option v-for="option in newsType" v-bind:value="option.type">
                                   {{ option.text }}
                           </option>
                       </select>
@@ -116,8 +126,15 @@
                       资讯图片:
                   </div>
                   <div class="col-sm-9 col-md-9 col-xs-6">
-                      <img v-bind:src="modifyImg"/>
-                      <input type="file" @change="modifyFileChange" ref="uploadmodify" value="上传图片"/>
+                      <ul class="list-inline">
+                          <li><img v-bind:src="modifyImg"/></li>
+                          <li style="position:relative;">
+                            <input type="file" @change="modifyFileChange" ref="uploadmodify" value="上传图片" style="position:absolute; opacity:0;"/>
+                            <button style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
+                                上传图片
+                            </button>
+                          </li>
+                      </ul>
                   </div>
               </div>
               <div class="row">
@@ -165,7 +182,31 @@ export default {
       Title:'',
       Content:'',
       modifyId:'',
+
+      searchId:'',
     }
+  },
+  watch:{
+    searchId:'Search',//值可以为methods的方法名
+  },
+  filters:{
+    dateStamp:function(value){
+        //获取一个事件戳
+         var time = new Date(value*1000);
+         //获取年份信息
+         var y = time.getFullYear();
+         //获取月份信息，月份是从0开始的
+         var m = (time.getMonth()+1)<10?('0'+(time.getMonth()+1)):(time.getMonth()+1);
+         //获取天数信息
+         //获取天数信息
+         var d = (time.getDate())<10?('0'+time.getDate()):time.getDate();
+
+         var H=(time.getHours())<10?('0'+time.getHours()):time.getHours();
+
+         var M=(time.getMinutes())<10?('0'+time.getMinutes()):time.getMinutes();
+         //返回拼接信息
+         return y+'-'+m + '-' + d+'    '+H+":"+M;
+    },
   },
   mounted(){
     this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
@@ -238,7 +279,7 @@ export default {
       reader.readAsDataURL(file);
     },
 
-    modifyNews(item){
+    modifyEconomics(item){
       console.log(item);
       this.modifyNew = ! this.modifyNew;
       this.modifyType = item.type;
@@ -254,15 +295,13 @@ export default {
       let data = new FormData();
 
       data.append('sid',this.Sid);
-      data.append('id',this.modifyId);
-      data.append('type',2);
+      data.append('nid',this.modifyId);
+      data.append('type',this.modifyType);
       data.append('title',this.Title);
       data.append('img',input.files[0]);
       data.append('content',this.Content);
 
       let that = this;
-
-      console.log(this.Sid,this.modifyId,this.modifyType,this.Title);
 
       axios.post(env.baseUrl+'/cycj/news/modify', data, {
             headers: {
@@ -303,39 +342,16 @@ export default {
       let params={
           begidx:0,
           counts:100,
-          type:2,
+          type:0,
         };
 
       let that = this;
       api.queryNews(params).then(function(res){
           if(res.data.Code ==3){
-            if(res.data.Code ==3){
               that.newsLists = res.data.Data.Detail;
-            }
+              console.log(that.newsLists);
           }
       });
-    },
-
-    //时间转换
-    add(m) {
-         return m<10?'0'+m:m
-    },
-    time(tm) {
-         //获取一个事件戳
-         var time = new Date(tm);
-         //获取年份信息
-         var y = time.getFullYear();
-         //获取月份信息，月份是从0开始的
-         var m = time.getMonth()+1;
-         //获取天数信息
-         //获取天数信息
-         var d = time.getDate();
-
-         var H=time.getHours();
-
-         var M=time.getMinutes();
-         //返回拼接信息
-         return y+'-'+this.add(m) + '-' + this.add(d)+'&nbsp;&nbsp;'+this.add(H)+":"+this.add(M);
     },
 
     delNew(item,idx){
@@ -362,6 +378,23 @@ export default {
 
     Cancel(){
         this.addNew = ! this.addNew;
+    },
+
+    //搜索
+    Search(){
+      let params={
+        begidx:0,
+        counts:100,
+        type:this.searchId,
+      };
+
+      let that = this;
+      api.queryNews(params).then(function(res){
+          if(res.data.Code ==3){
+              that.newsLists = res.data.Data.Detail;
+              console.log(that.newsLists);
+          }
+      });
     }
 
   }
