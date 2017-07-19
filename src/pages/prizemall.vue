@@ -177,11 +177,10 @@ export default {
                 }
             }).then(function(res) {
                 if (res.data.Code != 3) {
+                    alert(res.data.Msg)
                     if (res.data.Code == 6) {
-                        alert('登录状态已过期, 请重新登录!')
                         _this.$router.push('/')
                     }
-                    alert(res.data.Msg)
                 } else {
                     alert('添加成功!')
                     _this.isShowAdd()
