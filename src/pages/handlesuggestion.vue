@@ -141,27 +141,26 @@ methods:{
     //搜索
     getHandleSuggestion() {
         let param = {
+            sid:this.Sid,
             bdt: this.dateToUnix($("#start_time").val()),
             edt: this.dateToUnix($("#end_time").val()),
             category_id: this.prize,
             analysts: this.teacher,
             begidx: 0,
-            countes: 100
-        }
-        if (param.bdt < param.edt) {
-            api.queryHandleSuggestion(param).then(function(res) {
-                console.log(res.data);
-                if (res.data.Code == 3) {
-                    if (res.data.Data == null) {
-                        alert('暂无数据')
-                    }
+            counts: 100,
+        };
+
+        console.log(param);
+        api.queryHandleSuggestion(param).then(function(res) {
+            console.log(res.data);
+            if (res.data.Code == 3) {
+                if (res.data.Data == null) {
+                    alert('暂无数据')
                 }
-            }).catch(function(err) {
-                console.log(err)
-            })
-        } else {
-            alert('结束时间不得小于开始时间')
-        }
+            }
+        }).catch(function(err) {
+            console.log(err)
+        })
     },
 
     //时间转换
