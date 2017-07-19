@@ -48,10 +48,16 @@ class API {
     }
 
     delUser(param) {
-            config.data = param;
-            return axios.post('/cycj/admin/deluser', {}, config);
-        }
-        //修改密码
+        config.data = param;
+        return axios.post('/cycj/admin/deluser', {}, config);
+    }
+
+    categoryUser(param) {
+        config.data = param;
+        return axios.post('/cycj/admin/userquery', {}, config);
+    }
+
+    //修改密码
     modifypwd(param) {
         config.data = param;
         return axios.post('/cycj/pwd/modify', {}, config);
