@@ -51,6 +51,8 @@ import qqManage from '@/pages/qqManage'
 //用户等级管理
 import userLevel from '@/pages/userlevel'
 
+import userLeveladd from '@/pages/userLeveladd'
+
 //用户等级图标的管理
 import levelIcon from '@/pages/levelIcon'
 
@@ -150,6 +152,9 @@ export default new Router({
         }, {
             path: '/userlevel',
             component: userLevel
+        }, {
+            path: '/userlevel/add',
+            component: userLeveladd
         }, {
             path: '/levelIcon',
             component: levelIcon
