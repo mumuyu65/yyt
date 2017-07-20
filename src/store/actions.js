@@ -36,7 +36,7 @@ function filterAsyncRouter(asyncRouterMap, roles) {
     return accessedRouters
 }
 
-export const GenerateRoutes = ({
+export const generateRoutes = ({
     commit
 }, value) => {
     const {
@@ -48,6 +48,5 @@ export const GenerateRoutes = ({
     } else {
         accessedRouters = filterAsyncRouter(asyncRouterMap, roles);
     }
-    console.log(accessedRouters);
     commit('SET_ROUTERS', accessedRouters);
 }

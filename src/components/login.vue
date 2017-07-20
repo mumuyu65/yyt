@@ -56,6 +56,22 @@ export default {
               window.localStorage.setItem('user',JSON.stringify(res.data.Data));
               that.$store.dispatch("changeUser",res.data.Data);
               that.$router.push('/home');
+              let roles=res.data.Data.Flag;
+              if (roles == 4) {
+                  roles = ['superman', 'admin'];
+              } else if (roles == 3) {
+                  roles = ['admin'];
+              } else if (roles == 2) {
+                  roles = ['checker'];
+              } else if (roles == 1) {
+                  roles = ['teacher'];
+              } else {
+                  roles = ['user']
+              }
+
+              that.$store.dispatch('generateRoutes', {
+                  roles
+              })
           }
           else{
             alert(res.data.Msg);

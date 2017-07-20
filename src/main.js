@@ -23,35 +23,12 @@ function hasPermission(roles, permissionRoles) {
 Vue.config.productionTip = false
 
 router.beforeEach((to, from, next) => {
-    if (store.getters.getUser.Flag) { // 判断是否有user
-        if (to.path === '/') {
+    if (store.getters.getRoutes.length !== 0) { // 判断是否有user
+        router.addRoutes(store.getters.getRoutes); // 动态添加可访问路由表
+        console.log(router);
+        if (to.path == '/home') {
             next({
-                path: '/'
-            });
-        } else {
-            let roles = store.getters.getUser.Flag;
-            if (roles == 4) {
-                roles = ['superman', 'admin'];
-            } else if (roles == 3) {
-                roles = ['admin'];
-            } else if (roles == 2) {
-                roles = ['checker'];
-            } else if (roles == 1) {
-                roles = ['teacher'];
-            } else {
-                roles = ['user']
-            }
-            store.dispatch('GenerateRoutes', {
-                roles
-            }).then(() => { // 生成可访问的路由表
-                router.addRoutes(store.getters.getRoutes); // 动态添加可访问路由表
-                for (let route of store.getters.getRoutes) {
-                    router.options.routes.push(route);
-                }
-                let url = '' + to.path;
-                next({
-                    path: url
-                })
+                path: '/settings'
             })
         }
     } else {
@@ -62,7 +39,6 @@ router.beforeEach((to, from, next) => {
         }
     }
 });
-
 /* eslint-disable no-new */
 new Vue({
     el: '#app',
