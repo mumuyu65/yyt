@@ -377,5 +377,10 @@ class API {
         config.data = param
         return axios.post('/cycj/award/modify', {}, config)
     }
+    // 赢豆记录
+    getBeansChangeRecord(param) {
+        config.data = param
+        return axios.post('/cycj/bean/change', {}, config)
+    }
 }
 export default API;
