@@ -48,10 +48,16 @@ class API {
     }
 
     delUser(param) {
-            config.data = param;
-            return axios.post('/cycj/admin/deluser', {}, config);
-        }
-        //修改密码
+        config.data = param;
+        return axios.post('/cycj/admin/deluser', {}, config);
+    }
+
+    categoryUser(param) {
+        config.data = param;
+        return axios.post('/cycj/admin/userquery', {}, config);
+    }
+
+    //修改密码
     modifypwd(param) {
         config.data = param;
         return axios.post('/cycj/pwd/modify', {}, config);
@@ -376,6 +382,12 @@ class API {
     getDj(param) {
         config.data = param
         return axios.post('/cycj/dj/query', {}, config)
+    }
+
+    // 赢豆记录
+    getBeansChangeRecord(param) {
+        config.data = param
+        return axios.post('/cycj/bean/change', {}, config)
     }
 }
 export default API;

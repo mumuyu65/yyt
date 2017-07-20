@@ -2,33 +2,36 @@
     <div id="page-wrapper" >
         <div id="page-inner">
             <div class="prizemall-box">
-                <ul class="list-inline">
-                    <li><h3>奖品商城</h3></li>
-                </ul>
-                <hr/>
                 <div v-if="!is_show_add">
                     <div v-if="!is_show_modify">
-                        <div class="row">
-                            <div @click="isShowAdd" class="btn btn-primary col-md-1 pull-right">新增</div>
-                        </div>
-                        <div class="container" style="margin-top: 2rem;">
-                            <div class="col-md-3" v-for="item in prizes">
-                                <div class="prize-item">
-                                    <div class="p-img">
-                                        <img class="thumbnail-image" src="../assets/prizebg.png" :style="'background-image: url('+ item.imgurl + ')'" alt="奖品图片">
-                                    </div>
-                                    <div class="p-info">
-                                        <span class="pull-left">{{item.name}}</span>
-                                        <span class="pull-right beans">¥ {{item.beans}}</span>
-                                    </div>
-                                    <div class="p-intro">{{item.intro}}</div>
-                                    <div class="btn-group">
-                                        <div class="btn btn-primary" @click="showModify(item)">修改</div>
-                                        <div class="btn btn-danger" @click="delPrize(item.id)">删除</div>
-                                    </div>
+                     <ul class="list-inline">
+                        <li><h3>奖品商城</h3></li>
+                        <li class="pull-right" style="margin-top:15px;">
+                        <button @click="isShowAdd()"
+                            style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
+                            <i class="fa fa-plus fa-1x"></i>新增奖品
+                        </button>
+                    </li>
+                    </ul>
+                    <hr/>
+                    <div style="margin-top: 2rem;">
+                        <div class="col-md-3" v-for="item in prizes">
+                            <div class="prize-item">
+                                <div class="p-img">
+                                    <img class="thumbnail-image" src="../assets/prizebg.png" :style="'background-image: url('+ item.imgurl + ')'" alt="奖品图片">
+                                </div>
+                                <div class="p-info">
+                                    <span class="pull-left">{{item.name}}</span>
+                                    <span class="pull-right beans">¥ {{item.beans}}</span>
+                                </div>
+                                <div class="p-intro">{{item.intro}}</div>
+                                <div class="btn-group">
+                                    <div class="btn btn-primary" @click="showModify(item)">修改</div>
+                                    <div class="btn btn-danger" @click="delPrize(item.id)">删除</div>
                                 </div>
                             </div>
                         </div>
+                    </div>
                     </div>
                 </div>
                 <!-- 新增 -->
@@ -177,11 +180,10 @@ export default {
                 }
             }).then(function(res) {
                 if (res.data.Code != 3) {
+                    alert(res.data.Msg)
                     if (res.data.Code == 6) {
-                        alert('登录状态已过期, 请重新登录!')
                         _this.$router.push('/')
                     }
-                    alert(res.data.Msg)
                 } else {
                     alert('添加成功!')
                     _this.isShowAdd()
