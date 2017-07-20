@@ -43,7 +43,8 @@ const ModifyLive = resolve => require(['@/pages/modifylive'], resolve)
 
 const zhibo = resolve => require(['@/pages/zhibo'], resolve)
 
-const operational = resolve => require(['@/pages/operational'], resolve)
+//操作建议管理
+import operational from '@/pages/operational'
 
 //高级助理管理
 import qqManage from '@/pages/qqManage'
@@ -52,9 +53,6 @@ import qqManage from '@/pages/qqManage'
 import userLevel from '@/pages/userlevel'
 
 import userLeveladd from '@/pages/userLeveladd'
-
-//用户等级图标的管理
-import levelIcon from '@/pages/levelIcon'
 
 //微信二维码管理
 import qrcode from '@/pages/qrcode'
@@ -91,112 +89,207 @@ import beansrecord from '@/pages/beansrecord'
 
 Vue.use(Router)
 
-export default new Router({
-    routes: [{
+//所有权限通用路由表
+//如首页和登录页和一些不用权限的公用页面
+export const constantRouterMap = [{
         path: '/',
-        name: 'Login',
-        component: Login
+        component: Login,
+        hidden: true
+    }, //hidden为自定义属性，侧边栏那章会纤细解释
+
+]
+
+//实例化vue的时候只挂载constantRouter
+export default new Router({
+    routes: constantRouterMap
+});
+
+//异步挂载的路由
+//动态需要根据权限加载的路由表
+export const asyncRouterMap = [{
+        path: '/home',
+        component: Home,
+        meta: {
+            role: ['admin', 'superman']
+        },
     }, {
-        path: '/index',
-        name: 'Index',
-        component: Index,
-        redirect: '/home',
-        children: [{
-            path: '/home',
-            component: Home
-        }, {
-            path: '/addUser',
-            component: addUser
-        }, {
-            path: '/modifyUser',
-            component: modifyUser
-        }, {
-            path: '/settings',
-            component: Settings
-        }, {
-            path: '/economicNewsType',
-            component: EconomicNewsType
-        }, {
-            path: '/economicNews',
-            component: EconomicNews
-        }, {
-            path: '/addNew',
-            component: AddNew
-        }, {
-            path: '/modifyNews',
-            component: ModifyNew
-        }, {
-            path: '/live',
-            component: ZhiboManage
-        }, {
-            path: '/handlesuggestion',
-            component: HandleSuggestion
-        }, {
-            path: '/handlesuggestion/add',
-            component: AddHandleSuggestion
-        }, {
-            path: '/live/add',
-            component: AddLive
-        }, {
-            path: '/live/modify',
-            component: ModifyLive
-        }, {
-            path: '/live/room',
-            component: zhibo
-        }, {
-            path: '/live/operational',
-            component: operational
-        }, {
-            path: '/productsManage',
-            component: productsManage
-        }, {
-            path: '/userlevel',
-            component: userLevel
-        }, {
-            path: '/userlevel/add',
-            component: userLeveladd
-        }, {
-            path: '/levelIcon',
-            component: levelIcon
-        }, {
-            path: '/qrcode',
-            component: qrcode
-        }, {
-            path: '/productsintro',
-            component: productIntro
-        }, {
-            path: '/clan',
-            component: Clan
-        }, {
-            path: '/dayComment',
-            component: DayComment
-        }, {
-            path: '/productsComment',
-            component: productsComment
-        }, {
-            path: '/classArrange',
-            component: ClassArrange
-        }, {
-            path: '/qqManage',
-            component: qqManage
-        }, {
-            path: '/juniorclasses',
-            component: juniorclasses
-        }, {
-            path: '/seniorclasses',
-            component: seniorclasses
-        }, {
-            path: '/download',
-            component: download
-        }, {
-            path: '/prizemall',
-            component: prizemall
-        }, {
-            path: '/exchangerecord',
-            component: exchangerecord
-        }, {
-            path: '/beansrecord',
-            component: beansrecord
-        }]
-    }]
-})
+        path: '/addUser',
+        component: addUser,
+        meta: {
+            role: ['admin', 'superman']
+        },
+    }, {
+        path: '/modifyUser',
+        component: modifyUser,
+        meta: {
+            role: ['admin', 'superman']
+        },
+    }, {
+        path: '/settings',
+        component: Settings,
+        hidden: true
+    }, //个人中心
+    {
+        path: '/economicNewsType',
+        component: EconomicNewsType,
+        meta: {
+            role: ['admin', 'superman']
+        },
+    }, {
+        path: '/economicNews',
+        component: EconomicNews,
+        meta: {
+            role: ['admin', 'superman']
+        },
+    }, {
+        path: '/addNew',
+        component: AddNew,
+        meta: {
+            role: ['admin', 'superman']
+        },
+    }, {
+        path: '/modifyNews',
+        component: ModifyNew,
+        meta: {
+            role: ['admin', 'superman']
+        },
+    }, {
+        path: '/live',
+        component: ZhiboManage,
+        meta: {
+            role: ['admin', 'superman']
+        },
+    }, {
+        path: '/handlesuggestion',
+        component: HandleSuggestion,
+        meta: {
+            role: ['teacher', 'admin', 'superman']
+        },
+    }, {
+        path: '/handlesuggestion/add',
+        component: AddHandleSuggestion,
+        meta: {
+            role: ['teacher', 'admin', 'superman']
+        },
+    }, {
+        path: '/live/add',
+        component: AddLive,
+        meta: {
+            role: ['admin', 'superman']
+        },
+    }, {
+        path: '/live/modify',
+        component: ModifyLive,
+        meta: {
+            role: ['admin', 'superman']
+        },
+    }, {
+        path: '/live/room',
+        component: zhibo,
+        meta: {
+            role: ['admin', 'superman']
+        },
+    }, {
+        path: '/live/operational',
+        component: operational,
+        meta: {
+            role: ['teacher', 'admin', 'superman']
+        },
+    }, {
+        path: '/productsManage',
+        component: productsManage,
+        meta: {
+            role: ['admin']
+        },
+    }, {
+        path: '/userlevel',
+        component: userLevel,
+        meta: {
+            role: ['admin', 'superman']
+        },
+    }, {
+        path: '/userlevel/add',
+        component: userLeveladd,
+        meta: {
+            role: ['admin', 'superman']
+        },
+    }, {
+        path: '/qrcode',
+        component: qrcode,
+        meta: {
+            role: ['admin', 'superman']
+        },
+    }, {
+        path: '/productsintro',
+        component: productIntro,
+        meta: {
+            role: ['admin', 'superman']
+        },
+    }, {
+        path: '/clan',
+        component: Clan,
+        meta: {
+            role: ['admin', 'superman']
+        },
+    }, {
+        path: '/dayComment',
+        component: DayComment,
+        meta: {
+            role: ['teacher', 'admin', 'superman']
+        },
+    }, {
+        path: '/productsComment',
+        component: productsComment,
+        meta: {
+            role: ['teacher', 'admin', 'superman']
+        },
+    }, {
+        path: '/classArrange',
+        component: ClassArrange,
+        meta: {
+            role: ['admin', 'superman']
+        },
+    }, {
+        path: '/qqManage',
+        component: qqManage,
+        meta: {
+            role: ['admin', 'superman']
+        },
+    }, {
+        path: '/juniorclasses',
+        component: juniorclasses,
+        meta: {
+            role: ['teacher', 'admin', 'superman']
+        },
+    }, {
+        path: '/seniorclasses',
+        component: seniorclasses,
+        meta: {
+            role: ['teacher', 'admin', 'superman']
+        },
+    }, {
+        path: '/download',
+        component: download,
+        meta: {
+            role: ['admin', 'superman']
+        },
+    }, {
+        path: '/prizemall',
+        component: prizemall,
+        meta: {
+            role: ['admin', 'superman']
+        },
+    }, {
+        path: '/exchangerecord',
+        component: exchangerecord,
+        meta: {
+            role: ['admin', 'superman']
+        },
+    }, {
+        path: '/beansrecord',
+        component: beansrecord,
+        meta: {
+            role: ['admin', 'superman']
+        },
+    }
+];
