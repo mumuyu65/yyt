@@ -15,16 +15,17 @@ import {
 } from '@/router';
 
 
-function hasPermission(roles, permissionRoles) {
-    if (roles.indexOf('admin') >= 0) return true; // admin权限 直接通过
-    if (!permissionRoles) return true; //免权限，直接通过
-    return roles.some(role => permissionRoles.indexOf(role) >= 0) //监测roles数组中是否存在某些权限
+function hasPermission(roles, route) {
+    if (route.meta && route.meta.role) {
+        return roles.some(role => route.meta.role.indexOf(role) >= 0)
+    } else {
+        return true
+    }
 }
 
 
 function filterAsyncRouter(asyncRouterMap, roles) {
     const accessedRouters = asyncRouterMap.filter(route => {
-        console.log(route, roles);
         if (hasPermission(roles, route)) {
             if (route.children && route.children.length) {
                 route.children = filterAsyncRouter(route.children, roles)
@@ -46,7 +47,20 @@ export const generateRoutes = ({
     if (roles.indexOf('admin') >= 0) {
         accessedRouters = asyncRouterMap;
     } else {
-        accessedRouters = filterAsyncRouter(asyncRouterMap, roles);
+        accessedRouters = filterAsyncRouter(asyncRouterMap[0].children, roles);
     }
     commit('SET_ROUTERS', accessedRouters);
+}
+
+
+export const changeRole = ({
+    commit
+}, value) => {
+    commit('SET_ROLES', value);
+}
+
+export const changeAdmin = ({
+    commit
+}, value) => {
+    commit('SET_ITEMS', value);
 }

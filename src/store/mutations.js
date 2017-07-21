@@ -15,8 +15,15 @@ export default {
             //权限路由表
             state.addRouters = value;
 
-            //有权限和无权限的路由表
+        },
+
+        SET_ROLES(state, value) {
+            //权限路由表
+            state.roles = value;
+        },
+
+        SET_ITEMS(state, value) {
             state.routers = constantRouterMap.concat(value);
-        }
+        },
 
 }

@@ -15,7 +15,7 @@ import {
 Vue.use(Vuex)
 
 const state = {
-    user: {},
+    user: '',
     routers: constantRouterMap,
     addRouters: [],
     roles: [],
