@@ -8,20 +8,17 @@ import mutations from './mutations'
 
 import * as getters from './getters'
 
+import {
+    constantRouterMap
+} from '@/router';
+
 Vue.use(Vuex)
 
 const state = {
-    loginway: 'login',
-    user: {
-        Nick: '游客',
-        Beans: 0,
-    },
-    userOnline: 0,
-    giftNum: 1,
-    giftSelected: '',
-    lastGiftNum: 1,
-    sendGift: false,
-    gifts: [],
+    user: '',
+    routers: constantRouterMap,
+    addRouters: [],
+    roles: [],
 }
 
 export default new Vuex.Store({

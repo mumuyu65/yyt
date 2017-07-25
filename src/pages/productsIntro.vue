@@ -5,7 +5,7 @@
               <li><h3>产品介绍</h3></li>
           </ul>
           <hr/>
-          <div style="width:700px;margin:0 auto; margin-top:50px;">
+          <div style="margin:0 auto; padding:20px;">
              <div class="row">
                     <div class="col-sm-3 col-md-3 col-xs-6">
                        <span class="required">*</span>产品介绍:

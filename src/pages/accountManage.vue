@@ -1,7 +1,8 @@
 <template>
     <div id="page-wrapper" >
         <div id="page-inner">
-            <div v-show="!modifyUser">
+            <div v-show='!User'>
+                <div v-show="!modifyUser" >
                 <ul class="list-inline">
                     <li><h3>账号管理</h3></li>
                     <li class="pull-right" style="margin-top:15px;">
@@ -38,11 +39,47 @@
                             </td>
                             <td>
                                 <button class="btn btn-primary" @click="modifyuser(item)">修改</button>
-                                <button class="btn btn-danger" @click="delUser(item,index)">删除</button>
+                                <button class="btn btn-danger" @click="delUser(item,index)" v-if="item.flag!=4">删除</button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            </div>
+            <!-- 新增用户 -->
+            <div style="width:700px;margin:0 auto; margin-top:50px;" v-show='User'>
+                <div class="row">
+                    <div class="col-sm-3 col-md-3 col-xs-6">
+                         <span class="required">*</span>  角色选择：
+                    </div>
+                    <div class="col-sm-9 col-md-9 col-xs-6">
+                        <select v-model="selected">
+                            <option v-for="option in options" v-bind:value="option.value">
+                                    {{ option.text }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3 col-md-3 col-xs-6">
+                        <span class="required">*</span> 手机号:
+                    </div>
+                    <div class="col-sm-9 col-md-9 col-xs-6">
+                       <input type='number' value="" style="height:30px;" v-model="phone"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3 col-md-3 col-xs-6">
+                       <span class="required">*</span> 密码:
+                    </div>
+                    <div class="col-sm-9 col-md-9 col-xs-6">
+                        <input type='password' value="" style="height:30px;" v-model="pwd"/>
+                        <div style="margin-top:20px;">
+                                <button class="btn btn-danger" @click="UserAdd()">提交</button>
+                                <button style="margin-left:50px;" class="btn btn-default" @click="addCancel()">取消</button>
+                        </div>
+                    </div>
+                </div>
             </div>
             <!-- 修改用户 -->
             <div style="width:700px;margin:0 auto; margin-top:50px;" v-show="modifyUser">
@@ -141,7 +178,10 @@ export default {
           { text: '审核员', value: '2' },
           { text: '管理员', value: '3' }
         ],
-
+        User:false,
+        selected: '1',
+        phone:'',
+        pwd:'',
     }
   },
   filters:{
@@ -174,7 +214,7 @@ export default {
         api.queryUser(params).then(function(res){
             if(res.data.Code ==3){
                 that.userlists = res.data.Data.Detail;
-                console.log(that.userlists);
+                //console.log(that.userlists);
             }else{
                 alert(res.data.Msg);
             }
@@ -183,10 +223,37 @@ export default {
         });
     },
 
+    //新增用户
     addUser(){
-        this.$router.push('addUser');
+        this.User = !this.User;
     },
 
+    UserAdd(){
+        let params={
+            sid:this.Sid,
+            phone:this.phone,
+            pwd:this.pwd,
+            flag:this.selected,
+        };
+
+        let that = this;
+
+        api.addUser(params).then(function(res){
+            alert(res.data.Msg);
+            if(res.data.Code ==3){
+              that.User = !that.User;
+            }
+        }).catch(function(err){
+            console.log(err);
+        });
+    },
+
+    addCancel(){
+        this.User = !this.User;
+    },
+
+
+    //删除用户
     delUser(item,idx){
         let params={
             sid:this.Sid,
@@ -233,22 +300,12 @@ export default {
             alert(res.data.Msg);
           if(res.data.Code ==3){
               that.modifyUser = ! that.modifyUser;
-              window.location.reload();
+              that.initData();
           }
         })
         .catch(function (error) {
           console.log(error);
         });
-        /*
-        api.modifyUser(params).then(function(res){
-            alert(res.data.Msg);
-            if(res.data.Code ==3){
-
-            }
-        }).catch(function(err){
-            console.log(err);
-        });
-        */
     },
 
     //上传图片
@@ -274,6 +331,7 @@ export default {
 
     Cancel(){
          this.modifyUser = ! this.modifyUser;
+         this.initData();
     },
   },
 }

@@ -4,43 +4,79 @@
             <div class="beansrecord-box">
                 <ul class="list-inline">
                     <li><h3>赢豆记录</h3></li>
+                    <li class="pull-right">
+                        <ol class="list-inline" style="margin-top:15px;">
+                          <li style="vertical-align:top;"><input type="text" class="form-control"  placeholder="请输入手机号" v-model="search_account" /></li>
+                          <li><button @click="getRecordRough"
+                              style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
+                              搜索
+                          </button></li>
+                        </ol>
+                    </li>
                 </ul>
                 <hr/>
                 <div v-if="!is_show_sign">
                     <div v-if="!is_show_bean">
-                        <div class="container">
-                            <div class="col-md-4">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="请输入手机号">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-primary" type="button">搜索</button>
-                                    </span>
-                                </div>
-                            </div>
-                            <table class="table table-hover col-md-12" style="margin-top: 3rem;">
-                                <tr>
-                                    <th>头像</th>
-                                    <th>手机号</th>
-                                    <th>昵称</th>
-                                    <th>签到情况</th>
-                                    <th>赢数量/局数</th>
-                                    <th>输数量/局数</th>
-                                    <th>总赢豆</th>
-                                    <th>操作</th>
-                                </tr>
-                                <tr>
-                                    <td><img class="user-head" src="" alt=""></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td><div class="btn btn-default">查看</div></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td><div class="btn btn-info">明细</div></td>
-                                </tr>
-                            </table>
-                        </div>
+                        <table class="table table-hover col-md-12" style="margin-top: 3rem;">
+                            <tr>
+                                <th>头像</th>
+                                <th>手机号</th>
+                                <th>昵称</th>
+                                <th>签到情况</th>
+                                <th>赢数量/局数</th>
+                                <th>输数量/局数</th>
+                                <th>总赢豆</th>
+                                <th>操作</th>
+                            </tr>
+                            <tr v-for="item in user_info">
+                                <td><img class="user-head" :src="item.headurl" alt=""></td>
+                                <td>{{item.account}}</td>
+                                <td>{{item.nick}}</td>
+                                <td><div class="btn btn-default" @click="showSignin(item)">查看</div></td>
+                                <td>{{item.win}}</td>
+                                <td>{{item.lose}}</td>
+                                <td>{{item.beans}}</td>
+                                <td><div class="btn btn-info" @click="getBeansRecord(item)">明细</div></td>
+                            </tr>
+                        </table>
                     </div>
+                </div>
+                <div v-if="is_show_bean">
+                    <div class="user-info-box">
+                        <div class="user-info pull-left">
+                            <div class="user-head">
+                                <img :src="beans_account.headurl" alt="">
+                            </div>
+                            <div class="user-nick">{{beans_account.nick}}</div>
+                            <div class="user-account">{{beans_account.account}}</div>
+                        </div>
+                        <div class="btn btn-danger pull-right" @click="isShowBean">返回</div>
+                    </div>
+                    <div class="beans-record">
+                        <table class="table table-hover">
+                            <tr>
+                                <th>时间</th>
+                                <th>赢豆</th>
+                                <th>内容</th>
+                            </tr>
+                            <tr v-for="item in beans_record">
+                                <td>{{item.unix | unixToDate}}</td>
+                                <td>{{item.beans}}</td>
+                                <td>{{item.types | beansRecordTypes}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div v-if="is_show_sign">
+                    <div class="col-md-4">
+                        <select class="form-control" v-model="signin_record_time">
+                            <option value="">-- 请选择年份 --</option>
+                            <option value="2017">2017年</option>
+                            <option value="2016">2016年</option>
+                        </select>
+                    </div>
+                    <div class="btn btn-primary" @click="getSigninRecord">查询</div>
+                    <div class="btn btn-danger pull-right" @click="isShowSign">返回</div>
                 </div>
             </div>
         </div>
@@ -63,12 +99,44 @@ export default {
             Sid:'',
             is_show_sign: false,
             is_show_bean: false,
-            beans_record: []
+            search_account: '13917189832',
+            user_info: [],
+            beans_record: [],
+            beans_account: {
+                account: '',
+                headurl: '',
+                nick: ''
+            },
+            signin_record_account: '',
+            signin_record_time: ''
+        }
+    },
+    filters: {
+        unixToDate(unix) {
+            let date = new Date(unix * 1000)
+            let y = date.getFullYear() + '-'
+            let m = (date.getMonth() - 1) + '-'
+            let d = date.getDate() + ' '
+            let h = date.getHours() + ':'
+            let mm = date.getMinutes() + ':'
+            let s = date.getSeconds()
+            return date = y + m + d + h + mm + s
+        },
+        beansRecordTypes(types) {
+            let res = ''
+            types = parseInt(types)
+            switch (types) {
+                case 1: res = '投注'; break;
+                case 2: res = '签到'; break;
+                case 3: res = '猜对奖励'; break;
+                case 4: res = '充值'; break;
+                case 5: res = '兑换奖励消耗'; break;
+            }
+            return res
         }
     },
     mounted() {
         this.Sid = JSON.parse(window.localStorage.getItem('user')).SessionId
-        this.getBeansRecord()
     },
     methods: {
         isShowSign() {
@@ -77,15 +145,38 @@ export default {
         isShowBean() {
             this.is_show_bean = !this.is_show_bean
         },
-        getBeansRecord() {
+        getRecordRough() {
+            let _this = this
+            let param = {
+                sid: this.Sid,
+                account: this.search_account
+            }
+            api.getRecordRough(param).then(function(res) {
+                if (res.data.Code != 3) {
+                    alert(res.data.Msg)
+                    if (res.data.Code == 6) {
+                        _this.$router.push('/')
+                    }
+                } else {
+                    _this.user_info = res.data.Data
+                }
+            }).catch(function(res) {
+                console.log(res)
+            })
+        },
+        getBeansRecord(item) {
+            this.isShowBean()
+            this.beans_account.account = item.account
+            this.beans_account.headurl = item.headurl
+            this.beans_account.nick = item.nick
             let _this = this
             let param = {
                 sid: this.Sid,
                 begidx: 0,
-                counts: 100
+                counts: 100,
+                account: item.account
             }
             api.getBeansChangeRecord(param).then(function(res) {
-                console.log(res)
                 if (res.data.Code != 3) {
                     alert(res.data.Msg)
                     if (res.data.Code == 6) {
@@ -93,6 +184,33 @@ export default {
                     }
                 } else {
                     _this.beans_record = res.data.Data.Detail
+                }
+            }).catch(function(res) {
+                console.log(res)
+            })
+        },
+        dateToUnix(time) {
+            time = time.split('-')
+            let odate = new Date(time[0], time[1] - 1, time[2]).getTime() / 1000
+            return odate
+        },
+        showSignin(item) {
+            this.isShowSign()
+            this.signin_record_account = item.account
+        },
+        getSigninRecord() {
+            let _this = this
+            let param = {
+                sid: this.Sid,
+                account: this.signin_record_account,
+                bdt: this.dateToUnix(this.signin_record_time + '-1-1'),
+                edt: this.dateToUnix(this.signin_record_time + '-12-31')
+            }
+            api.getSigninRecord(param).then(function(res) {
+                if (res.data.Code != 3) {
+                    alert(res.data.Msg)
+                } else {
+                    console.log(res.data)
                 }
             })
         }
@@ -108,5 +226,31 @@ export default {
         width: 6rem;
         height:6rem;
         border-radius: 50%;
+    }
+    .user-info-box {
+        &:after {
+            display: table;
+            content: ' ';
+            clear: both;
+        }
+        .user-info {
+            margin-bottom: 2rem;
+            &:after {
+                display: table;
+                content: ' ';
+                clear: both;
+            }
+            .user-head, .user-nick, .user-account {
+                float: left;
+            }
+            .user-nick, .user-account {
+                margin-left: 1rem;
+                line-height: 6rem;
+                font-size: 3rem;
+            }
+            .user-account {
+                margin-left: 2rem;
+            }
+        }
     }
 </style>

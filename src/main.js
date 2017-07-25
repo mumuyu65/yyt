@@ -12,6 +12,7 @@ import store from './store/store'
 //关闭生产模式下给出的提示
 Vue.config.productionTip = false
 
+
 /* eslint-disable no-new */
 new Vue({
     el: '#app',
@@ -21,4 +22,4 @@ new Vue({
     components: {
         App
     }
-})
+});
