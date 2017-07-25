@@ -1,6 +1,13 @@
 <template>
     <div id="page-wrapper" >
         <div id="page-inner">
+            <div v-if="is_show">
+                <div class="order-box">
+                    <input type="number" class="form-control" v-model="order_num" placeholder="请填写快递单号">
+                    <button class="btn btn-primary" @click="confirmNo">确认</button>
+                    <button class="btn btn-danger" @click="isShow">取消</button>
+                </div>
+            </div>
             <div class="exchangerecord-box">
                 <ul class="list-inline form-inline">
                     <li><h3>兑换记录</h3></li>
@@ -27,8 +34,9 @@
                         <th  class="text-center">配送地址</th>
                         <th  class="text-center">商品</th>
                         <th  class="text-center">数量</th>
-                        <th  class="text-center">操作</th>
+                        <th  class="text-center">状态</th>
                         <th  class="text-center">快递单号</th>
+                        <th  class="text-center">操作</th>
                     </thead>
                     <tbody>
                         <tr v-for="(item, index) in dj_list">
@@ -39,11 +47,13 @@
                             <td>{{item.location}}</td>
                             <td>{{item.name}}</td>
                             <td>{{item.amount}}</td>
+                            <td>{{item.status | getStatus}}</td>
+                            <td v-if="item.tracking_no">{{item.tracking_no}}</td>
+                            <td v-if="!item.tracking_no"><button class="btn btn-success" @click="isShow(item.id)">填写</button></td>
                             <td>
-                                <button class="btn btn-primary">{{item.status | getStatus}}</button>
-                                <button class="btn btn-danger">{{item.status | getStatu}}</button>
+                                <button class="btn btn-primary" @click="isConfirm(item.id,item.status)">{{item.status | getStatu}}</button>
+                                <button class="btn btn-danger" @click="Abandoned(item.id)">废弃</button>
                             </td>
-                            <td>{{item.tracking_no}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -69,7 +79,10 @@ export default {
             account:'',
             bdt:'',
             edt:'',
-            dj_list:[]
+            dj_list:[],
+            order_num:'',
+            is_show:false,
+            id:''
         }
     },
     filters:{
@@ -88,9 +101,9 @@ export default {
             switch(num){
                 case 0:str = '未确认';
                         break;
-                case 1:str = '已确认';
+                case 1:str = '已确认未发货';
                         break;
-                case 2:str = '已确认';
+                case 2:str = '已确认已发货';
                         break;
                 case 3:str = '已废弃';
                         break;
@@ -101,13 +114,13 @@ export default {
             var num = Number(n);
             var str = '';
             switch(num){
-                case 0:str = '未发送';
+                case 0:str = '确认';
                         break;
-                case 1:str = '未发送';
+                case 1:str = '发送';
                         break;
                 case 2:str = '已发送';
                         break;
-                case 3:str = '未发送';
+                case 3:str = '已废弃';
                         break;
             }
             return str
@@ -117,16 +130,22 @@ export default {
         this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
     },
     methods: {
+        dateToUnix(dateStr) {
+            let newstr = dateStr.replace(/-/g,'/'); 
+            let date =  new Date(newstr); 
+            let time_str = date.getTime().toString();
+            return time_str.substr(0, 10);
+        },  
         djList(){
             let _this = this
             let param = {
-                sid:_this.Sid,
+                sid:this.Sid,
                 bdt: this.dateToUnix(this.bdt),
                 edt: this.dateToUnix(this.edt),
-                account:_this.account
+                account:this.account,
+                status:-1
             }
             if (param.bdt < param.edt) {
-                console.log(param)
                 api.getDj(param).then(function(res) {
                     if (res.data.Code != 3) {
                         alert(res.data.Msg)
@@ -135,7 +154,6 @@ export default {
                             alert('暂无数据')
                         }else{
                             _this.dj_list = res.data.Data
-                            console.log(res.data.Data)
                         }
                     }
                 }).catch(function(err) {
@@ -146,12 +164,59 @@ export default {
                 alert('结束时间不得小于开始时间')
             }
         },
-        dateToUnix(dateStr) {
-            let newstr = dateStr.replace(/-/g,'/'); 
-            let date =  new Date(newstr); 
-            let time_str = date.getTime().toString();
-            return time_str.substr(0, 10);
-        }    }
+        isConfirm(id,status){
+            let _this = this
+            let param = {
+                sid:this.Sid,
+                id:id,
+                flag:Number(status) + 1
+            }
+            if(param.flag > 2){
+                return
+            }
+            api.Confirm(param).then(function(res) {
+                alert(res.data.Msg);
+                _this.djList();
+            }).catch(function(err) {
+                console.log(err)
+            })
+        },
+        Abandoned(id){
+            let _this = this
+            let param = {
+                sid:this.Sid,
+                id:id,
+                flag:3
+            }
+            api.Confirm(param).then(function(res) {
+                alert(res.data.Msg);
+                _this.djList();
+            }).catch(function(err) {
+                console.log(err)
+            })
+        },
+        isShow(id){
+            this.is_show = !this.is_show
+            this.id = id
+        },
+        confirmNo(){
+            let _this = this
+            let param = {
+                sid:this.Sid,
+                id:this.id,
+                tracking_no:this.order_num
+            }
+            api.Confirm(param).then(function(res) {
+                alert(res.data.Msg);
+                if(res.data.Code == 3){
+                    _this.is_show = !_this.is_show
+                    _this.djList();
+                }
+            }).catch(function(err) {
+                console.log(err)
+            })
+        }
+    }
 }
 </script>
 
@@ -161,5 +226,22 @@ export default {
     }
     #djTable td{
         padding:10px 0;
+    }
+    .order-box{
+        width:300px;
+        height:200px;
+        position:absolute;
+        left: 50%;
+        top: 50%;
+        transform: translateX(-50%);
+        transform: translateY(-50%);
+        border:1px solid #ccc;
+        box-shadow: 0px 0px 1rem #999;
+        padding:50px;
+        border-radius: .7rem;
+        button{
+            margin-left: 25px;
+            margin-top:20px;
+        }
     }
 </style>

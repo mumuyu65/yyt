@@ -383,6 +383,11 @@ class API {
         config.data = param
         return axios.post('/cycj/dj/query', {}, config)
     }
+
+    Confirm(param) {
+        config.data = param
+        return axios.post('/cycj/dj/check', {}, config)
+    }
     
     // 赢豆记录
     getBeansChangeRecord(param) {
