@@ -39,7 +39,7 @@
                             </td>
                             <td>
                                 <button class="btn btn-primary" @click="modifyuser(item)">修改</button>
-                                <button class="btn btn-danger" @click="delUser(item,index)">删除</button>
+                                <button class="btn btn-danger" @click="delUser(item,index)" v-if="item.flag!=4">删除</button>
                             </td>
                         </tr>
                     </tbody>
@@ -214,7 +214,7 @@ export default {
         api.queryUser(params).then(function(res){
             if(res.data.Code ==3){
                 that.userlists = res.data.Data.Detail;
-                console.log(that.userlists);
+                //console.log(that.userlists);
             }else{
                 alert(res.data.Msg);
             }
@@ -300,22 +300,12 @@ export default {
             alert(res.data.Msg);
           if(res.data.Code ==3){
               that.modifyUser = ! that.modifyUser;
-              window.location.reload();
+              that.initData();
           }
         })
         .catch(function (error) {
           console.log(error);
         });
-        /*
-        api.modifyUser(params).then(function(res){
-            alert(res.data.Msg);
-            if(res.data.Code ==3){
-
-            }
-        }).catch(function(err){
-            console.log(err);
-        });
-        */
     },
 
     //上传图片
@@ -341,6 +331,7 @@ export default {
 
     Cancel(){
          this.modifyUser = ! this.modifyUser;
+         this.initData();
     },
   },
 }

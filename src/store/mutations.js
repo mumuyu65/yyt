@@ -15,13 +15,10 @@ export default {
             //权限路由表
             state.addRouters = value;
 
-            //state.routers = constantRouterMap.concat(value);
-
             for (let i = 0; i < value.length; i++) {
                 constantRouterMap[1].children.push(value);
             }
-
-            console.log(constantRouterMap, value);
+            window.localStorage.setItem('routes', JSON.stringify(value));
         },
 
         SET_ROLES(state, value) {

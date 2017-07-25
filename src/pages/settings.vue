@@ -1,7 +1,7 @@
 <template>
     <div id="page-wrapper" >
         <div id="page-inner">
-            <div style="width:700px;margin:0 auto; margin-top:50px;">
+            <div style="margin:0 auto; padding:20px;">
                 <div class="row">
                     <div class="col-sm-3 col-md-3 col-xs-6">
                          <span class="required">*</span>用户昵称：
@@ -16,7 +16,7 @@
                     </div>
                     <div class="col-sm-9 col-md-9 col-xs-6">
                       <ul class="list-inline">
-                          <li><img v-bind:src="user.img" id="file" src="../../static/images/course_t.png" class="profile img-circle"/></li>
+                          <li><img v-bind:src="user.img" id="file" class="profile img-circle"/></li>
                           <li style="position:relative;">
                             <input type="file" @change="onFileChange"  ref="upload" value="上传图片" style="position:absolute; opacity:0;"/>
                             <button style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
@@ -32,10 +32,10 @@
                     </div>
                     <div class="col-sm-9 col-md-9 col-xs-6">
                         <textarea cols='40' rows='10' class="form-control" v-model="user.intro"></textarea>
-                        <div style="margin-top:20px;" class="text-center">
-                                <button class="btn btn-danger" @click="changeUser()">提交</button>
-                        </div>
                     </div>
+                </div>
+                <div style="margin-top:20px;" class="text-center">
+                        <button class="btn btn-danger" @click="changeUser()">提交</button>
                 </div>
             </div>
          </div>
@@ -51,17 +51,31 @@ import axios from 'axios'
 
 import env from '@/config/env'
 
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'Settings',
   data (){
     return {
-        user:{},
+        user:{
+          nick:'',
+          intro:'',
+          img:'',
+        },
         Sid:'',
     }
   },
-   mounted (){
+  computed: {
+    ...mapGetters({
+      users:'getUser'
+    })
+  },
+  mounted (){
+    let user =JSON.parse(window.localStorage.getItem('user'));
     this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
-    this.userInformation(this.Sid);
+    this.user.nick = user.Nick;
+    this.user.intro = user.Intro;
+    this.initData(user.Flag,user.Account);
   },
   methods:{
     //上传头像
@@ -106,13 +120,29 @@ export default {
         });
     },
 
-    //下载用户信息
-    userInformation(Sid){
+    initData(Flag,Account){
        let params={
-        sid:Sid,
+          sid:this.Sid,
+          flag:Flag,
+          begidx:0,
+          counts:100,
        };
 
        let that = this;
+       api.queryUser(params).then(function(res){
+          if(res.data.Code ==3){
+            let usersInfos = res.data.Data.Detail;
+            for(let i=0; i<usersInfos.length;i++){
+              if(usersInfos[i].account == Account){
+                  that.user.img = usersInfos[i].headurl;
+              }
+            }
+          }else{
+              alert(res.data.Msg);
+          }
+       }).catch(function(err){
+          console.log(err);
+      });
     }
   },
 }

@@ -140,6 +140,7 @@ export default {
           alert(res.data.Msg);
           if(res.data.Code ==3){
              that.addQQ = !that.addQQ;
+             that.initData();
           }
       }).catch(function(err){
           console.log(err);

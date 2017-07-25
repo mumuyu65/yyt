@@ -72,12 +72,12 @@
                         <label>奖品简介</label>
                         <input type="text" class="form-control" placeholder="请输入奖品简介" v-model="modify_prizes.intro">
                     </div>
+                    <div class="col-md-12" style="margin-bottom: 1rem; text-align: center">
+                        <img :src="modify_prizes.img" alt="" class="thumbnail-img">
+                    </div>
                     <div class="form-group">
                         <label>奖品图片</label>
                         <input type="file" class="form-control" ref="update" @change="onFileChange" style="width: 100%;">
-                    </div>
-                    <div class="col-md-12" style="margin-bottom: 1rem; text-align: center">
-                        <img :src="modify_prizes.img" alt="" class="thumbnail-img">
                     </div>
                     <div class="btn btn-primary col-md-4" @click="modifyPrize">确认</div>
                     <div class="btn btn-default col-md-4 col-md-offset-4" @click="isShowModify">取消</div>

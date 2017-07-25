@@ -7,7 +7,7 @@
              用户名：
           </div>
           <div class="col-sm-8 col-md-8 col-xs-6 ">
-            <input type="text" name="account" placeholder="输入用户名" v-model="user.name" class="form-control" required/>
+            <input type="text" name="account" placeholder="输入手机号" v-model="user.name" class="form-control" required/>
           </div>
         </div>
         <div class="row">
@@ -15,7 +15,7 @@
             密码：
           </div>
           <div class="col-sm-8 col-md-8 col-xs-6">
-             <input type="password" name="pwd" placeholder="输入密码" v-model="user.pwd" class="form-control" required/>
+             <input type="password" name="pwd" placeholder="输入密码" @keyup.13="doLogin()" @keyup.enter="doLogin()" v-model="user.pwd" class="form-control" required/>
           </div>
         </div>
         <div class="row">
@@ -37,8 +37,8 @@ export default {
   data (){
     return {
         user:{
-          name:'18516074685',
-          pwd:'123456',
+          name:'',
+          pwd:'',
         },
     }
   },
@@ -54,7 +54,6 @@ export default {
       api.login(params).then(function(res){
           if(res.data.Code ==3){
               window.localStorage.setItem('user',JSON.stringify(res.data.Data));
-              //that.$store.dispatch("changeUser",res.data.Data);
               that.$router.push({ path: '/index' });
               let roles = res.data.Data.Flag;
               if (roles == 4) {
@@ -71,6 +70,7 @@ export default {
               that.$store.dispatch('generateRoutes', {
                         roles
                 });
+
           }
           else{
             alert(res.data.Msg);

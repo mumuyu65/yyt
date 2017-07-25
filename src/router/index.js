@@ -53,6 +53,8 @@ import productIntro from '@/pages/productsIntro'
 //产品介绍
 import Clan from '@/pages/clan'
 
+import Comment from '@/pages/comment'
+
 //早晚评
 import DayComment from '@/pages/daycomment'
 
@@ -62,6 +64,8 @@ import productsComment from '@/pages/productsComment'
 //课程安排
 import ClassArrange from '@/pages/classArrange'
 
+import Classes from '@/pages/classes'
+
 //学习课件
 import juniorclasses from '@/pages/juniorclasses'
 
@@ -69,6 +73,8 @@ import seniorclasses from '@/pages/seniorclasses'
 
 //下载中心
 import download from '@/pages/download'
+
+import Smallgame from '@/pages/smallgame'
 
 //小游戏
 import prizemall from '@/pages/prizemall'
@@ -172,57 +178,63 @@ export default new Router({
                 component: operational,
             }],
         }, {
-            path: '',
+            path: '/comment',
             name: '老师点评',
+            redirect: '/comment/dayComment',
             noDropdown: false,
+            component: Comment,
             meta: {
                 role: ['teacher', 'admin', 'superman']
             },
             icon: 'fa fa-comments fa-2x',
             children: [{
-                path: '/dayComment',
+                path: '/comment/dayComment',
                 component: DayComment,
                 name: '早晚评',
             }, {
-                path: '/productsComment',
+                path: '/comment/productsComment',
                 component: productsComment,
                 name: '果蔬预测',
             }]
         }, {
-            path: '',
+            path: '/classes',
             name: '学习课件',
+            redirect: '/classes/juniorclasses',
             noDropdown: false,
+            component: Classes,
             meta: {
                 role: ['teacher', 'admin', 'superman']
             },
             icon: 'fa fa-book fa-2x',
             children: [{
-                path: '/juniorclasses',
+                path: '/classes/juniorclasses',
                 component: juniorclasses,
                 name: '基础课件',
             }, {
-                path: '/seniorclasses',
+                path: '/classes/seniorclasses',
                 component: seniorclasses,
                 name: '高级课件',
             }]
         }, {
-            path: '',
+            path: '/smallgame',
             name: '小游戏',
+            redirect: '/smallgame/prizemall',
             noDropdown: false,
+            component: Smallgame,
             meta: {
                 role: ['admin', 'superman']
             },
             icon: 'fa fa-book fa-2x',
             children: [{
-                path: '/prizemall',
+                path: '/smallgame/prizemall',
                 component: prizemall,
                 name: '积分商城',
             }, {
-                path: '/exchangerecord',
+                path: '/smallgame/exchangerecord',
                 component: exchangerecord,
                 name: '兑换记录',
             }, {
-                path: '/beansrecord',
+                path: '/smallgame/beansrecord',
                 component: beansrecord,
                 name: '赢豆记录',
             }]
@@ -374,57 +386,60 @@ export const asyncRouterMap = [{ //个人中心
         component: operational,
     }],
 }, {
-    path: '',
+    path: '/comment',
     name: '老师点评',
+    redirect: '/comment/dayComment',
     noDropdown: false,
     meta: {
         role: ['teacher', 'admin', 'superman']
     },
     icon: 'fa fa-comments fa-2x',
     children: [{
-        path: '/dayComment',
+        path: '/comment/dayComment',
         component: DayComment,
         name: '早晚评',
     }, {
-        path: '/productsComment',
+        path: '/comment/productsComment',
         component: productsComment,
         name: '果蔬预测',
     }]
 }, {
-    path: '',
+    path: '/classes',
     name: '学习课件',
+    redirect: '/classes/juniorclasses',
     noDropdown: false,
     meta: {
         role: ['teacher', 'admin', 'superman']
     },
     icon: 'fa fa-book fa-2x',
     children: [{
-        path: '/juniorclasses',
+        path: '/classes/juniorclasses',
         component: juniorclasses,
         name: '基础课件',
     }, {
-        path: '/seniorclasses',
+        path: '/classes/seniorclasses',
         component: seniorclasses,
         name: '高级课件',
     }]
 }, {
-    path: '',
+    path: '/smallgame',
     name: '小游戏',
+    redirect: '/smallgame/prizemall',
     noDropdown: false,
     meta: {
         role: ['admin', 'superman']
     },
     icon: 'fa fa-book fa-2x',
     children: [{
-        path: '/prizemall',
+        path: '/smallgame/prizemall',
         component: prizemall,
         name: '积分商城',
     }, {
-        path: '/exchangerecord',
+        path: '/smallgame/exchangerecord',
         component: exchangerecord,
         name: '兑换记录',
     }, {
-        path: '/beansrecord',
+        path: '/smallgame/beansrecord',
         component: beansrecord,
         name: '赢豆记录',
     }]

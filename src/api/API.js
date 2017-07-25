@@ -28,7 +28,7 @@ class API {
     //在线用户信息查询
     userInfo(param) {
         config.data = param;
-        return axios.post('', {}, config);
+        return axios.post('/cycj/admin/specifyuser', {}, config);
     }
 
     //用户管理
@@ -383,7 +383,7 @@ class API {
         config.data = param
         return axios.post('/cycj/dj/query', {}, config)
     }
-    
+
     // 赢豆记录
     getBeansChangeRecord(param) {
         config.data = param

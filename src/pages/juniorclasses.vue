@@ -302,7 +302,7 @@ export default {
           alert(res.data.Msg);
           if(res.data.Code ==3){
             that.AddComments = !that.AddComments;
-            that.$router.push("/juniorclasses");
+            that.initData();
           }
         })
         .catch(function (error) {

@@ -633,6 +633,7 @@ export default {
             display: block;
             clear: both;
             text-align: center;
+            min-width:800px;
         }
     .schedule ul li{
             float: left;

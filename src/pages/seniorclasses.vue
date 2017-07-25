@@ -302,7 +302,7 @@ export default {
           alert(res.data.Msg);
           if(res.data.Code ==3){
             that.AddComments = !that.AddComments;
-            window.location.reload();
+            that.initData();
           }
         })
         .catch(function (error) {
@@ -316,7 +316,7 @@ export default {
 
 
     modifyComment(item){
-      console.log(item);
+      //console.log(item);
       this.modifyComments = !this.modifyComments;
       this.modifyTitle = item.title;
       this.modifyImg = item.cover_url;
@@ -354,7 +354,7 @@ export default {
           alert(res.data.Msg);
           if(res.data.Code ==3){
             that.modifyComments = !that.modifyComments;
-            window.location.reload();
+            that.initData();
           }
         })
         .catch(function (error) {

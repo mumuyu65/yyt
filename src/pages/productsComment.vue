@@ -341,7 +341,7 @@ export default {
         alert(res.data.Msg);
         if(res.data.Code ==3){
           that.modifyComments =!that.modifyComments;
-          window.location.reload();
+          that.initProduct();
         }
       })
       .catch(function (error) {

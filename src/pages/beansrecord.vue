@@ -4,18 +4,19 @@
             <div class="beansrecord-box">
                 <ul class="list-inline">
                     <li><h3>赢豆记录</h3></li>
+                    <li class="pull-right">
+                        <ol class="list-inline" style="margin-top:15px;">
+                          <li style="vertical-align:top;"><input type="text" class="form-control"  placeholder="请输入手机号" v-model="search_account" /></li>
+                          <li><button @click="getRecordRough"
+                              style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
+                              搜索
+                          </button></li>
+                        </ol>
+                    </li>
                 </ul>
                 <hr/>
                 <div v-if="!is_show_sign">
                     <div v-if="!is_show_bean">
-                        <div class="col-md-4">
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="请输入手机号" v-model="search_account">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-primary" type="button" @click="getRecordRough">搜索</button>
-                                </span>
-                            </div>
-                        </div>
                         <table class="table table-hover col-md-12" style="margin-top: 3rem;">
                             <tr>
                                 <th>头像</th>

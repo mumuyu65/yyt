@@ -4,18 +4,22 @@
             <div class="exchangerecord-box">
                 <ul class="list-inline form-inline">
                     <li><h3>兑换记录</h3></li>
-                    <li>
-                        <input type="number" class="form-control" placeholder="请输入用户手机号" v-model="account">
+                    <li class="pull-right">
+                        <ol class="list-inline">
+                             <li>
+                                <input type="number" class="form-control" placeholder="请输入用户手机号" v-model="account">
+                            </li>
+                            <li class="form-group">
+                                <label>起始时间</label>
+                                <input type="date" class="form-control" v-model="bdt">
+                            </li>
+                            <li>
+                                <label>终止时间</label>
+                                <input type="date" class="form-control" v-model="edt">
+                            </li>
+                            <li><div class="btn btn-primary" @click="djList">搜索</div></li>
+                        </ol>
                     </li>
-                    <li class="form-group">
-                        <label>起始时间</label>
-                        <input type="date" class="form-control" v-model="bdt">
-                    </li>
-                    <li>
-                        <label>终止时间</label>
-                        <input type="date" class="form-control" v-model="edt">
-                    </li>
-                    <li><div class="btn btn-primary" @click="djList">搜索</div></li>
                 </ul>
                 <hr/>
                 <table id="djTable" class="text-center" width="100%" border="1" >
@@ -147,8 +151,8 @@ export default {
             }
         },
         dateToUnix(dateStr) {
-            let newstr = dateStr.replace(/-/g,'/'); 
-            let date =  new Date(newstr); 
+            let newstr = dateStr.replace(/-/g,'/');
+            let date =  new Date(newstr);
             let time_str = date.getTime().toString();
             return time_str.substr(0, 10);
         }    }

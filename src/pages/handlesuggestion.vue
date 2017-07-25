@@ -88,6 +88,9 @@ data (){
           {value:'大厅直播',platform:'大厅直播',flag:true},
           {value:'战队直播',platform:'战队直播',flag:false},
         ],
+        ClanInfos:[],
+        RoomInfos:[],
+        templateInfos:[],
     }
 },
 methods:{
@@ -136,6 +139,7 @@ methods:{
             console.log(err);
         });
 
+        this.getHandleSuggestion();  //初始化
     },
 
     //搜索
@@ -150,12 +154,24 @@ methods:{
             counts: 100,
         };
 
-        console.log(param);
+        let that = this;
+
         api.queryHandleSuggestion(param).then(function(res) {
             console.log(res.data);
             if (res.data.Code == 3) {
                 if (res.data.Data == null) {
                     alert('暂无数据')
+                }else{
+                    let templateObj = res.data.Data;
+                    for(let i =0; i<templateObj.length;i++){
+                        if(templateObj[i].place == '战队直播'){
+                            that.ClanInfos.push(templateObj[i]);
+                        }
+                        else{
+                            that.RoomInfos.push(templateObj[i]);
+                        }
+                    }
+
                 }
             }
         }).catch(function(err) {
@@ -176,6 +192,8 @@ methods:{
             this.clanItems[i].flag = false;
         }
         item.flag= true;
+
+        this.templateInfos = this.RoomInfos;
     },
 }
 }
