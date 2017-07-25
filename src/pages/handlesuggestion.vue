@@ -1,73 +1,201 @@
 <template>
 <div id="page-wrapper">
     <div id="page-inner">
-        <ul class="list-inline">
-            <li><h3>操作建议管理</h3></li>
-            <li class="pull-right" style="margin-top:15px;">
-                <router-link :to="{ path: '/handlesuggestion/add' }">
-                    <button
-                        style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
-                        <i class="fa fa-plus fa-1x"></i>新增操盘建议
-                    </button>
-                </router-link>
-            </li>
-        </ul>
-        <!-- 搜索区域  -->
-        <ol class="list-inline">
-            <li>开始时间：</li>
-            <li><input type="text" class="form-control form_datetime" id="start_time" /></li>
-            <li>结束时间:</li>
-            <li><input type="text" class="form-control form_datetime" id="end_time" /></li>
-            <li>商品:</li>
-            <li>
-                <select class="form-control" v-model="prize">
-                    <option v-for="p in all_prizes" :value="p.id">{{p.name}}</option>
-                </select>
-            </li>
-            <li>分析师:</li>
-            <li>
-                <select class="form-control" v-model="teacher">
-                    <option v-for="t in all_teachers" :value="t.id">{{t.nick}}</option>
-                </select>
-            </li>
-            <li><button class="btn btn-danger" @click="getHandleSuggestion">搜索</button></li>
-        </ol>
-        <hr/>
-        <ul class="nav nav-tabs">
-            <li v-bind:class="{'active':item.flag}" v-for="(item,index) in clanItems">
-              <a style="cursor:pointer;" @click="changeFlag(item,index)">{{item.value}}</a>
-            </li>
-        </ul>
-        <!-- table展示区域  -->
-        <table class="text-center" border="1" width="100%" id="productsTable">
-            <thead>
-                <th  class="text-center">开仓时间</th>
-                <th  class="text-center">类型</th>
-                <th  class="text-center">仓位</th>
-                <th  class="text-center">产品</th>
-                <th  class="text-center">止损价</th>
-                <th  class="text-center">止盈价</th>
-                <th  class="text-center">结果</th>
-                <th  class="text-center">麦单类型</th>
-                <th  class="text-center">操作</th>
-            </thead>
-            <tbody>
-                <tr v-for="item in templateInfos">
-                    <td>{{item.open_time | dateStamp}}</td>
-                    <td>{{item.order_type}}</td>
-                    <td>{{item.entry_price}}</td>
-                    <td>{{item.category_id}}</td>
-                    <td>{{item.loss_price}}</td>
-                    <td>{{item.win_price}}</td>
-                    <td>{{item.result}}</td>
-                    <td>{{item.wheat_type}}</td>
-                    <td>
-                        <button class="btn btn-primary">修改</button>
-                        <button class="btn btn-danger">删除</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div v-show="!addhandlesuggestion">
+           <div v-show="!modifyhandlesuggestion">
+                <ul class="list-inline">
+                    <li><h3>操作建议管理</h3></li>
+                    <li class="pull-right" style="margin-top:15px;">
+                        <button @click="AddSuggestion()"
+                            style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
+                            <i class="fa fa-plus fa-1x"></i>新增操盘建议
+                        </button>
+                    </li>
+                </ul>
+                <!-- 搜索区域  -->
+                <ol class="list-inline">
+                    <li>开始时间：</li>
+                    <li><input type="text" class="form-control form_datetime" id="start_time" /></li>
+                    <li>结束时间:</li>
+                    <li><input type="text" class="form-control form_datetime" id="end_time" /></li>
+                    <li>商品:</li>
+                    <li>
+                        <select class="form-control" v-model="prize">
+                            <option v-for="p in all_prizes" :value="p.id">{{p.name}}</option>
+                        </select>
+                    </li>
+                    <li>分析师:</li>
+                    <li>
+                        <select class="form-control" v-model="teacher">
+                            <option v-for="t in all_teachers" :value="t.id">{{t.nick}}</option>
+                        </select>
+                    </li>
+                    <li><button class="btn btn-danger" @click="getHandleSuggestion">搜索</button></li>
+                </ol>
+                <hr/>
+                <ul class="nav nav-tabs">
+                    <li v-bind:class="{'active':item.flag}" v-for="(item,index) in clanItems">
+                      <a style="cursor:pointer;" @click="changeFlag(item,index)">{{item.value}}</a>
+                    </li>
+                </ul>
+                <!-- table展示区域  -->
+                <table class="text-center" border="1" width="100%" id="productsTable">
+                    <thead>
+                        <th  class="text-center">开仓时间</th>
+                        <th  class="text-center">类型</th>
+                        <th  class="text-center">仓位</th>
+                        <th  class="text-center">产品</th>
+                        <th  class="text-center">止损价</th>
+                        <th  class="text-center">止盈价</th>
+                        <th  class="text-center">结果</th>
+                        <th  class="text-center">麦单类型</th>
+                        <th  class="text-center">操作</th>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(item, index) in templateInfos">
+                            <td>{{item.open_time | dateStamp}}</td>
+                            <td>{{item.order_type}}</td>
+                            <td>{{item.entry_price}}</td>
+                            <td>{{item.category_id}}</td>
+                            <td>{{item.loss_price}}</td>
+                            <td>{{item.win_price}}</td>
+                            <td>{{item.result}}</td>
+                            <td>{{item.wheat_type}}</td>
+                            <td>
+                                <button class="btn btn-primary" @click="showModify(item)">修改</button>
+                                <button class="btn btn-danger" @click="removehandlesuggestion(item,index)">删除</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- 新增 -->
+        <div v-show="addhandlesuggestion">
+            <h3>新增操作建议</h3>
+            <hr/>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label>投放地</label>
+                    <select class="form-control" v-model="handlesuggestion.place">
+                        <option value="大厅直播">大厅直播</option>
+                        <option value="战队直播">战队直播</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>商品</label>
+                    <select class="form-control" v-model="handlesuggestion.category_id">
+                        <option v-for="item in category" :value="item.id">{{item.name}}</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>类型</label>
+                    <select class="form-control" v-model="handlesuggestion.order_type">
+                        <option value="买入">买入</option>
+                        <option value="卖出">卖出</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>开仓时间</label>
+                    <input type="text" class="form-control" id="form_datetime"/>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>仓位</label>
+                    <input type="text" class="form-control" v-model="handlesuggestion.entry_price">
+                </div>
+                <div class="form-group col-md-6">
+                    <label>止盈价</label>
+                    <input type="text" class="form-control" v-model="handlesuggestion.win_price">
+                </div>
+                <div class="form-group col-md-6">
+                    <label>止损价</label>
+                    <input type="text" class="form-control" v-model="handlesuggestion.loss_price">
+                </div>
+                <div class="form-group col-md-6">
+                    <label>结果</label>
+                    <select class="form-control" v-model="handlesuggestion.result">
+                        <option value="赢单">赢单</option>
+                        <option value="输单">输单</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label>麦单类型</label>
+                    <select class="form-control" v-model="handlesuggestion.wheat_type">
+                        <option value="麦下单">麦下单</option>
+                        <option value="麦上单">麦上单</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" style="margin:50px;">
+                <button @click="addHandleSuggestion()" class="btn btn-danger">提交</button>
+                <button class="btn btn-default" @click="CancelAdd()">取消</button>
+            </div>
+        </div>
+        <!-- 修改 -->
+        <div v-show="modifyhandlesuggestion">
+            <h3>修改操作建议</h3>
+            <hr/>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label>投放地</label>
+                    <select class="form-control" v-model="modifyhandlesuggestion.place">
+                        <option value="大厅直播">大厅直播</option>
+                        <option value="战队直播">战队直播</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>商品</label>
+                    <select class="form-control" v-model="modifyhandlesuggestion.category_id">
+                        <option v-for="item in category" :value="item.id">{{item.name}}</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>类型</label>
+                    <select class="form-control" v-model="modifyhandlesuggestion.order_type">
+                        <option value="买入">买入</option>
+                        <option value="卖出">卖出</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>开仓时间</label>
+                    <input type="text" class="form-control" id="modify_form_datetime"/>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>仓位</label>
+                    <input type="text" class="form-control" v-model="modifyhandlesuggestion.entry_price">
+                </div>
+                <div class="form-group col-md-6">
+                    <label>止盈价</label>
+                    <input type="text" class="form-control" v-model="modifyhandlesuggestion.win_price">
+                </div>
+                <div class="form-group col-md-6">
+                    <label>止损价</label>
+                    <input type="text" class="form-control" v-model="modifyhandlesuggestion.loss_price">
+                </div>
+                <div class="form-group col-md-6">
+                    <label>结果</label>
+                    <select class="form-control" v-model="modifyhandlesuggestion.result">
+                        <option value="赢单">赢单</option>
+                        <option value="输单">输单</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label>麦单类型</label>
+                    <select class="form-control" v-model="modifyhandlesuggestion.wheat_type">
+                        <option value="麦下单">麦下单</option>
+                        <option value="麦上单">麦上单</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" style="margin:50px;">
+                <button @click="modifyHandleSuggestion()" class="btn btn-danger">提交</button>
+                <button class="btn btn-default" @click="CancelModify()">取消</button>
+            </div>
+        </div>
     </div>
 </div>
 </template>
@@ -103,6 +231,20 @@ data (){
         ClanInfos:[],
         RoomInfos:[],
         templateInfos:[],
+        addhandlesuggestion:false,
+        modifyhandlesuggestion:false,
+        handlesuggestion: {
+                place: '大厅直播', // 投放地
+                category_id: '', // 商品id
+                order_type: '买入', // 买入卖出
+                entry_price: '', // 仓位
+                win_price: '', // 止盈价
+                loss_price: '', // 止损价
+                result: '赢单', // 结果
+                wheat_type: '麦下单' // 麦单类型
+            },
+            category: [],
+            open_time: '', // 开仓时间
     }
 },
 filters:{
@@ -146,6 +288,7 @@ methods:{
             if(res.data.Code ==3){
                 //console.log(res.data);
                 that.all_prizes = res.data.Data;
+                that.category = res.data.Data;
             }
             else{
                 alert(res.data.Msg);
@@ -175,6 +318,14 @@ methods:{
         });
 
         this.getHandleSuggestion();  //初始化
+         //时间
+        $("#form_datetime").datetimepicker({
+            format: "yyyy-mm-dd hh:ii",
+            autoclose: true,
+            todayBtn: true,
+            language:'zh-CN',
+            pickerPosition: "bottom"
+        });
     },
 
     //搜索
@@ -192,7 +343,7 @@ methods:{
         let that = this;
 
         api.queryHandleSuggestion(param).then(function(res) {
-            //console.log(res.data);
+            console.log(res.data);
             if (res.data.Code == 3) {
                 if (res.data.Data == null) {
                     alert('暂无数据')
@@ -236,7 +387,65 @@ methods:{
         }
     },
 
+    //添加
+    addHandleSuggestion() {
+        let hs = this.handlesuggestion;
+        let ot = $("#form_datetime").val();
+        let arr = ot.replace(/ |:/g, '-').split('-');
+        let date = new Date(arr[0], arr[1]-1, arr[2], arr[3], arr[4]).getTime()/1000;
+        let param = {
+            sid: this.sid,
+            place: hs.place,
+            category_id: hs.category_id,
+            order_type: hs.order_type,
+            open_time: date,
+            entry_price: hs.entry_price,
+            win_price: hs.win_price,
+            loss_price: hs.loss_price,
+            result: hs.result,
+            wheat_type: hs.wheat_type
+        }
+        let _this = this;
+        api.addHandleSuggestion(param).then(function(res) {
+            if (res.data.Code == 3) {
+               _this.initData();
+               _this.addhandlesuggestion = !_this.addhandlesuggestion;
+            }
+            alert(res.data.Msg);
+        }).catch(function(err) {
+            console.log(err)
+        })
+    },
 
+    AddSuggestion(){
+        this.addhandlesuggestion = !this.addhandlesuggestion;
+    },
+
+    CancelAdd(){
+        this.addhandlesuggestion = !this.addhandlesuggestion;
+    },
+
+    //修改
+
+
+    //删除
+    removehandlesuggestion(item,idx){
+        let params={
+            sid:this.Sid,
+            id:item.id
+        };
+
+        let that = this;
+
+        api.delHandleSuggestion(params).then(function(res){
+            alert(res.data.Msg);
+            if(res.data.Code ==3){
+                that.templateInfos.splice(idx,1);
+            }
+        }).catch(function(err){
+            console.log(err);
+        });
+    }
     }
 }
 </script>

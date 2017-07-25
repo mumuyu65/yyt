@@ -21,8 +21,6 @@ import EconomicNewsType from '@/pages/economicNewsType'
 // 操作建议
 import HandleSuggestion from '@/pages/handlesuggestion'
 
-const AddHandleSuggestion = resolve => require(['@/pages/addhandlesuggestion'], resolve)
-
 //产品管理
 import productsManage from '@/pages/productsManage'
 
@@ -247,10 +245,6 @@ export default new Router({
             },
             icon: 'fa fa-sitemap fa-2x',
             noDropdown: true,
-            children: [{
-                path: '/handlesuggestion/add',
-                component: AddHandleSuggestion,
-            }],
         }, { //品类管理
             path: '/productsManage',
             component: productsManage,
@@ -452,10 +446,6 @@ export const asyncRouterMap = [{ //个人中心
     },
     icon: 'fa fa-sitemap fa-2x',
     noDropdown: true,
-    children: [{
-        path: '/handlesuggestion/add',
-        component: AddHandleSuggestion,
-    }],
 }, { //品类管理
     path: '/productsManage',
     component: productsManage,
