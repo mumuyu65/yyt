@@ -56,7 +56,7 @@
                             <td>{{item.open_time | dateStamp}}</td>
                             <td>{{item.order_type}}</td>
                             <td>{{item.entry_price}}</td>
-                            <td>{{item.category_id}}</td>
+                            <td>{{item.categoryname}}</td>
                             <td>{{item.loss_price}}</td>
                             <td>{{item.win_price}}</td>
                             <td>{{item.result}}</td>
@@ -343,7 +343,7 @@ methods:{
         let that = this;
 
         api.queryHandleSuggestion(param).then(function(res) {
-            console.log(res.data);
+            //console.log(res.data);
             if (res.data.Code == 3) {
                 if (res.data.Data == null) {
                     alert('暂无数据')
@@ -358,7 +358,7 @@ methods:{
                         }
                     }
 
-                    that.templateInfos = that.RoomInfos;
+                    that.templateInfos = that.transName(that.RoomInfos);
                 }
             }
         }).catch(function(err) {
@@ -381,9 +381,26 @@ methods:{
         item.flag= true;
 
         if(item.platform =="战队直播"){
-            this.templateInfos = this.ClanInfos;
+            this.templateInfos = this.transName(this.ClanInfos);
+
         }else{
-            this.templateInfos = this.RoomInfos;
+            this.templateInfos = this.transName(this.RoomInfos);
+        }
+    },
+
+    transName(item){
+        if(item.length>0){
+            let len= item.length;
+            for(let i =0; i<len;i++){
+                for(let j=0;j<this.category.length;j++){
+                    if(this.category[j].id == item[i].category_id){
+                        item[i].categoryname = this.category[j].name;
+                    }
+                }
+            }
+            return item;
+        }else{
+            alert("无数据！");
         }
     },
 
