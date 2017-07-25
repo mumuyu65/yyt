@@ -54,8 +54,23 @@ export default {
       api.login(params).then(function(res){
           if(res.data.Code ==3){
               window.localStorage.setItem('user',JSON.stringify(res.data.Data));
-              that.$store.dispatch("changeUser",res.data.Data);
-              that.$router.push('/index');
+              //that.$store.dispatch("changeUser",res.data.Data);
+              that.$router.push({ path: '/index' });
+              let roles = res.data.Data.Flag;
+              if (roles == 4) {
+                  roles = ['superman'];
+              } else if (roles == 3) {
+                  roles = ['admin'];
+              } else if (roles == 2) {
+                  roles = ['checker'];
+              } else if (roles == 1) {
+                  roles = ['teacher'];
+              } else {
+                  roles = ['user']
+              }
+              that.$store.dispatch('generateRoutes', {
+                        roles
+                });
           }
           else{
             alert(res.data.Msg);

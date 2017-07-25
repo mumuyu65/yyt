@@ -47,20 +47,9 @@ export const generateRoutes = ({
     if (roles.indexOf('admin') >= 0) {
         accessedRouters = asyncRouterMap;
     } else {
-        accessedRouters = filterAsyncRouter(asyncRouterMap[0].children, roles);
+        accessedRouters = filterAsyncRouter(asyncRouterMap, roles);
     }
+
+    console.log(accessedRouters);
     commit('SET_ROUTERS', accessedRouters);
-}
-
-
-export const changeRole = ({
-    commit
-}, value) => {
-    commit('SET_ROLES', value);
-}
-
-export const changeAdmin = ({
-    commit
-}, value) => {
-    commit('SET_ITEMS', value);
 }

@@ -8,4 +8,4 @@ export const getRoutes = state => state.addRouters
 
 export const getRoles = state => state.roles
 
-export const getItems = state => state.routers
+export const getItems = state => state.router
