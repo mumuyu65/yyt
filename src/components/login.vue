@@ -37,7 +37,7 @@ export default {
   data (){
     return {
         user:{
-          name:'18668800630',
+          name:'18516074685',
           pwd:'123456',
         },
     }
@@ -45,8 +45,8 @@ export default {
   methods: {
     doLogin() {
       let params={
-        account:this.user.name,
-        pwd:this.user.pwd
+        account:this.user.name.trim(),
+        pwd:this.user.pwd.trim()
       };
 
       let that= this;
@@ -54,15 +54,16 @@ export default {
       api.login(params).then(function(res){
           if(res.data.Code ==3){
               window.localStorage.setItem('user',JSON.stringify(res.data.Data));
-              that.$router.push('index');
+              that.$store.dispatch("changeUser",res.data.Data);
+              that.$router.push('/index');
+          }
+          else{
+            alert(res.data.Msg);
           }
       }).catch(function(err){
           console.log(err);
-        });
+      });
     },
-
-
-
   },
 }
 </script>
@@ -92,5 +93,6 @@ export default {
     background-color:#d1201d;
     color:#fff;
     border:1px solid transparent;
+    width:100%;
   }
 </style>

@@ -377,6 +377,13 @@ class API {
         config.data = param
         return axios.post('/cycj/award/modify', {}, config)
     }
+
+    // 兑奖记录
+    getDj(param) {
+        config.data = param
+        return axios.post('/cycj/dj/query', {}, config)
+    }
+    
     // 赢豆记录
     getBeansChangeRecord(param) {
         config.data = param
