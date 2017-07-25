@@ -168,7 +168,6 @@ export default {
                 alert('结束时间不得小于开始时间')
             }
         },
-<<<<<<< HEAD
         isConfirm(id,status){
             let _this = this
             let param = {
@@ -220,16 +219,14 @@ export default {
             }).catch(function(err) {
                 console.log(err)
             })
-        }
-    }
-=======
+        },
         dateToUnix(dateStr) {
             let newstr = dateStr.replace(/-/g,'/');
             let date =  new Date(newstr);
             let time_str = date.getTime().toString();
             return time_str.substr(0, 10);
-        }    }
->>>>>>> 385dab6f94b22a791470e558cd94fb843680692f
+        } 
+    }   
 }
 </script>
 
