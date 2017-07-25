@@ -389,5 +389,16 @@ class API {
         config.data = param
         return axios.post('/cycj/bean/change', {}, config)
     }
+
+    getRecordRough(param) {
+        config.data = param
+        return axios.post('/cycj/record/rough', {}, config)
+    }
+
+    // 签到管理
+    getSigninRecord(param) {
+        config.data = param
+        return axios.post('/cycj/signin/query', {}, config)
+    }
 }
 export default API;
