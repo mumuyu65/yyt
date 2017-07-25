@@ -45,7 +45,6 @@
                 <th  class="text-center">类型</th>
                 <th  class="text-center">仓位</th>
                 <th  class="text-center">产品</th>
-                <th  class="text-center">开仓价</th>
                 <th  class="text-center">止损价</th>
                 <th  class="text-center">止盈价</th>
                 <th  class="text-center">结果</th>
@@ -53,7 +52,20 @@
                 <th  class="text-center">操作</th>
             </thead>
             <tbody>
-
+                <tr v-for="item in templateInfos">
+                    <td>{{item.open_time | dateStamp}}</td>
+                    <td>{{item.order_type}}</td>
+                    <td>{{item.entry_price}}</td>
+                    <td>{{item.category_id}}</td>
+                    <td>{{item.loss_price}}</td>
+                    <td>{{item.win_price}}</td>
+                    <td>{{item.result}}</td>
+                    <td>{{item.wheat_type}}</td>
+                    <td>
+                        <button class="btn btn-primary">修改</button>
+                        <button class="btn btn-danger">删除</button>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -92,6 +104,29 @@ data (){
         RoomInfos:[],
         templateInfos:[],
     }
+},
+filters:{
+    dateStamp:function(value){
+        let tm = parseInt(value)*1000;
+        var time = new Date(tm);
+         //获取年份信息
+         var y = time.getFullYear();
+         //获取月份信息，月份是从0开始的
+         var m = time.getMonth()+1;
+         //获取天数信息
+         //获取天数信息
+         var d = time.getDate();
+
+         var H=time.getHours();
+
+         var M=time.getMinutes();
+         //返回拼接信息
+         return y+'-'+add(m) + '-' + add(d)+'  '+add(H)+":"+add(M);
+
+         function add(m){
+            return m<10?'0'+m:m
+         }
+    },
 },
 methods:{
     initData() {
@@ -157,7 +192,7 @@ methods:{
         let that = this;
 
         api.queryHandleSuggestion(param).then(function(res) {
-            console.log(res.data);
+            //console.log(res.data);
             if (res.data.Code == 3) {
                 if (res.data.Data == null) {
                     alert('暂无数据')
@@ -172,6 +207,7 @@ methods:{
                         }
                     }
 
+                    that.templateInfos = that.RoomInfos;
                 }
             }
         }).catch(function(err) {
@@ -193,9 +229,15 @@ methods:{
         }
         item.flag= true;
 
-        this.templateInfos = this.RoomInfos;
+        if(item.platform =="战队直播"){
+            this.templateInfos = this.ClanInfos;
+        }else{
+            this.templateInfos = this.RoomInfos;
+        }
     },
-}
+
+
+    }
 }
 </script>
 
