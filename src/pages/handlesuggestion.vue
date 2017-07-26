@@ -360,6 +360,8 @@ methods:{
 
                     that.templateInfos = that.transName(that.RoomInfos);
                 }
+            }else{
+                alert(res.data.Msg)
             }
         }).catch(function(err) {
             console.log(err)
@@ -443,8 +445,14 @@ methods:{
     },
 
     //修改
+    showModify(item){
+        this.modifyhandlesuggestion = !this.modifyhandlesuggestion;
+    },
 
-
+    CancelModify(){
+        this.modifyhandlesuggestion = !this.modifyhandlesuggestion;
+    },
+    
     //删除
     removehandlesuggestion(item,idx){
         let params={
