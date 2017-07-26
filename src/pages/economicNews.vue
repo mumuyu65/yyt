@@ -21,7 +21,7 @@
                       </li>
                   </ul>
                   <hr/>
-                  <table class="text-center" border="1" width="100%" id="productsTable">
+                  <!-- <table class="text-center" border="1" width="100%" id="productsTable">
                     <thead>
                         <th  class="text-center">序列号</th>
                         <th  class="text-center">资讯类型</th>
@@ -34,7 +34,7 @@
                     <tbody>
                         <tr v-for="(item,index) in newsLists">
                           <td>{{index+1}}</td>
-                          <td>{{item.type}}</td>
+                          <td>{{item.type }}</td>
                           <td>{{item.title}}</td>
                           <td><img v-bind:src="item.imgurl" style="height:50px;"/></td>
                           <td>{{item.content}}</td>
@@ -45,7 +45,22 @@
                           </td>
                         </tr>
                     </tbody>
-                </table>
+                </table> -->
+                <div class="row" v-for="(item,index) in newsLists" @click="upDown">
+                    <div class="col-sm-2 col-md-2">
+                       <img v-bind:src="item.imgurl" style="height:120px;"/>
+                    </div>
+                    <div class="col-sm-8 col-md-8">
+                         <ul>
+                          <li style="margin-top:20px"><b>{{item.title}}</b></li>
+                          <li style="display:none" class="content">{{item.content}}</li>
+                      </ul>
+                    </div>
+                    <div class="col-sm-2 col-md-2">
+                        <button class="btn btn-primary" @click="modifyEconomics(item)">修改</button>
+                        <button class="btn btn-danger" @click="delNew(item,index)">删除</button>
+                    </div>
+                </div>
               </div>
           </div>
           <!-- 添加 -->
@@ -218,7 +233,7 @@ export default {
       api.newsType().then(function(res){
             if(res.data.Code ==3){
                 that.newsType = res.data.Data;
-                that.queryNews();
+                that.queryNews(res.data.Data);
             }else{
                 alert(res.data.Msg);
             }
@@ -380,6 +395,10 @@ export default {
         this.addNew = ! this.addNew;
     },
 
+    newsTypeDetail(){
+        let that = this;
+    },
+
     //搜索
     Search(){
       let params={
@@ -395,6 +414,10 @@ export default {
               console.log(that.newsLists);
           }
       });
+    },
+
+    upDown(){
+      $('.content').toggle()
     }
 
   }
@@ -402,6 +425,10 @@ export default {
 </script>
 
 <style scoped>
+    li{
+      list-style: none;
+    }
+
     #page-inner .row{
         padding:20px;
         background-color:#F3F3F3;
