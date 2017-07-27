@@ -44,7 +44,7 @@ export const generateRoutes = ({
         roles
     } = value;
     let accessedRouters;
-    if (roles.indexOf('admin') >= 0) {
+    if (roles.indexOf('superman') >= 0) {
         accessedRouters = asyncRouterMap;
     } else {
         accessedRouters = filterAsyncRouter(asyncRouterMap, roles);

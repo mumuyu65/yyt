@@ -134,7 +134,7 @@ export default new Router({
             component: Home,
             name: '账户管理',
             meta: {
-                role: ['admin', 'superman']
+                role: ['superman']
             },
             icon: 'fa fa-dashboard fa-2x',
             noDropdown: true,
@@ -347,7 +347,7 @@ export const asyncRouterMap = [{ //个人中心
     component: Home,
     name: '账户管理',
     meta: {
-        role: ['admin', 'superman']
+        role: ['superman']
     },
     icon: 'fa fa-dashboard fa-2x',
     noDropdown: true,
