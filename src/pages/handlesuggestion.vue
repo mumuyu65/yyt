@@ -2,7 +2,7 @@
 <div id="page-wrapper">
     <div id="page-inner">
         <div v-show="!addhandlesuggestion">
-           <div v-show="!modifyhandlesuggestion">
+           <div v-show="!Modifyhandlesuggestion">
                 <ul class="list-inline">
                     <li><h3>操作建议管理</h3></li>
                     <li class="pull-right" style="margin-top:15px;">
@@ -134,7 +134,7 @@
             </div>
         </div>
         <!-- 修改 -->
-        <div v-show="modifyhandlesuggestion">
+        <div v-show="Modifyhandlesuggestion">
             <h3>修改操作建议</h3>
             <hr/>
             <div class="row">
@@ -160,7 +160,7 @@
                 </div>
                 <div class="form-group col-md-6">
                     <label>开仓时间</label>
-                    <input type="text" class="form-control" id="modify_form_datetime"/>
+                    <input type="text" class="form-control" id="modify_form_datetime" />
                 </div>
                 <div class="form-group col-md-6">
                     <label>仓位</label>
@@ -232,19 +232,30 @@ data (){
         RoomInfos:[],
         templateInfos:[],
         addhandlesuggestion:false,
-        modifyhandlesuggestion:false,
+        Modifyhandlesuggestion:false,
         handlesuggestion: {
-                place: '大厅直播', // 投放地
-                category_id: '', // 商品id
-                order_type: '买入', // 买入卖出
-                entry_price: '', // 仓位
-                win_price: '', // 止盈价
-                loss_price: '', // 止损价
-                result: '赢单', // 结果
-                wheat_type: '麦下单' // 麦单类型
-            },
-            category: [],
-            open_time: '', // 开仓时间
+            place: '大厅直播', // 投放地
+            category_id: '', // 商品id
+            order_type: '买入', // 买入卖出
+            entry_price: '', // 仓位
+            win_price: '', // 止盈价
+            loss_price: '', // 止损价
+            result: '赢单', // 结果
+            wheat_type: '麦下单' // 麦单类型
+        },
+        category: [],
+        open_time: '', // 开仓时间
+        modifyhandlesuggestion:{
+            place:'',
+            category_id:'',
+            order_type:'',
+            entry_price:'',
+            win_price:'',
+            loss_price:'',
+            result:'',
+            wheat_type:'',
+        },
+        ModifyId:'',
     }
 },
 filters:{
@@ -320,6 +331,14 @@ methods:{
         this.getHandleSuggestion();  //初始化
          //时间
         $("#form_datetime").datetimepicker({
+            format: "yyyy-mm-dd hh:ii",
+            autoclose: true,
+            todayBtn: true,
+            language:'zh-CN',
+            pickerPosition: "bottom"
+        });
+
+        $("#modify_form_datetime").datetimepicker({
             format: "yyyy-mm-dd hh:ii",
             autoclose: true,
             todayBtn: true,
@@ -446,13 +465,51 @@ methods:{
 
     //修改
     showModify(item){
-        this.modifyhandlesuggestion = !this.modifyhandlesuggestion;
+        this.Modifyhandlesuggestion = !this.Modifyhandlesuggestion;
+        this.modifyhandlesuggestion.place = item.place;
+        this.modifyhandlesuggestion.category_id= item.category_id;
+        this.modifyhandlesuggestion.order_type= item.order_type;
+        $("#modify_form_datetime").attr('value',this.dateStamp(item.unix));
+        this.modifyhandlesuggestion.entry_price= item.entry_price;
+        this.modifyhandlesuggestion.win_price= item.win_price;
+        this.modifyhandlesuggestion.loss_price= item.loss_price;
+        this.modifyhandlesuggestion.result= item.result;
+        this.modifyhandlesuggestion.wheat_type= item.wheat_type;
+        this.ModifyId = item.id;
+    },
+
+    modifyHandleSuggestion(){
+        let params={
+            sid:this.Sid,
+            id:this.ModifyId,
+            place:this.modifyhandlesuggestion.place,
+            category_id:this.modifyhandlesuggestion.category_id,
+            order_type:this.modifyhandlesuggestion.order_type,
+            open_time:$("#modify_form_datetime").val(),
+            entry_price:this.modifyhandlesuggestion.entry_price,
+            win_price:this.modifyhandlesuggestion.win_price,
+            loss_price:this.modifyhandlesuggestion.loss_price,
+            result:this.modifyhandlesuggestion.result,
+            wheat_type:this.modifyhandlesuggestion.wheat_type,
+        };
+
+        let that = this;
+
+        api.modifyHandleSuggestion(params).then(function(res){
+            alert(res.data.Msg);
+            if(res.data.Code ==3){
+                that.Modifyhandlesuggestion = !that.Modifyhandlesuggestion;
+                that.initData();
+            }
+        }).catch(function(err){
+            console.log(err);
+        });
     },
 
     CancelModify(){
-        this.modifyhandlesuggestion = !this.modifyhandlesuggestion;
+        this.Modifyhandlesuggestion = !this.Modifyhandlesuggestion;
     },
-    
+
     //删除
     removehandlesuggestion(item,idx){
         let params={
@@ -470,8 +527,30 @@ methods:{
         }).catch(function(err){
             console.log(err);
         });
-    }
-    }
+    },
+
+    //时间转换
+    dateStamp (value) {
+        let tm = parseInt(value)*1000;
+        var time = new Date(tm);
+         //获取年份信息
+         var y = time.getFullYear();
+         //获取月份信息，月份是从0开始的
+         var m = time.getMonth()+1;
+         //获取天数信息
+         var d = time.getDate();
+
+         var H=time.getHours();
+
+         var M=time.getMinutes();
+         //返回拼接信息
+         return y+'-'+this.add(m) + '-' + this.add(d)+'  '+this.add(H)+":"+this.add(M);
+    },
+    add(m){
+        return m<10?'0'+m:m
+    },
+
+    },
 }
 </script>
 
