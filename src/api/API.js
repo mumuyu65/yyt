@@ -198,6 +198,17 @@ class API {
         return axios.post('/cycj/wxcode/update', {}, config);
     }
 
+    //活動專區管理
+    activityQuery(param) {
+        config.data = param;
+        return axios.post('/cycj/activity/query', {}, config);
+    }
+
+    activityUpdate(param) {
+        config.data = param;
+        return axios.post('/cycj/activity/update', {}, config);
+    }
+
     //产品介绍管理
     productIntroQuery(param) {
         config.data = param;
