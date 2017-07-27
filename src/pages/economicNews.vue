@@ -21,15 +21,15 @@
                       </li>
                   </ul>
                   <hr/>
-                  <!-- 添加 -->
-                  <div style="margin-top: 2rem;">
+                  <!-- 展示 -->
+                  <div style="margin-top: 2rem;" class="row">
                         <div class="col-md-3" v-for="(item,index) in newsLists">
                             <div class="prize-item">
                                 <div class="p-img">
                                     <img class="thumbnail-image" v-bind:src="item.imgurl"  alt="奖品图片" style="height:100px;" />
                                 </div>
                                 <div class="p-info">
-                                    <span class="pull-left">{{item.type }}</span>
+                                    <span class="pull-left">资讯类型:{{item.typename }}</span>
                                     <span class="pull-right beans">{{item.unix | dateStamp }}</span>
                                 </div>
                                 <h5 style="padding:0 10px;">标题：{{item.title}}</h5>
@@ -41,33 +41,11 @@
                             </div>
                         </div>
                   </div>
-                  <!-- <table class="text-center" border="1" width="100%" id="productsTable">
-                    <thead>
-                        <th  class="text-center">序列号</th>
-                        <th  class="text-center">资讯类型</th>
-                        <th  class="text-center">资讯标题</th>
-                        <th  class="text-center">资讯图片</th>
-                        <th  class="text-center">资讯内容</th>
-                        <th  class="text-center">时间</th>
-                        <th  class="text-center">操作</th>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(item,index) in newsLists">
-                          <td>{{index+1}}</td>
-                          <td>{{item.type }}</td>
-                          <td>{{item.title}}</td>
-                          <td><img v-bind:src="item.imgurl" style="height:50px;"/></td>
-                          <td>{{item.content}}</td>
-                          <td>{{item.unix | dateStamp }}</td>
-                          <td>
-                            <button class="btn btn-primary" @click="modifyEconomics(item)">修改</button>
-                            <button class="btn btn-danger" @click="delNew(item,index)">删除</button>
-                          </td>
-                        </tr>
-                    </tbody>
-                </table> -->
+                  <div id="economic_pagnation"></div>
               </div>
           </div>
+          <!-- 添加 -->
+
           <!-- 修改 -->
           <div style="width:700px; margin:0 auto; margin-top:50px;" v-show="modifyNew">
               <div class="row">
@@ -132,6 +110,8 @@ import axios from 'axios'
 
 import env from '@/config/env'
 
+import '../../static/pagnation/bootstrap-paginator.js';
+
 export default {
   name: 'economicNews',
   data(){
@@ -153,6 +133,7 @@ export default {
       modifyId:'',
 
       searchId:'',
+      BegIdx:0,
     }
   },
   watch:{
@@ -186,8 +167,9 @@ export default {
       let that = this;
       api.newsType().then(function(res){
             if(res.data.Code ==3){
-                that.newsType = res.data.Data;
-                that.queryNews(res.data.Data);
+                that.newsType = res.data.Data.Detail;
+                that.queryNews(res.data.Data.Detail);
+
             }else{
                 alert(res.data.Msg);
             }
@@ -310,17 +292,90 @@ export default {
     queryNews(){
       let params={
           begidx:0,
-          counts:100,
+          counts:8,
           type:0,
         };
 
       let that = this;
       api.queryNews(params).then(function(res){
           if(res.data.Code ==3){
-              that.newsLists = res.data.Data.Detail;
-              console.log(that.newsLists);
+              let TotalNum;  //总数据条数
+              TotalNum=res.data.Data.Total;
+              let templateObj = res.data.Data.Detail;
+              //    分页
+               if(TotalNum>8) {
+                  for(let i=0;i<8;i++){
+                    for(let j =0;j<that.newsType.length;j++){
+                        if(templateObj[i].type == that.newsType[j].type){
+                            templateObj[i].typename = that.newsType[j].text;
+                        }
+                    }
+                  }
+                   that.newsLists= templateObj;
+                   var options = {
+                       currentPage: 1,
+                       totalPages: parseInt(TotalNum /8) + 1,
+                       onPageClicked: function (e, originalEvent, type, page) {
+                           switch (type) {
+                               case 'first':
+                                   that.economicsListContent(0);
+                                   break;
+                               case 'page':
+                                   that.BegIdx = (page - 1) * 8;
+                                   that.economicsListContent(that.BegIdx,0);
+                                   break;
+                               case 'next':
+                                   that.BegIdx  += 8;
+                                   that.economicsListContent(that.BegIdx,0);
+                                   break;
+                               case 'last':
+                                   that.BegIdx = TotalNum - TotalNum % 8;
+                                   that.economicsListContent(that.BegIdx,0);
+                                   break;
+                               case 'prev':
+                                   that.BegIdx -= 8;
+                                   that.economicsListContent(that.BegIdx,0);
+                                   break;
+                           }
+                       }
+                   };
+                   $('#economic_pagnation').bootstrapPaginator(options);
+               }
+          }else{
+            let templateObj = res.data.Data.Detail;
+            for(let i=0;i<8;i++){
+                for(let j =0;j<that.newsType.length;j++){
+                    if(templateObj[i].type == that.newsType[j].type){
+                        templateObj[i].typename = that.newsType[j].text;
+                    }
+                }
+              }
+            that.newsLists= templateObj;
           }
       });
+    },
+
+    economicsListContent(BegIdx,type){
+      let params={
+          begidx:BegIdx,
+          counts:8,
+          type:type,
+      };
+
+      let that = this;
+      api.queryNews(params).then(function(res){
+          if(res.data.Code ==3){
+              let templateObj = res.data.Data.Detail;
+              for(let i=0;i<templateObj.length;i++){
+                  for(let j =0;j<that.newsType.length;j++){
+                      if(templateObj[i].type == that.newsType[j].type){
+                          templateObj[i].typename = that.newsType[j].text;
+                      }
+                  }
+                }
+              that.newsLists= templateObj;
+              }
+          })
     },
 
     delNew(item,idx){
@@ -357,15 +412,65 @@ export default {
     Search(){
       let params={
         begidx:0,
-        counts:100,
+        counts:8,
         type:this.searchId,
       };
 
       let that = this;
       api.queryNews(params).then(function(res){
           if(res.data.Code ==3){
-              that.newsLists = res.data.Data.Detail;
-              console.log(that.newsLists);
+              let templateObj = res.data.Data.Detail;
+              let TotalNum;  //总数据条数
+              TotalNum=res.data.Data.Total;
+              //    分页
+               if(TotalNum>8) {
+                  for(let i=0;i<8;i++){
+                      for(let j =0;j<that.newsType.length;j++){
+                          if(templateObj[i].type == that.newsType[j].type){
+                              templateObj[i].typename = that.newsType[j].text;
+                          }
+                      }
+                    }
+                  that.newsLists= templateObj;
+                   var options = {
+                       currentPage: 1,
+                       totalPages: parseInt(TotalNum /8) + 1,
+                       onPageClicked: function (e, originalEvent, type, page) {
+                           switch (type) {
+                               case 'first':
+                                   that.economicsListContent(0);
+                                   break;
+                               case 'page':
+                                   that.BegIdx = (page - 1) * 8;
+                                   that.economicsListContent(that.BegIdx,that.searchId);
+                                   break;
+                               case 'next':
+                                   that.BegIdx  += 8;
+                                   that.economicsListContent(that.BegIdx,that.searchId);
+                                   break;
+                               case 'last':
+                                   that.BegIdx = TotalNum - TotalNum % 8;
+                                   that.economicsListContent(that.BegIdx,that.searchId);
+                                   break;
+                               case 'prev':
+                                   that.BegIdx -= 8;
+                                   that.economicsListContent(that.BegIdx,that.searchId);
+                                   break;
+                           }
+                       }
+                   };
+                   $('#economic_pagnation').bootstrapPaginator(options);
+               }else{
+                  $('#economic_pagnation').empty();
+                  for(let i=0;i<templateObj.length;i++){
+                      for(let j =0;j<that.newsType.length;j++){
+                          if(templateObj[i].type == that.newsType[j].type){
+                              templateObj[i].typename = that.newsType[j].text;
+                          }
+                      }
+                    }
+                  that.newsLists= templateObj;
+                }
           }
       });
     },

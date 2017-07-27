@@ -65,7 +65,7 @@ export default {
       let that = this;
       api.newsType().then(function(res){
         if(res.data.Code ==3){
-            that.currentItems = res.data.Data;
+            that.currentItems = res.data.Data.Detail;
             that.Num = parseInt(that.currentItems[that.currentItems.length-1].type) +1;
         }else{
              alert(res.data.Msg);
