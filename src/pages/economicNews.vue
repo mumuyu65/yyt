@@ -22,7 +22,7 @@
                   </ul>
                   <hr/>
                   <!-- 展示 -->
-                  <div style="margin-top: 2rem;" class="row">
+                  <div style="margin-top: 2rem; background-color:transparent" class="row">
                         <div class="col-md-3" v-for="(item,index) in newsLists">
                             <div class="prize-item">
                                 <div class="p-img">
@@ -45,9 +45,58 @@
               </div>
           </div>
           <!-- 添加 -->
-
+          <div style="width:95%; margin:0 auto; margin-top:50px;" v-show="addNew">
+              <div class="row">
+                  <div class="col-sm-3 col-md-3 col-xs-6">
+                      资讯类型：
+                  </div>
+                  <div class="col-sm-9 col-md-9 col-xs-6">
+                      <select v-model="Type" class="form-control">
+                          <option v-for="option in newsType" v-bind:value="option.type">
+                                  {{ option.text }}
+                          </option>
+                      </select>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-3 col-md-3 col-xs-6">
+                      资讯标题：
+                  </div>
+                  <div class="col-sm-9 col-md-9 col-xs-6">
+                      <input type="text" class="form-control" v-model="title"/>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-3 col-md-3 col-xs-6">
+                      上传图片:
+                  </div>
+                  <div class="col-sm-9 col-md-9 col-xs-6">
+                      <ul class="list-inline">
+                          <li><img v-bind:src="Img" class="profile"/></li>
+                          <li style="position:relative;">
+                            <input type="file" @change="onFileChange" ref="uploadimg" value="上传图片" style="position:absolute; opacity:0;"/>
+                            <button style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
+                                上传图片
+                            </button>
+                          </li>
+                      </ul>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-3 col-md-3 col-xs-6">
+                      资讯内容:
+                  </div>
+                  <div class="col-sm-9 col-md-9 col-xs-6">
+                      <textarea cols='40' rows='10' class="form-control" v-model='content'></textarea>
+                      <div style="margin-top:20px;">
+                              <button class="btn btn-danger" @click="addNews()">提交</button>
+                              <button class="btn btn-default pull-right" @click="Cancel()">取消</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
           <!-- 修改 -->
-          <div style="width:700px; margin:0 auto; margin-top:50px;" v-show="modifyNew">
+          <div style="width:95%;margin:0 auto; margin-top:50px;" v-show="modifyNew">
               <div class="row">
                   <div class="col-sm-3 col-md-3 col-xs-6">
                       资讯类型：
@@ -483,6 +532,12 @@ export default {
 </script>
 
 <style scoped lang="scss">
+     #page-inner .row{
+        padding:20px;
+        background-color:#F3F3F3;
+        margin-bottom:10px;
+    }
+
     .prizemall-box {
         padding: 1rem 3rem;
         .prize-item {
