@@ -87,7 +87,10 @@
                       资讯内容:
                   </div>
                   <div class="col-sm-9 col-md-9 col-xs-6">
-                      <textarea cols='40' rows='10' class="form-control" v-model='content'></textarea>
+                       <div id="editor">
+                          <p>欢迎使用 wangEditor 富文本编辑器</p>
+                      </div>
+                      <!-- <textarea cols='40' rows='10' class="form-control" v-model='content'></textarea>  -->
                       <div style="margin-top:20px;">
                               <button class="btn btn-danger" @click="addNews()">提交</button>
                               <button class="btn btn-default pull-right" @click="Cancel()">取消</button>
@@ -161,6 +164,8 @@ import env from '@/config/env'
 
 import '../../static/pagnation/bootstrap-paginator.js';
 
+import * as E from 'wangeditor'
+
 export default {
   name: 'economicNews',
   data(){
@@ -230,6 +235,9 @@ export default {
     //新增资讯
     addNewEconomics(){
         this.addNew = ! this.addNew;
+        // 创建编辑器
+        var editor = new E('#editor')
+        editor.create();
     },
 
     addNews(){
