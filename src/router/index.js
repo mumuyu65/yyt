@@ -81,6 +81,9 @@ import exchangerecord from '@/pages/exchangerecord'
 
 import beansrecord from '@/pages/beansrecord'
 
+//活动专区管理
+import activities from '@/pages/activities'
+
 Vue.use(Router)
 
 //所有权限通用路由表
@@ -267,6 +270,15 @@ export default new Router({
             path: '/qrcode',
             component: qrcode,
             name: '微信二维码管理',
+            meta: {
+                role: ['admin', 'superman']
+            },
+            icon: 'fa fa-qrcode fa-2x',
+            noDropdown: true,
+        },{ //活动专区管理
+            path: '/activities',
+            component: activities,
+            name: '活动专区管理',
             meta: {
                 role: ['admin', 'superman']
             },
@@ -468,6 +480,15 @@ export const asyncRouterMap = [{ //个人中心
     path: '/qrcode',
     component: qrcode,
     name: '微信二维码管理',
+    meta: {
+        role: ['admin', 'superman']
+    },
+    icon: 'fa fa-qrcode fa-2x',
+    noDropdown: true,
+},{ //活动专区管理
+    path: '/activities',
+    component: activities,
+    name: '活动专区管理',
     meta: {
         role: ['admin', 'superman']
     },
