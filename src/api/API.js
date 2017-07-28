@@ -416,5 +416,27 @@ class API {
         config.data = param
         return axios.post('/cycj/signin/query', {}, config)
     }
+
+    // 直播管理
+    getLive(param) {
+        config.data = param
+        return axios.post('/cycj/live/query', {}, config)
+    }
+    addLive(param) {
+        config.data = param
+        return axios.post('/cycj/live/add', {}, config)
+    }
+    delLive(param) {
+        config.data = param
+        return axios.post('/cycj/live/del', {}, config)
+    }
+    changeLive(param) {
+        config.data = param
+        return axios.post('/cycj/live/operate', {}, config)
+    }
+    modifyLive(param) {
+        config.data = param
+        return axios.post('/cycj/live/update', {}, config)
+    }
 }
 export default API;
