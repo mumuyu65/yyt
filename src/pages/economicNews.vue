@@ -23,17 +23,19 @@
                   <hr/>
                   <!-- 展示 -->
                   <div style="margin-top: 2rem; background-color:transparent" class="row">
-                        <div class="col-md-3" v-for="(item,index) in newsLists">
-                            <div class="prize-item">
-                                <div class="p-img">
-                                    <img class="thumbnail-image" v-bind:src="item.imgurl"  alt="奖品图片" style="height:100px;" />
-                                </div>
-                                <div class="p-info">
-                                    <span class="pull-left">资讯类型:{{item.typename }}</span>
-                                    <span class="pull-right beans">{{item.unix | dateStamp }}</span>
-                                </div>
-                                <h5 style="padding:0 10px;">标题：{{item.title}}</h5>
-                                <div class="p-intro" style="height:240px; overflow:auto;">内容：{{item.content}}</div>
+                        <div class="col-md-6" v-for="(item,index) in newsLists">
+                            <div class="prize-item" style="">
+                              <div class="col-md-12" style="border-bottom: 1px solid #c0c0c0;">
+                                  <div class="p-img col-md-6">
+                                      <img class="thumbnail-image" v-bind:src="item.imgurl"  alt="奖品图片" style="height:100px;" />
+                                  </div>
+                                  <div class="p-info col-md-6" style="height:100px;">
+                                      <h5>标题：{{item.title}}</h5>
+                                      <span class="pull-left">资讯类型:{{item.typename }}</span>
+                                      <p class="beans">{{item.unix | dateStamp }}</p>
+                                  </div>
+                              </div>
+                                <div class="p-intro" style="height:320px; overflow:auto;" v-html="item.content"></div>
                                 <div class="btn-group">
                                     <div class="btn btn-primary" @click="modifyEconomics(item)">修改</div>
                                     <div class="btn btn-danger" @click="delNew(item,index)">删除</div>
@@ -87,8 +89,8 @@
                       资讯内容:
                   </div>
                   <div class="col-sm-9 col-md-9 col-xs-6">
-                       <div id="editor">
-                          <p>欢迎使用 wangEditor 富文本编辑器</p>
+                       <div id="editor" v-model='content'>
+                          
                       </div>
                       <!-- <textarea cols='40' rows='10' class="form-control" v-model='content'></textarea>  -->
                       <div style="margin-top:20px;">
@@ -222,8 +224,8 @@ export default {
       api.newsType().then(function(res){
             if(res.data.Code ==3){
                 that.newsType = res.data.Data.Detail;
+                console.log(that.newsType)
                 that.queryNews(res.data.Data.Detail);
-
             }else{
                 alert(res.data.Msg);
             }
@@ -237,6 +239,9 @@ export default {
         this.addNew = ! this.addNew;
         // 创建编辑器
         var editor = new E('#editor')
+        editor.customConfig.onchange = (html) => {
+          this.content = html
+        }
         editor.create();
     },
 
@@ -250,7 +255,7 @@ export default {
       data.append('title',this.title);
       data.append('img',input.files[0]);
       data.append('content',this.content);
-
+      console.log(encodeURIComponent(this.content))
       let that = this;
 
       axios.post(env.baseUrl+'/cycj/news/add', data, {
@@ -349,7 +354,7 @@ export default {
     queryNews(){
       let params={
           begidx:0,
-          counts:8,
+          counts:6,
           type:0,
         };
 
@@ -360,8 +365,8 @@ export default {
               TotalNum=res.data.Data.Total;
               let templateObj = res.data.Data.Detail;
               //    分页
-               if(TotalNum>8) {
-                  for(let i=0;i<8;i++){
+               if(TotalNum>6) {
+                  for(let i=0;i<6;i++){
                     for(let j =0;j<that.newsType.length;j++){
                         if(templateObj[i].type == that.newsType[j].type){
                             templateObj[i].typename = that.newsType[j].text;
@@ -371,26 +376,26 @@ export default {
                    that.newsLists= templateObj;
                    var options = {
                        currentPage: 1,
-                       totalPages: parseInt(TotalNum /8) + 1,
+                       totalPages: parseInt(TotalNum /6) + 1,
                        onPageClicked: function (e, originalEvent, type, page) {
                            switch (type) {
                                case 'first':
                                    that.economicsListContent(0);
                                    break;
                                case 'page':
-                                   that.BegIdx = (page - 1) * 8;
+                                   that.BegIdx = (page - 1) * 6;
                                    that.economicsListContent(that.BegIdx,0);
                                    break;
                                case 'next':
-                                   that.BegIdx  += 8;
+                                   that.BegIdx  += 6;
                                    that.economicsListContent(that.BegIdx,0);
                                    break;
                                case 'last':
-                                   that.BegIdx = TotalNum - TotalNum % 8;
+                                   that.BegIdx = TotalNum - TotalNum % 6;
                                    that.economicsListContent(that.BegIdx,0);
                                    break;
                                case 'prev':
-                                   that.BegIdx -= 8;
+                                   that.BegIdx -= 6;
                                    that.economicsListContent(that.BegIdx,0);
                                    break;
                            }
@@ -400,7 +405,7 @@ export default {
                }
           }else{
             let templateObj = res.data.Data.Detail;
-            for(let i=0;i<8;i++){
+            for(let i=0;i<6;i++){
                 for(let j =0;j<that.newsType.length;j++){
                     if(templateObj[i].type == that.newsType[j].type){
                         templateObj[i].typename = that.newsType[j].text;
@@ -415,7 +420,7 @@ export default {
     economicsListContent(BegIdx,type){
       let params={
           begidx:BegIdx,
-          counts:8,
+          counts:6,
           type:type,
       };
 
@@ -438,14 +443,13 @@ export default {
     delNew(item,idx){
       let params={
         sid:this.Sid,
-        id:item.id
+        nid:item.id
       };
-
+      console.log(params)
       let that = this;
       api.delNews(params).then(function(res){
           alert(res.data.Msg);
           if(res.data.Code ==3){
-              that.modifyNew = ! that.modifyNew;
               that.newsLists.splice(idx,1);
           }
       }).catch(function(err){
@@ -469,7 +473,7 @@ export default {
     Search(){
       let params={
         begidx:0,
-        counts:8,
+        counts:6,
         type:this.searchId,
       };
 
@@ -480,8 +484,8 @@ export default {
               let TotalNum;  //总数据条数
               TotalNum=res.data.Data.Total;
               //    分页
-               if(TotalNum>8) {
-                  for(let i=0;i<8;i++){
+               if(TotalNum>6) {
+                  for(let i=0;i<6;i++){
                       for(let j =0;j<that.newsType.length;j++){
                           if(templateObj[i].type == that.newsType[j].type){
                               templateObj[i].typename = that.newsType[j].text;
@@ -491,26 +495,26 @@ export default {
                   that.newsLists= templateObj;
                    var options = {
                        currentPage: 1,
-                       totalPages: parseInt(TotalNum /8) + 1,
+                       totalPages: parseInt(TotalNum /6) + 1,
                        onPageClicked: function (e, originalEvent, type, page) {
                            switch (type) {
                                case 'first':
                                    that.economicsListContent(0);
                                    break;
                                case 'page':
-                                   that.BegIdx = (page - 1) * 8;
+                                   that.BegIdx = (page - 1) * 6;
                                    that.economicsListContent(that.BegIdx,that.searchId);
                                    break;
                                case 'next':
-                                   that.BegIdx  += 8;
+                                   that.BegIdx  += 6;
                                    that.economicsListContent(that.BegIdx,that.searchId);
                                    break;
                                case 'last':
-                                   that.BegIdx = TotalNum - TotalNum % 8;
+                                   that.BegIdx = TotalNum - TotalNum % 6;
                                    that.economicsListContent(that.BegIdx,that.searchId);
                                    break;
                                case 'prev':
-                                   that.BegIdx -= 8;
+                                   that.BegIdx -= 6;
                                    that.economicsListContent(that.BegIdx,that.searchId);
                                    break;
                            }
@@ -557,7 +561,6 @@ export default {
             .p-img {
                 padding: 1rem;
                 text-align: center;
-                border-bottom: 1px solid #c0c0c0;
                 .thumbnail-image {
                     max-width: 100%;
                     height: auto;

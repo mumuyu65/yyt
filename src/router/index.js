@@ -27,10 +27,6 @@ import productsManage from '@/pages/productsManage'
 // 直播管理
 import ZhiboManage from '@/pages/zhibomanage'
 
-const AddLive = resolve => require(['@/pages/addlive'], resolve)
-
-const ModifyLive = resolve => require(['@/pages/modifylive'], resolve)
-
 const zhibo = resolve => require(['@/pages/zhibo'], resolve)
 
 //操作建议管理
@@ -83,6 +79,9 @@ import beansrecord from '@/pages/beansrecord'
 
 //活动专区管理
 import activities from '@/pages/activities'
+
+//聊天图片管理
+import chatImg from '@/pages/chatImg'
 
 Vue.use(Router)
 
@@ -165,19 +164,6 @@ export default new Router({
             },
             icon: 'fa fa-file-video-o fa-2x',
             noDropdown: true,
-            children: [{
-                path: '/live/add',
-                component: AddLive,
-            }, {
-                path: '/live/modify',
-                component: ModifyLive,
-            }, {
-                path: '/live/room',
-                component: zhibo,
-            }, {
-                path: '/live/operational',
-                component: operational,
-            }],
         }, {
             path: '/comment',
             name: '老师点评',
@@ -320,6 +306,15 @@ export default new Router({
             name: '高级助理',
             icon: 'fa fa-qq fa-2x',
             noDropdown: true,
+        }, { //聊天图片
+            path: '/chatImg',
+            component: chatImg,
+            name: '聊天图片',
+            meta: {
+                role: ['admin', 'superman']
+            },
+            icon: 'fa fa-download fa-2x',
+            noDropdown: true,
         }, { //下载中心
             path: '/download',
             component: download,
@@ -378,19 +373,6 @@ export const asyncRouterMap = [{ //个人中心
     },
     icon: 'fa fa-file-video-o fa-2x',
     noDropdown: true,
-    children: [{
-        path: '/live/add',
-        component: AddLive,
-    }, {
-        path: '/live/modify',
-        component: ModifyLive,
-    }, {
-        path: '/live/room',
-        component: zhibo,
-    }, {
-        path: '/live/operational',
-        component: operational,
-    }],
 }, {
     path: '/comment',
     name: '老师点评',
@@ -529,6 +511,15 @@ export const asyncRouterMap = [{ //个人中心
     },
     name: '高级助理',
     icon: 'fa fa-qq fa-2x',
+    noDropdown: true,
+}, { //聊天图片
+    path: '/chatImg',
+    component: chatImg,
+    name: '聊天图片',
+    meta: {
+        role: ['admin', 'superman']
+    },
+    icon: 'fa fa-download fa-2x',
     noDropdown: true,
 }, { //下载中心
     path: '/download',
