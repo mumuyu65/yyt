@@ -11,7 +11,7 @@
                 </li>
             </ul>
             <hr/>
-             <div class="schedule" style="margin-top:50px; margin-left:50px; height:99%;" v-show="!addSchedules">
+            <div class="schedule" style="margin-top:50px; margin-left:50px; height:99%;" v-show="!addSchedules">
                 <ul>
                     <li>时间</li>
                     <li>星期一</li>
@@ -318,7 +318,7 @@ export default {
                     else {
                          pointName = 10;
                     }
-                    console.log(pointName,i);
+                    //console.log(pointName,i);
                     DataSource[0].course.push({teacherName:items[i].lecturer,pointName:pointName,pointTime:items[i].period,id:items[i].id}); break;
                 case '周二':
                     var pointName;
