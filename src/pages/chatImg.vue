@@ -1,41 +1,112 @@
 <template>
-     <div id="page-wrapper" >
+    <div id="page-wrapper" >
         <div id="page-inner">
-            <div class="row">
-                    <div class="col-md-12">
-                        <ul class="list-inline">
-                            <li><h3>新闻资讯类型管理</h3></li>
-                            <li class="pull-right" style="margin-top:15px;">
-                                <input type="text" value="" v-model="newData" style="height:35px; vertical-align:top;"/>
-                                <button @click="addType()"
-                                    style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
-                                    <i class="fa fa-plus fa-1x"></i>新增资讯类型
-                                </button>
-                            </li>
-                        </ul>
-                    <hr/>
-                    <table id="productsTable" class="text-center" border="1" width="100%">
-                        <thead>
-                            <th  class="text-center">编号</th>
-                            <th  class="text-center">类型名称</th>
-                            <th  class="text-center">操作</th>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(item, index) in currentItems">
-                                <td>{{index +1}}</td>
-                                <td>
-                                    <span v-show="!item.flag">{{item.text}} </span>
-                                    <span v-show="item.flag"><input type="text" :name="index" v-model="item.name" style="height:35px;"></span>
-                                </td>
-                                <td>
-                                    <button class="btn btn-danger" @click="removeType(item.type,index)">删除</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+          <div v-show="!AddComments">
+              <div v-show="!modifyComments">
+                <ul class="list-inline">
+                    <li><h3>聊天图片管理</h3></li>
+                    <li class="pull-right" style="margin-top:15px;">
+                        <button @click="addImg()"
+                            style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
+                            <i class="fa fa-plus fa-1x"></i>添加图片
+                        </button>
+                    </li>
+                </ul>
+                <hr/>
+                <table class="text-center" border="1" width="100%" id="productsTable">
+                    <thead>
+                        <th class="text-center">编号</th>
+                        <th class="text-center">标题</th>
+                        <th class="text-center">图片</th>
+                        <th class="text-center">操作</th>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(item,index) in imgList">
+                          <td>{{index+1}}</td>
+                          <td>{{item.title}}</td>
+                          <td>
+                            <img v-bind:src='item.imgurl' />
+                          </td>
+                          <td>
+                            <button class="btn btn-primary" @click="modifyComment(item)">修改</button>
+                            <button class="btn btn-danger" @click="removeComment(item,index)">删除</button>
+                          </td>
+                        </tr>
+                    </tbody>
+                </table>
+              </div>
+          </div>
+          <!-- 添加图片 -->
+          <div style="width:700px;margin:0 auto; margin-top:50px;" v-show="AddComments">
+                <div class="row">
+                    <div class="col-sm-3 col-md-3 col-xs-6">
+                        <span class="required">*</span> 标题:
+                    </div>
+                    <div class="col-sm-9 col-md-9 col-xs-6">
+                       <input type='text' value="" style="height:30px;" v-model="Title"/>
+                    </div>
                 </div>
-            </div>
-         </div>
+                <div class="row">
+                    <div class="col-sm-3 col-md-3 col-xs-6">
+                       <span class="required">*</span>图片:
+                    </div>
+                    <div class="col-sm-9 col-md-9 col-xs-6">
+                      <ul class="list-inline">
+                          <li><img id="file" v-bind:src="Img" class="profile"/></li>
+                          <li style="position:relative;">
+                            <input type="file" @change="onFileChange" ref="upload"  value="上传图片" style="position:absolute; opacity:0;"/>
+                            <button style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
+                                上传图片
+                            </button>
+                          </li>
+                      </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-9 col-md-9 col-xs-6">
+                        <div style="margin-top:20px;">
+                                <button class="btn btn-danger" @click="addDayComment()">提交</button>
+                                <button style="margin-left:50px;" class="btn btn-default" @click="Cancel()">取消</button>
+                        </div>
+                    </div>
+                </div>
+          </div>
+          <!-- 修改图片 -->
+          <div style="width:700px;margin:0 auto; margin-top:50px;" v-show="modifyComments">
+                <div class="row">
+                    <div class="col-sm-3 col-md-3 col-xs-6">
+                        <span class="required">*</span> 标题:
+                    </div>
+                    <div class="col-sm-9 col-md-9 col-xs-6">
+                       <input type='text' value="" style="height:30px;" v-model="modifyTitle"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3 col-md-3 col-xs-6">
+                       <span class="required">*</span>图片:
+                    </div>
+                    <div class="col-sm-9 col-md-9 col-xs-6">
+                      <ul class="list-inline">
+                          <li><img id="modifyFile" v-bind:src="modifyImg" class="profile"/></li>
+                          <li style="position:relative;">
+                            <input type="file" @change="modifyFileChange" ref="uploadmodify" value="上传图片" style="position:absolute; opacity:0;"/>
+                            <button style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
+                                上传图片
+                            </button>
+                          </li>
+                      </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-9 col-md-9 col-xs-6">
+                        <div style="margin-top:20px;">
+                                <button class="btn btn-danger" @click="modifyDayComment()">提交</button>
+                                <button style="margin-left:50px;" class="btn btn-default" @click="modifyCancel()">取消</button>
+                        </div>
+                    </div>
+                </div>
+          </div>
+        </div>
     </div>
 </template>
 
@@ -44,78 +115,200 @@ import API from '@/api/API'
 //实例化api
 const api = new API();
 
-import 'bootstrap-table'
+import axios from 'axios'
+
+import env from '@/config/env'
 
 export default {
-  name: 'economicNewsType',
-  data(){
-    return{
-      Sid:'',
-      currentItems:[],
-      newData:'',
-      Num:0,
+  name: 'chatImg',
+  data (){
+    return {
+        Sid:'',
+        Img:'',
+        Title:'',
+        AddComments:false,
+        options:[{ text: '早评', value: '1' },
+          { text: '晚评', value: '2' }],
+        imgList:[],
+        //修改
+        modifyComments:false,
+        modifyTitle:'',
+        modifyImg:'',
+        modifyId:'',
     }
   },
-  mounted(){
+  mounted (){
     this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
     this.initData();
   },
   methods:{
     initData(){
+      let params={
+        sid:this.Sid
+      };
+
       let that = this;
-      api.newsType().then(function(res){
+
+      api.getImg(params).then(function(res){
         if(res.data.Code ==3){
-            that.currentItems = res.data.Data.Detail;
-            that.Num = parseInt(that.currentItems[that.currentItems.length-1].type) +1;
+            that.imgList = res.data.Data;
+            console.log(that.imgList)
         }else{
-             alert(res.data.Msg);
-            }
+          alert(res.data.Msg);
+        }
       }).catch(function(err){
-        console.log(err);
+          console.log(err);
       });
     },
 
-    removeType(Type,idx){
-        let params={
-          sid:this.Sid,
-          type:Type,
-        };
+    onFileChange(e) {
+          var files = e.target.files || e.dataTransfer.files;
+          if (!files.length)
+           return;
+           this.createImage(files[0]);
+     },
 
-        let that = this;
+    createImage(file) {
+          var image = new Image();
+          var reader = new FileReader();
+          var that = this;
 
-        api.delnewsType(params).then(function(res){
-            if(res.data.Code ==3){
-              that.currentItems.splice(idx, 1);
+          reader.onload = (e) => {
+            that.Img = e.target.result;
+            //预览
+            $("#file").attr("src",that.Img);
+          };
+          reader.readAsDataURL(file);
+    },
+
+    modifyFileChange(e) {
+          var files = e.target.files || e.dataTransfer.files;
+          if (!files.length)
+           return;
+           this.modifyImage(files[0]);
+     },
+
+    modifyImage(file) {
+          var image = new Image();
+          var reader = new FileReader();
+          var that = this;
+
+          reader.onload = (e) => {
+            that.modifyImg = e.target.result;
+            //预览
+            $("#modifyFile").attr("src",that.modifyImg);
+          };
+          reader.readAsDataURL(file);
+    },
+
+    addImg(){
+      this.AddComments = !this.AddComments;
+    },
+
+    //提交
+    addDayComment(){
+      let input = this.$refs.upload;
+      let data = new FormData();
+      data.append('sid',this.Sid);
+      data.append('title', this.Title);
+      data.append('image', input.files[0]);
+
+      let that = this;
+
+      axios.post(env.baseUrl+'/cycj/live/image/save', data, {
+            headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded'
             }
-            alert(res.data.Msg);
-        }).catch(function(err){
-            console.log(err);
+        })
+        .then(function (res) {
+          alert(res.data.Msg);
+          if(res.data.Code ==3){
+            that.AddComments = !that.AddComments;
+            that.initData();
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
         });
     },
 
-    addType(){
-      let params={
-        sid:this.Sid,
-        type:this.Num,
-        text:this.newData
-      };
-      let that = this;
-      api.addnewsType(params).then(function(res){
-        if(res.data.Code ==3){
-            that.newData ='';
-            that.initData();
-          }
-        alert(res.data.Msg);
-      }).catch(function(err){
-        console.log(err);
-      });
+    Cancel(){
+      this.AddComments = !this.AddComments;
     },
 
+
+    modifyComment(item){
+      this.modifyComments = !this.modifyComments;
+      this.modifyTitle = item.title;
+      this.modifyImg = item.imgurl;
+      this.modifyId = item.id;
+    },
+
+    modifyCancel(){
+      this.modifyComments = !this.modifyComments;
+    },
+
+    modifyDayComment(){
+      let input = this.$refs.uploadmodify;
+      let data = new FormData();
+      data.append('sid',this.Sid);
+      data.append('id',this.modifyId);
+      data.append('title',this.modifyTitle);
+      data.append('img', input.files[0]);
+
+      let that = this;
+
+      axios.post(env.baseUrl+'/cycj/live/image/change', data, {
+            headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        })
+        .then(function (res) {
+          alert(res.data.Msg);
+          if(res.data.Code ==3){
+            that.modifyComments = !that.modifyComments;
+            that.initData();
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+
+    //删除
+    removeComment(item,index){
+      let params={
+        sid:this.Sid,
+        id:item.id
+      };
+
+      let that = this;
+      api.delImg(params).then(function(res){
+        alert(res.data.Msg);
+        if(res.data.Code ==3){
+            that.dayComments.splice(index,1);
+        }
+      }).catch(function(err){
+          console.log(err);
+      });
+    }
   },
 }
 </script>
+
 <style scoped>
-   #productsTable th,#productsTable td{
+   #page-inner .row{
+        padding:20px;
+        background-color:#F3F3F3;
+        margin-bottom:10px;
+    }
+
+    .required{
+        color:#e60000;
+        margin-right:5px;
+    }
+
+    #productsTable th,#productsTable td{
         padding:5px 0;
         border:1px solid #ececec;
    }
@@ -127,4 +320,5 @@ export default {
    #productsTable tr:nth-child(odd){
         background-color:#f7f7f7;
    }
+
 </style>

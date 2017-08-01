@@ -438,5 +438,19 @@ class API {
         config.data = param
         return axios.post('/cycj/live/update', {}, config)
     }
+
+    // 聊天图片
+    delImg(param) {
+        config.data = param
+        return axios.post('/cycj/live/image/delete', {}, config)
+    }
+    addImg(param) {
+        config.data = param
+        return axios.post('/cycj/live/image/save', {}, config)
+    }
+    getImg(param) {
+        config.data = param
+        return axios.post('/cycj/live/images', {}, config)
+    }
 }
 export default API;

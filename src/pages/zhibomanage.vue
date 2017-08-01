@@ -3,44 +3,45 @@
 	   <div id="page-inner" class="zhibo">
             <div v-show="!addlive">
                 <div v-show="!modifylive">
-                    <ul class="list-inline">
-                        <li><h3>观看总人数：{{allOnline}}</h3></li>
-                        <li class="pull-right" style="margin-top:15px;">
-                            <button style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" @click="isShowAdd()">
-                                <i class="fa fa-plus fa-1x"></i>新增直播室
-                            </button>
-                        </li>
-                    </ul>
-                    <hr/>
-                    <div class="zhibo-body text-center" border="1" width="100%">
-                       <table class="table table-hover">
-                            <tr>
-                                <th>发布房间</th>
-                                <th>直播老师</th>
-                                <th>直播状态</th>
-                                <th>观看人数</th>
-                                <th>更改状态</th>
-                                <th>操作建议</th>
-                                <th>操作</th>
-                            </tr>
-                            <tr v-for="item in liveList">
-                                <td>{{item.type | typeFilter}}</td>
-                                <td>{{item.name}}</td>
-                                <td>{{item.state | stateFilter}}</td>
-                                <td>{{item.online}}</td>
-                                <td><div class="btn btn-warning" @click="changeState(item.state,item.id)">{{item.state | statesFilter}}</div></td>
-                                <td><router-link :to="{ path: '/handlesuggestion' }" class="btn btn-info">查看</router-link></td>
-                                <td>
-                                    <div class="btn btn-success">进入</div>
-                                    <div class="btn btn-danger" @click="delLive(item.id)">删除</div>
-                                    <div class="btn btn-primary" @click="ShowModmodify(item)">修改</div>
-                                </td>
-                            </tr>
-                       </table>
-                   </div>
+                    <div v-show="!living">
+                        <ul class="list-inline">
+                            <li><h3>观看总人数：{{allOnline}}</h3></li>
+                            <li class="pull-right" style="margin-top:15px;">
+                                <button style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" @click="isShowAdd()">
+                                    <i class="fa fa-plus fa-1x"></i>新增直播室
+                                </button>
+                            </li>
+                        </ul>
+                        <hr/>
+                        <div class="zhibo-body text-center" border="1" width="100%">
+                           <table class="table table-hover">
+                                <tr>
+                                    <th>发布房间</th>
+                                    <th>直播老师</th>
+                                    <th>直播状态</th>
+                                    <th>观看人数</th>
+                                    <th>更改状态</th>
+                                    <th>操作建议</th>
+                                    <th>操作</th>
+                                </tr>
+                                <tr v-for="item in liveList">
+                                    <td>{{item.type | typeFilter}}</td>
+                                    <td>{{item.name}}</td>
+                                    <td>{{item.state | stateFilter}}</td>
+                                    <td>{{item.online}}</td>
+                                    <td><div class="btn btn-warning" @click="changeState(item.state,item.id)">{{item.state | statesFilter}}</div></td>
+                                    <td><router-link :to="{ path: '/handlesuggestion' }" class="btn btn-info">查看</router-link></td>
+                                    <td>
+                                        <div class="btn btn-success" @click="showLiving(item)">进入</div>
+                                        <div class="btn btn-danger" @click="delLive(item.id)">删除</div>
+                                        <div class="btn btn-primary" @click="ShowModmodify(item)">修改</div>
+                                    </td>
+                                </tr>
+                           </table>
+                       </div>
+                    </div>
                 </div>
             </div>
-               
             <!-- 添加 -->
             <div class="addlive" v-show="addlive">
                 <div class="form-group">
@@ -101,6 +102,24 @@
                 <div class="btn btn-primary" @click="modifyLive()">确认</div>
                 <div class="btn btn-default" @click="isShowModify()">取消</div>
             </div>
+
+            <!-- 进入直播间 -->
+            <div class="living" v-show="living">
+                <div class="zhibo-box">
+                </div>
+                <div class="comment-box">
+                    <div class="comment" v-for="c in comment_list">
+                        <div class="head-file">
+                            <img :src="c.src" alt="">
+                        </div>
+                        <div class="info">
+                            <div class="name">{{c.username}} <span>{{c.time}}</span></div>
+                            <div class="description">{{c.message}}</div>
+                        </div>
+                        <div class="btn btn-danger pull-right">通过</div>
+                    </div>
+                </div>
+            </div>
 	   </div>
    </div>
 </template>
@@ -122,6 +141,7 @@ data() {
         liveList:[],
         addlive:false,
         modifylive:false,
+        living:false,
         options:[{ text: '大厅直播', value: '0' },
             { text: '战队直播', value: '1' }],
         teacherList:[],
@@ -137,7 +157,8 @@ data() {
         modifyInfo:'',
         modifyLiveurl:'',
         modifyId:'',
-        modifyRoomid:''
+        modifyRoomid:'',
+        comment_list:''
     }
 },
 filters:{
@@ -198,6 +219,7 @@ methods: {
                 }
                 _this.liveList = res.data.Data.Detail;
                 _this.allOnline = res.data.Data.AllOnline;
+                console.log(res.data.Data.Detail)
             }else{
                 alert(res.data.Msg);
             }
@@ -212,6 +234,14 @@ methods: {
 
     isShowModify(){
         this.modifylive = !this.modifylive
+    },
+
+    showLiving(item){
+        if(item.state == 1){
+            alert('该直播尚未开启！请开启后重试')
+            return
+        }
+        this.living = !this.living;
     },
     // 新增直播间
     addLive(){
@@ -338,8 +368,44 @@ methods: {
         .zhibo-body {
             padding: 3rem;
         }
-        .addlive,.modifylive{
+        .addlive,.modifylive,.zhibo-box{
             padding:3rem;
+        }
+        .comment-box {
+            padding: 3rem;
+            .comment {
+                padding: 10px;
+                margin: 1rem 0;
+                border-radius: .7rem;
+                background-color: #F3F3F3;
+                &:after {
+                    display: table;
+                    content: ' ';
+                    clear: both;
+                }
+                .head-file {
+                    width: 5rem;
+                    height: 5rem;
+                    border-radius: 50%;
+                    float: left;
+                    img {
+                        width: 100%;
+                        border-radius: 50%;
+                    }
+                }
+                .info {
+                    float: left;
+                    margin-left: 2rem;
+                    .name {
+                        font-size: 2.2rem;
+                        font-weight: bold;
+                        span {
+                            font-size: 1.4rem;
+                            font-weight: normal;
+                        }
+                    }
+                }
+            }
         }
 	}
 </style>
