@@ -434,7 +434,6 @@ methods:{
     },
 
     HandleSuggestionAdd() {
-        alert(this.Sid);
         let hs = this.handlesuggestion;
         let ot = $("#form_datetime").val();
         let arr = ot.replace(/ |:/g, '-').split('-');
@@ -451,11 +450,11 @@ methods:{
             result: hs.result,
             wheat_type: hs.wheat_type
         }
-        let _this = this;
+        let that = this;
         api.addHandleSuggestion(param).then(function(res) {
             if (res.data.Code == 3) {
-               _this.initData();
-               _this.addhandlesuggestion = !_this.addhandlesuggestion;
+               that.initData();
+               that.addhandlesuggestion = !_this.addhandlesuggestion;
             }
             alert(res.data.Msg);
         }).catch(function(err) {
