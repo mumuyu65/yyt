@@ -89,7 +89,7 @@
                       资讯内容:
                   </div>
                   <div class="col-sm-9 col-md-9 col-xs-6">
-                       <div id="editor" v-model='content'>
+                      <div id="editor" v-model='content'>
                           
                       </div>
                       <!-- <textarea cols='40' rows='10' class="form-control" v-model='content'></textarea>  -->
@@ -143,10 +143,10 @@
                       资讯内容:
                   </div>
                   <div class="col-sm-9 col-md-9 col-xs-6">
-                      <div id="editor" v-model='content'>
-                          
-                      </div>
-                      <!-- <textarea cols='40' rows='10' class="form-control" v-model='Content'></textarea> -->
+                      <!-- <div id="modifyeditor" v-model='Content'>
+                          <div v-html="Content"></div>
+                      </div> -->
+                      <textarea cols='40' rows='10' class="form-control" v-model='Content'></textarea>
                       <div style="margin-top:20px;">
                               <button class="btn btn-danger" @click="modifyItem()">提交</button>
                               <button class="btn btn-default pull-right" @click="modifyCancel()">取消</button>
@@ -223,6 +223,24 @@ export default {
   },
   methods:{
     initData(){
+        this.queryAllNews();
+        // 创建编辑器
+        var editor = new E('#editor')
+        editor.customConfig.onchange = (html) => {
+          this.content = html
+        }
+        editor.create();
+        // 创建编辑器
+        var modifyeditor = new E('#modifyeditor')
+        modifyeditor.customConfig.onchange = (html) => {
+          this.content = html
+        }
+        modifyeditor.create();
+
+    },
+
+    // 查询资讯
+    queryAllNews(){
       let that = this;
       api.newsType().then(function(res){
             if(res.data.Code ==3){
@@ -240,12 +258,6 @@ export default {
     //新增资讯
     addNewEconomics(){
         this.addNew = ! this.addNew;
-        // 创建编辑器
-        var editor = new E('#editor')
-        editor.customConfig.onchange = (html) => {
-          this.content = html
-        }
-        editor.create();
     },
 
     addNews(){
@@ -258,7 +270,6 @@ export default {
       data.append('title',this.title);
       data.append('img',input.files[0]);
       data.append('content',this.content);
-      console.log(encodeURIComponent(this.content))
       let that = this;
 
       axios.post(env.baseUrl+'/cycj/news/add', data, {
@@ -270,7 +281,7 @@ export default {
         alert(res.data.Msg);
         if(res.data.Code ==3){
           that.addNew = !that.addNew;
-          that.initData();
+          that.queryAllNews();
         }
       })
       .catch(function (error) {
@@ -309,7 +320,7 @@ export default {
       let input = this.$refs.uploadmodify;
 
       let data = new FormData();
-
+      console.log(this.Content)
       data.append('sid',this.Sid);
       data.append('nid',this.modifyId);
       data.append('type',this.modifyType);
@@ -328,7 +339,7 @@ export default {
         alert(res.data.Msg);
         if(res.data.Code ==3){
           that.modifyNew = !that.modifyNew;
-          window.location.reload();
+          that.queryAllNews();
         }
       })
       .catch(function (error) {

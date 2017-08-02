@@ -84,6 +84,8 @@ import activities from '@/pages/activities'
 //聊天图片管理
 import chatImg from '@/pages/chatImg'
 
+import userManage from '@/pages/userManage'
+
 Vue.use(Router)
 
 //所有权限通用路由表
@@ -135,6 +137,15 @@ export default new Router({
             name: '账户管理',
             meta: {
                 role: ['superman']
+            },
+            icon: 'fa fa-dashboard fa-2x',
+            noDropdown: true,
+        }, { //用户管理
+            path: '/userManage',
+            component: userManage,
+            name: '用户管理',
+            meta: {
+                role: ['admin']
             },
             icon: 'fa fa-dashboard fa-2x',
             noDropdown: true,
@@ -344,6 +355,15 @@ export const asyncRouterMap = [{ //个人中心
     name: '账户管理',
     meta: {
         role: ['superman']
+    },
+    icon: 'fa fa-dashboard fa-2x',
+    noDropdown: true,
+}, { //用户管理
+    path: '/userManage',
+    component: userManage,
+    name: '用户管理',
+    meta: {
+        role: ['admin']
     },
     icon: 'fa fa-dashboard fa-2x',
     noDropdown: true,

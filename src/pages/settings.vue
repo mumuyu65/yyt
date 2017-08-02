@@ -138,7 +138,7 @@ export default {
               }
             }
           }else{
-              alert(res.data.Msg);
+              // alert(res.data.Msg);
           }
        }).catch(function(err){
           console.log(err);

@@ -52,6 +52,11 @@ class API {
         return axios.post('/cycj/admin/deluser', {}, config);
     }
 
+    modifyLevel(param) {
+        config.data = param;
+        return axios.post('/cycj/admin/modifylevel', {}, config);
+    }
+
     categoryUser(param) {
         config.data = param;
         return axios.post('/cycj/admin/userquery', {}, config);
