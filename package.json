@@ -27,7 +27,7 @@
     "vue-fullpage": "^1.1.1",
     "vue-router": "^2.3.1",
     "vuex": "^2.3.1",
-    "wangeditor": "^3.0.4"
+    "wangeditor": "^3.0.5"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.2",
