@@ -454,7 +454,7 @@ methods:{
         api.addHandleSuggestion(param).then(function(res) {
             if (res.data.Code == 3) {
                that.initData();
-               that.addhandlesuggestion = !_this.addhandlesuggestion;
+               that.addhandlesuggestion = !that.addhandlesuggestion;
             }
             alert(res.data.Msg);
         }).catch(function(err) {
