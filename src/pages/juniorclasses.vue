@@ -15,33 +15,34 @@
                 <hr/>
                 <table class="text-center" border="1" width="100%" id="productsTable">
                     <thead>
-                        <th  class="text-center">编号</th>
-                        <th  class="text-center">负责人</th>
-                        <th  class="text-center">标题</th>
-                        <th  class="text-center">封面图片</th>
-                        <th  class="text-center">附件信息</th>
-                        <th  class="text-center">简介</th>
-                        <th  class="text-center">审核</th>
-                        <th  class="text-center">操作</th>
+                        <th class="text-center">编号</th>
+                        <th class="text-center">负责人</th>
+                        <th class="text-center" style="max-width:120px">标题</th>
+                        <th class="text-center">封面图片</th>
+                        <th class="text-center">附件信息</th>
+                        <th class="text-center" style="max-width:150px">简介</th>
+                        <th class="text-center">审核</th>
+                        <th class="text-center">操作</th>
                     </thead>
                     <tbody>
                         <tr v-for="(item,index) in courses" v-if="item.status">
                           <td>{{index+1}}</td>
                           <td>{{item.owner}}</td>
-                          <td>{{item.title}}</td>
+                          <td style="max-width:120px">{{item.title}}</td>
                           <td><img v-bind:src="item.cover_url" style="height:50px;"/></td>
                           <td>
                             <a v-bind:href="item.annex_url" target="_blank">{{item.annex_url}}</a>
                           </td>
-                          <td>{{item.intro}}</td>
+                          <td style="max-width:150px">{{item.intro}}</td>
                           <td><button class="btn btn-default" @click="Check(item)">{{item.status | filterCheck }}</button></td>
                           <td>
-                            <button class="btn btn-primary" @click="modifyComment(item)">修改</button>
-                            <button class="btn btn-danger" @click="removeClasses(item,index)">删除</button>
+                            <button class="btn btn-primary btn-sm" @click="modifyComment(item)">修改</button>
+                            <button class="btn btn-danger btn-sm" @click="removeClasses(item,index)">删除</button>
                           </td>
                         </tr>
                     </tbody>
                 </table>
+                <div id="classes_pagnation" class="text-center"></div>
               </div>
           </div>
           <!--添加 -->
@@ -200,14 +201,47 @@ export default {
       let params={
         flag:'1',
         begidx:0,
-        counts:30,
+        counts:10,
       };
 
       let that = this;
 
       api.coursesQuery(params).then(function(res){
         if(res.data.Code ==3){
-            that.courses = res.data.Data;
+            let TotalNum = res.data.Data.Totals;
+            let templateObj = res.data.Data.Detail;
+            that.courses= templateObj;
+            //    分页
+             if(TotalNum>10) {
+                 var options = {
+                     currentPage: 1,
+                     totalPages: parseInt(TotalNum /10) + 1,
+                     onPageClicked: function (e, originalEvent, type, page) {
+                         switch (type) {
+                             case 'first':
+                                 that.classListQuery(0);
+                                 break;
+                             case 'page':
+                                 that.BegIdx = (page - 1) * 10;
+                                 that.classListQuery(that.BegIdx);
+                                 break;
+                             case 'next':
+                                 that.BegIdx  += 10;
+                                 that.classListQuery(that.BegIdx);
+                                 break;
+                             case 'last':
+                                 that.BegIdx = TotalNum - TotalNum % 10;
+                                 that.classListQuery(that.BegIdx);
+                                 break;
+                             case 'prev':
+                                 that.BegIdx -= 10;
+                                 that.classListQuery(that.BegIdx);
+                                 break;
+                         }
+                     }
+                 };
+                 $('#classes_pagnation').bootstrapPaginator(options);
+             }
         }else{
           alert(res.data.Msg);
         }
@@ -215,7 +249,20 @@ export default {
           console.log(err);
       });
     },
+    classListQuery(BegIdx){
+      let params={
+          flag:'1',
+          begidx:BegIdx,
+          counts:10,
+      };
 
+      let that = this;
+      api.coursesQuery(params).then(function(res){
+          if(res.data.Code ==3){
+              that.courses= res.data.Data.Detail;
+              }
+          })
+    },
     //上传图片
     onImgChange(e) {
           var files = e.target.files || e.dataTransfer.files;

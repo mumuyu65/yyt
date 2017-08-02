@@ -1,5 +1,6 @@
 // this file is the router of ydd
 import Vue from 'vue'
+
 import Router from 'vue-router'
 
 import Login from '@/components/login'
@@ -27,7 +28,7 @@ import productsManage from '@/pages/productsManage'
 // 直播管理
 import ZhiboManage from '@/pages/zhibomanage'
 
-const zhibo = resolve => require(['@/pages/zhibo'], resolve)
+// const ZhiboManage = resolve => require(['@/pages/ZhiboManage'], resolve)
 
 //操作建议管理
 import operational from '@/pages/operational'

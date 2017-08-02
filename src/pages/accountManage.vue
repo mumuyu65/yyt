@@ -15,15 +15,15 @@
                 <hr/>
                 <table id="userTable" class="text-center" width="100%" border="1" >
                     <thead>
-                        <th  class="text-center">序列号</th>
-                        <th  class="text-center">用户名</th>
-                        <th  class="text-center">用户昵称</th>
-                        <th  class="text-center">用户角色</th>
-                        <th  class="text-center">用户头像</th>
-                        <th  class="text-center">用户简介</th>
-                        <th  class="text-center">用户等级</th>
-                        <th  class="text-center">开启或关闭</th>
-                        <th  class="text-center">操作</th>
+                        <th class="text-center">序列号</th>
+                        <th class="text-center">用户名</th>
+                        <th class="text-center">用户昵称</th>
+                        <th class="text-center">用户角色</th>
+                        <th class="text-center">用户头像</th>
+                        <th class="text-center" style="max-width:200px">用户简介</th>
+                        <th class="text-center">用户等级</th>
+                        <th class="text-center">开启或关闭</th>
+                        <th class="text-center">操作</th>
                     </thead>
                     <tbody>
                         <tr v-for="(item, index) in userlists">
@@ -32,7 +32,7 @@
                             <td>{{item.nick}}</td>
                             <td>{{item.flag | userLevel }}</td>
                             <td><img v-bind:src="item.headurl" alt="用户头像" style="height:50px;"/></td>
-                            <td>{{item.intro}}</td>
+                            <td style="max-width:200px">{{item.intro}}</td>
                             <td>{{item.level}}</td>
                             <td>
                                 <button class="btn" v-bind:class="{'btn-primary':item.active,'btn-danger':!item.active}">{{item.active | checkStatus }}</button></span>

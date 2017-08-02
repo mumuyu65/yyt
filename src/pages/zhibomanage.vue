@@ -1,6 +1,6 @@
 <template>
    <div id="page-wrapper">
-	   <div id="page-inner" class="zhibo">
+       <div id="page-inner" class="zhibo">
             <div v-show="!addlive">
                 <div v-show="!modifylive">
                     <div v-show="!living">
@@ -106,21 +106,26 @@
             <!-- 进入直播间 -->
             <div class="living" v-show="living">
                 <div class="zhibo-box">
+                    
                 </div>
                 <div class="comment-box">
-                    <div class="comment" v-for="c in comment_list">
+                    <div class="comment" v-for="item in comment_list" >
                         <div class="head-file">
-                            <img :src="c.src" alt="">
+                            <img :src="item.msginfo.userlevel | imgurl">
                         </div>
                         <div class="info">
-                            <div class="name">{{c.username}} <span>{{c.time}}</span></div>
-                            <div class="description">{{c.message}}</div>
+                            <div class="name">
+                                {{item.msginfo.username}}
+                                <span>{{item.msginfo.time | unixTodate}}</span>
+                            </div>
+                            <div class="description">{{item.msginfo.message}}</div>
                         </div>
-                        <div class="btn btn-danger pull-right">通过</div>
+                        <div class="btn btn-primary pull-right" @click="refuse(item.msgid)">拒绝</div>
+                        <div class="btn btn-danger pull-right" @click="pass(item.msgid)">通过</div>
                     </div>
                 </div>
             </div>
-	   </div>
+       </div>
    </div>
 </template>
 
@@ -132,6 +137,8 @@ const api = new API()
 import axios from 'axios'
 
 import env from '@/config/env'
+
+import Jsonp from 'jsonp'
 
 export default {
 name: 'ZhiboManage',
@@ -158,7 +165,8 @@ data() {
         modifyLiveurl:'',
         modifyId:'',
         modifyRoomid:'',
-        comment_list:''
+        comment_list:[],
+        roomId:''
     }
 },
 filters:{
@@ -179,15 +187,39 @@ filters:{
             case '1': return '开启'; break;
             case '2': return '停止'; break;
         }
+    },
+    unixTodate(tm) {
+        let time = new Date(tm*1000);
+        let y = time.getFullYear();
+        let m = (time.getMonth()+1)<10?('0'+(time.getMonth()+1)):(time.getMonth()+1);
+        let d = (time.getDate())<10?('0'+time.getDate()):time.getDate();
+        let h = (time.getHours())<10?('0'+time.getHours()):time.getHours();
+        let min = (time.getMinutes())<10?('0'+time.getMinutes()):time.getMinutes();
+        return y+'-'+m+'-'+d+' '+h+':'+m;
+    },
+    imgurl(userlevel){
+        var url = 'http://yingdedao.com:10021/cycj/level/query';
+        var img_url;
+        $.ajaxSetup({  
+            async : false  
+        }); 
+        $.post(url,function(result){
+            for(var i = 0 ;i<result.Data.length;i++){
+                if(result.Data[i].lid == userlevel){
+                    img_url = result.Data[i].role_css;
+                }
+            }
+        })
+        return img_url
     }
 },
 mounted(){
     this.user = JSON.parse(window.localStorage.getItem('user'));
     this.sid = this.user.SessionId;
-	this.initData();
+    this.initData();
 },
 methods: {
-	initData(){
+    initData(){
         let _this = this;
         let params = {
             sid:this.sid,
@@ -199,7 +231,7 @@ methods: {
             if(res.data.Code ==3){
                 _this.teacherList = res.data.Data.Detail;
             }else{
-                alert(res.data.Msg);
+                // alert(res.data.Msg);
             }
         }).catch(function(err){
             console.log(err);
@@ -242,7 +274,147 @@ methods: {
             return
         }
         this.living = !this.living;
+        let roomid = item.roomno;
+        this.roomId = item.roomno;
+        let ws = null; 
+        let _this = this;
+        function ConnSvr(){
+            let that = _this;
+            ws = new WebSocket("ws://61.147.124.143:10015/sub");
+            ws.onopen = function(){
+                // 发送认证消息       
+                var body='{"Uid":"'+_this.user.UserId+'","Sessionid":"'+_this.sid+'","Platform":"3"}';
+                var pklen=body.length+16;
+                ws.send(JSON.stringify({
+                    'pklen':pklen,
+                    'klen':16,
+                    'ver': 1,
+                    'op': 7,
+                    'id': 1,
+                    'body': JSON.parse(body)
+                }));
+            };
+            ws.onmessage = function(evt){
+                let _that = that
+                var receives = JSON.parse(evt.data);   //从字符窜中解析出json对象
+
+                for (var i = 0; i < receives.length; i++) {
+                    var data = receives[i];
+                    // console.log(JSON.stringify(data)); //从对象中解析出字符窜
+                    if (data.op == 8) { //认证回复
+                        var rcvbody=data.body;
+                        console.log('认证回复')
+                        // 启动计时器发送心跳包
+                        heartbeat();
+                        var heartbeatInterval = setInterval(heartbeat, 20000);
+                    }
+
+                    else if (data.op == 3) { //心跳包回复
+                        console.log("收到心跳回复")
+                    }
+                    else if (data.op == 23) { //心跳包回复
+                        // console.log("发送成功")
+                    }
+                    else if (data.op == 28) { //
+                        var rcvbody=data.body;
+                        var data = JSON.parse(JSON.stringify(rcvbody));
+                        // console.log('进入房间成功')
+                        alert(data.msg)
+                    }
+                    else if(data.op == 46){
+                        // var rcvbody=data.body;
+                        var data = JSON.parse(JSON.stringify(data.body));
+                        _that.comment_list.unshift(data);
+                        console.log(data)
+                    }else{
+                        var data = JSON.parse(JSON.stringify(data));
+                        console.log(data)
+                    }
+                }
+            };
+            ws.onclose = onclose;
+            ws.onerror = onerror;
+        }
+        ConnSvr();
+        function onclose(){      
+            // console.log("WebSocket Closed.");
+
+            //2秒后启动重连
+            setTimeout("ConnSvr()",2000); 
+        }
+
+        function onerror(evt){      
+            // console.log("WebSocket Error." + evt.data);
+        }
+
+        // /im/liveroom/in http协议请求进入房间
+        function EnterRoom(){
+            // 进入房间
+            var body = roomid;
+            var pklen = body.length + 16;
+            ws.send(JSON.stringify({
+                'pklen':pklen,
+                'klen':16,
+                'ver': 1,
+                'op': 27,
+                'id': 1,
+                'body': Number(body)
+            }));
+        }
+        setTimeout(EnterRoom,500)
+        function heartbeat() {
+            if (ws) {
+                 ws.send(JSON.stringify({
+                    'pklen':16,
+                    'klen':16,
+                    'ver': 1,
+                    'op': 2,
+                    'id': 1,
+                    'body': {}
+                }));
+            } 
+        }
+
     },
+
+    pass(msgId){
+        let _this = this;
+        let params = {
+            sid:this.sid,
+            rmid:this.roomId,
+            msgid:msgId
+        }
+        api.passMsg(params).then(function(res){
+            alert(res.data.Msg);
+            for(let i = 0;i<_this.comment_list.length;i++){
+                if(_this.comment_list[i].msgid == msgId){
+                    _this.comment_list.splice(i,1);
+                }
+            }
+        }).catch(function(err){
+            console.log(err);
+        });
+    },
+
+    refuse(msgId){
+        let _this = this;
+        let params = {
+            sid:this.sid,
+            rmid:this.roomId,
+            msgid:msgId
+        }
+        api.refuseMsg(params).then(function(res){
+            alert(res.data.Msg);
+            for(let i = 0;i<_this.comment_list.length;i++){
+                if(_this.comment_list[i].msgid == msgId){
+                    _this.comment_list.splice(i,1);
+                }
+            }
+        }).catch(function(err){
+            console.log(err);
+        });
+    },
+
     // 新增直播间
     addLive(){
         let _this = this;
@@ -347,24 +519,24 @@ methods: {
 </script>
 
 <style scoped lang="scss">
-	.zhibo {
-		.zhibo-head {
-			width: 100%;
-			padding: 15px;
-			border-bottom: 1px solid #c0c0c0;
-			&:after {
-				display: table;
-				content: ' ';
-				clear: both;
-			}
-			.zhibo-watching-people {
-				font-size: 1.6rem;
-				span {
-					font-size: 2.4rem;
-					color: #e80000;
-				}
-			}
-		}
+    .zhibo {
+        .zhibo-head {
+            width: 100%;
+            padding: 15px;
+            border-bottom: 1px solid #c0c0c0;
+            &:after {
+                display: table;
+                content: ' ';
+                clear: both;
+            }
+            .zhibo-watching-people {
+                font-size: 1.6rem;
+                span {
+                    font-size: 2.4rem;
+                    color: #e80000;
+                }
+            }
+        }
         .zhibo-body {
             padding: 3rem;
         }
@@ -407,5 +579,5 @@ methods: {
                 }
             }
         }
-	}
+    }
 </style>

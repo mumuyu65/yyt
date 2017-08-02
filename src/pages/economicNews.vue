@@ -143,7 +143,10 @@
                       资讯内容:
                   </div>
                   <div class="col-sm-9 col-md-9 col-xs-6">
-                      <textarea cols='40' rows='10' class="form-control" v-model='Content'></textarea>
+                      <div id="editor" v-model='content'>
+                          
+                      </div>
+                      <!-- <textarea cols='40' rows='10' class="form-control" v-model='Content'></textarea> -->
                       <div style="margin-top:20px;">
                               <button class="btn btn-danger" @click="modifyItem()">提交</button>
                               <button class="btn btn-default pull-right" @click="modifyCancel()">取消</button>
@@ -267,7 +270,7 @@ export default {
         alert(res.data.Msg);
         if(res.data.Code ==3){
           that.addNew = !that.addNew;
-          window.location.reload();
+          that.initData();
         }
       })
       .catch(function (error) {

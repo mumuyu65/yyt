@@ -26,7 +26,7 @@
                     <tbody>
                         <tr v-for="(item,index) in productComments" v-if="item.status">
                           <td>{{index+1}}</td>
-                          <td>{{item.productName}}</td>
+                          <td>{{item.cgid | filterManage}}</td>
                           <td>{{item.title}}</td>
                           <td>
                             <img v-bind:src='item.cover_img' style="height:50px;" />
@@ -184,7 +184,22 @@ export default {
                 case '0': return '关闭'; break;
                 case '1': return '开启'; break;
              }
-        }
+        },
+        filterManage:function(cgid){
+            var url = 'http://yingdedao.com:10021/cycj/category/query';
+            var str;
+            $.ajaxSetup({  
+                async : false  
+            }); 
+            $.post(url,function(res){
+               for(let i = 0;i<res.Data.length;i++){
+                    if(cgid == res.Data[i].id){
+                      str = res.Data[i].name;
+                    }
+                  }
+            })
+            return str
+      }
   },
   mounted (){
     this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
@@ -198,6 +213,7 @@ export default {
         api.queryCategory().then(function(res){
             if(res.data.Code ==3){
                 that.options = res.data.Data;
+                console.log(res.data.Data)
                 that.CommentsList();
             }else{
                 alert(res.data.Msg);

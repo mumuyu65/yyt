@@ -438,6 +438,14 @@ class API {
         config.data = param
         return axios.post('/cycj/live/update', {}, config)
     }
+    passMsg(param) {
+        config.data = param
+        return axios.post('/cycj/live/message/pass', {}, config)
+    }
+    refuseMsg(param) {
+        config.data = param
+        return axios.post('/cycj/live/message/refuse', {}, config)
+    }
 
     // 聊天图片
     delImg(param) {

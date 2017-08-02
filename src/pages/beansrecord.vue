@@ -77,6 +77,18 @@
                     </div>
                     <div class="btn btn-primary" @click="getSigninRecord">查询</div>
                     <div class="btn btn-danger pull-right" @click="isShowSign">返回</div>
+                    <div class="beans-record">
+                        <table class="table table-hover">
+                            <tr>
+                                <th>时间</th>
+                                <th>赢豆</th>
+                            </tr>
+                            <tr v-for="item in singIn">
+                                <td>{{item.unix | unixToDate}}</td>
+                                <td>{{item.beans}}</td></td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -99,7 +111,7 @@ export default {
             Sid:'',
             is_show_sign: false,
             is_show_bean: false,
-            search_account: '13917189832',
+            search_account: '',
             user_info: [],
             beans_record: [],
             beans_account: {
@@ -108,19 +120,19 @@ export default {
                 nick: ''
             },
             signin_record_account: '',
-            signin_record_time: ''
+            signin_record_time: '',
+            singIn:[]
         }
     },
     filters: {
         unixToDate(unix) {
-            let date = new Date(unix * 1000)
-            let y = date.getFullYear() + '-'
-            let m = (date.getMonth() - 1) + '-'
-            let d = date.getDate() + ' '
-            let h = date.getHours() + ':'
-            let mm = date.getMinutes() + ':'
-            let s = date.getSeconds()
-            return date = y + m + d + h + mm + s
+            let time = new Date(unix*1000);
+            let y = time.getFullYear();
+            let m = (time.getMonth()+1)<10?('0'+(time.getMonth()+1)):(time.getMonth()+1);
+            let d = (time.getDate())<10?('0'+time.getDate()):time.getDate();
+            let h = (time.getHours())<10?('0'+time.getHours()):time.getHours();
+            let min = (time.getMinutes())<10?('0'+time.getMinutes()):time.getMinutes();
+            return y+'-'+m+'-'+d+' '+h+':'+m;
         },
         beansRecordTypes(types) {
             let res = ''
@@ -210,7 +222,11 @@ export default {
                 if (res.data.Code != 3) {
                     alert(res.data.Msg)
                 } else {
-                    console.log(res.data)
+                    if(res.data.Data == null){
+                        alert('没有签到记录')
+                    }else{
+                        _this.singIn = res.data.Data
+                    }
                 }
             })
         }
