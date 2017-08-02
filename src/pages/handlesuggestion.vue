@@ -30,7 +30,7 @@
                             <option v-for="t in all_teachers" :value="t.id">{{t.nick}}</option>
                         </select>
                     </li>
-                    <li><button class="btn btn-danger" @click="getHandleSuggestion">搜索</button></li>
+                    <li><button class="btn btn-danger" @click="getHandleSuggestion()">搜索</button></li>
                 </ol>
                 <hr/>
                 <ul class="nav nav-tabs">
@@ -129,7 +129,7 @@
                 </div>
             </div>
             <div class="form-group" style="margin:50px;">
-                <button @click="addHandleSuggestion()" class="btn btn-danger">提交</button>
+                <button @click="HandleSuggestionAdd()" class="btn btn-danger">提交</button>
                 <button class="btn btn-default" @click="CancelAdd()">取消</button>
             </div>
         </div>
@@ -329,6 +329,7 @@ methods:{
         });
 
         this.getHandleSuggestion();  //初始化
+
          //时间
         $("#form_datetime").datetimepicker({
             format: "yyyy-mm-dd hh:ii",
@@ -362,12 +363,14 @@ methods:{
         let that = this;
 
         api.queryHandleSuggestion(param).then(function(res) {
-            //console.log(res.data);
             if (res.data.Code == 3) {
                 if (res.data.Data == null) {
                     alert('暂无数据')
                 }else{
                     let templateObj = res.data.Data;
+                    //清空初始化中的数据
+                    that.ClanInfos=[];
+                    that.RoomInfos=[];
                     for(let i =0; i<templateObj.length;i++){
                         if(templateObj[i].place == '战队直播'){
                             that.ClanInfos.push(templateObj[i]);
@@ -426,14 +429,16 @@ methods:{
     },
 
     //添加
-    addHandleSuggestion() {
+    AddSuggestion(){
+        this.addhandlesuggestion = !this.addhandlesuggestion;
+    },
+
+    HandleSuggestionAdd() {
+        alert(this.Sid);
         let hs = this.handlesuggestion;
         let ot = $("#form_datetime").val();
         let arr = ot.replace(/ |:/g, '-').split('-');
         let date = new Date(arr[0], arr[1]-1, arr[2], arr[3], arr[4]).getTime()/1000;
-
-        console.log(this.Sid);
-
         let param = {
             sid: this.Sid,
             place: hs.place,
@@ -456,10 +461,6 @@ methods:{
         }).catch(function(err) {
             console.log(err)
         })
-    },
-
-    AddSuggestion(){
-        this.addhandlesuggestion = !this.addhandlesuggestion;
     },
 
     CancelAdd(){
