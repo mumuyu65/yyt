@@ -19,7 +19,6 @@ export default {
                 constantRouterMap[1].children.push(value);
             }
             window.localStorage.setItem('routes', JSON.stringify(value));
-            //console.log(value);
         },
 
         SET_ROLES(state, value) {

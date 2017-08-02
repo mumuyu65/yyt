@@ -1,3 +1,5 @@
+<<<<<<< HEAD
+=======
 <template>
     <div id="page-wrapper" >
         <div id="page-inner">
@@ -322,3 +324,4 @@ export default {
    }
 
 </style>
+>>>>>>> 0ac42ce9714f7f8d39c8b2e11ea4b2ef37e9f8d5

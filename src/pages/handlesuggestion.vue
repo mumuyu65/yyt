@@ -431,8 +431,11 @@ methods:{
         let ot = $("#form_datetime").val();
         let arr = ot.replace(/ |:/g, '-').split('-');
         let date = new Date(arr[0], arr[1]-1, arr[2], arr[3], arr[4]).getTime()/1000;
+
+        console.log(this.Sid);
+
         let param = {
-            sid: this.sid,
+            sid: this.Sid,
             place: hs.place,
             category_id: hs.category_id,
             order_type: hs.order_type,
