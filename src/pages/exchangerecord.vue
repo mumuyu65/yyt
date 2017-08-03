@@ -238,6 +238,7 @@ export default {
         padding:10px 0;
     }
     .order-box{
+        background:#fff;
         width:300px;
         height:200px;
         position:absolute;

@@ -1,45 +1,53 @@
 <template>
     <div id="page-wrapper" >
         <div id="page-inner">
-            <div>
-                <div>
-                <ul class="list-inline">
-                    <li><h3>用户管理</h3></li>
-                </ul>
-                <hr/>
-                <table id="userTable" class="text-center" width="100%" border="1" >
-                    <thead>
-                        <th class="text-center">序列号</th>
-                        <th class="text-center">用户名</th>
-                        <th class="text-center">用户昵称</th>
-                        <th class="text-center">用户头像</th>
-                        <th class="text-center" style="max-width:200px">用户简介</th>
-                        <th class="text-center">用户等级</th>
-                        <th class="text-center">注册时间</th>
-                        <th class="text-center">最后登录时间</th>
-                        <th class="text-center">修改用户等级</th>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(item, index) in userlists">
-                            <td>{{index +1}}</td>
-                            <td>{{item.account}}</td>
-                            <td>{{item.nick}}</td>
-                            <td><img v-bind:src="item.headurl" alt="用户头像" style="height:50px;"/></td>
-                            <td style="max-width:200px">{{item.intro}}</td>
-                            <td>{{item.level | userLevel}}</td>
-                            <td>{{item.unix | unixTodate}}</td>
-                            <td>{{item.login_unix | unixTodate}}</td>
-                            <td>
-                                <select v-model="selected" style="width:80px" @change="modifyLevel(item.id)">
-                                    <option v-for="option in options">
-                                        {{ option.text }}
-                                    </option>
-                                </select>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <ul class="list-inline">
+                <li><h3>用户管理</h3></li>
+            </ul>
+            <hr/>
+            <table id="userTable" class="text-center" width="100%" border="1" >
+                <thead>
+                    <th class="text-center">序列号</th>
+                    <th class="text-center">用户名</th>
+                    <th class="text-center">用户昵称</th>
+                    <th class="text-center">用户头像</th>
+                    <th class="text-center" style="max-width:200px">用户简介</th>
+                    <th class="text-center">用户等级</th>
+                    <th class="text-center">注册时间</th>
+                    <th class="text-center">最后登录时间</th>
+                    <th class="text-center">修改用户等级</th>
+                </thead>
+                <tbody>
+                    <tr v-for="(item, index) in userlists">
+                        <td>{{index +1}}</td>
+                        <td>{{item.account}}</td>
+                        <td>{{item.nick}}</td>
+                        <td><img v-bind:src="item.headurl" alt="用户头像" style="height:50px;"/></td>
+                        <td style="max-width:200px">{{item.intro}}</td>
+                        <td>{{item.level | userLevel}}</td>
+                        <td>{{item.unix | unixTodate}}</td>
+                        <td>{{item.login_unix | unixTodate}}</td>
+                        <td>
+                            <button class="btn btn-primary" @click="isShow(item.id)">修改</button>
+                            <!-- <select v-model="selected" style="width:80px" @change="modifyLevel(item.id)">
+                                <option v-for="option in options">
+                                    {{ option.text }}
+                                </option>
+                            </select> -->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div v-if="is_show">
+                <div class="order-box">
+                    <select v-model="selected" style="width:200px">
+                        <option v-for="option in options" v-bind:value="option.value">
+                            {{ option.text }}
+                        </option>
+                    </select>
+                    <button class="btn btn-primary" @click="modifyLevel()">确认</button>
+                    <button class="btn btn-danger" @click="isShow()">取消</button>
+                </div>
             </div>
         </div>
     </div>
@@ -73,7 +81,9 @@ export default {
           { text: '大亨', value: '5' }
         ],
         User:false,
-        selected:'',
+        selected:0,
+        is_show:false,
+        id:''
     }
   },
   filters:{
@@ -109,7 +119,6 @@ export default {
         api.queryUser(params).then(function(res){
             if(res.data.Code ==3){
                 that.userlists = res.data.Data.Detail;
-                console.log(that.userlists);
             }else{
                 alert(res.data.Msg);
             }
@@ -117,28 +126,33 @@ export default {
             console.log(err);
         });
     },
-    modifyLevel(id){
+    modifyLevel(){
         let that = this;
         let params={
             sid:that.Sid,
-            uid:id,
+            uid:this.id,
             level:this.selected
         };
         console.log(params)
         api.modifyLevel(params).then(function(res){
             alert(res.data.Msg);
             if(res.data.Code == 3){
-                that.initData()
+                that.initData();
+                that.is_show = false;
             }
         }).catch(function(err){
             console.log(err);
         });
-    }
+    },
+    isShow(id){
+        this.is_show = !this.is_show
+        this.id = id
+    },
   },
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     #page-inner .row{
         padding:20px;
         background-color:#F3F3F3;
@@ -166,4 +180,23 @@ export default {
    .profile{
         height:100px;
    }
+
+   .order-box{
+        background:#fff;
+        width:300px;
+        height:200px;
+        position:absolute;
+        left: 50%;
+        top: 50%;
+        transform: translateX(-50%);
+        transform: translateY(-50%);
+        border:1px solid #ccc;
+        box-shadow: 0px 0px 1rem #999;
+        padding:50px;
+        border-radius: .7rem;
+        button{
+            margin-left: 25px;
+            margin-top:20px;
+        }
+    }
 </style>
