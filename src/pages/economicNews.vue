@@ -90,7 +90,7 @@
                   </div>
                   <div class="col-sm-9 col-md-9 col-xs-6">
                       <div id="editor" v-model='content'>
-                          
+
                       </div>
                       <!-- <textarea cols='40' rows='10' class="form-control" v-model='content'></textarea>  -->
                       <div style="margin-top:20px;">
@@ -143,10 +143,8 @@
                       资讯内容:
                   </div>
                   <div class="col-sm-9 col-md-9 col-xs-6">
-                      <!-- <div id="modifyeditor" v-model='Content'>
-                          <div v-html="Content"></div>
-                      </div> -->
-                      <textarea cols='40' rows='10' class="form-control" v-model='Content'></textarea>
+                      <div id="modifyeditor" v-model='Content'>
+                      </div>
                       <div style="margin-top:20px;">
                               <button class="btn btn-danger" @click="modifyItem()">提交</button>
                               <button class="btn btn-default pull-right" @click="modifyCancel()">取消</button>
@@ -193,6 +191,9 @@ export default {
 
       searchId:'',
       BegIdx:0,
+
+      modifyeditor:'',
+      editor:'',
     }
   },
   watch:{
@@ -225,18 +226,9 @@ export default {
     initData(){
         this.queryAllNews();
         // 创建编辑器
-        var editor = new E('#editor')
-        editor.customConfig.onchange = (html) => {
-          this.content = html
-        }
+        let editor = new E('#editor');
         editor.create();
-        // 创建编辑器
-        var modifyeditor = new E('#modifyeditor')
-        modifyeditor.customConfig.onchange = (html) => {
-          this.content = html
-        }
-        modifyeditor.create();
-
+        this.editor = editor;
     },
 
     // 查询资讯
@@ -245,7 +237,6 @@ export default {
       api.newsType().then(function(res){
             if(res.data.Code ==3){
                 that.newsType = res.data.Data.Detail;
-                console.log(that.newsType)
                 that.queryNews(res.data.Data.Detail);
             }else{
                 alert(res.data.Msg);
@@ -269,7 +260,8 @@ export default {
       data.append('type',this.Type);
       data.append('title',this.title);
       data.append('img',input.files[0]);
-      data.append('content',this.content);
+      data.append('content',this.editor.txt.html());
+
       let that = this;
 
       axios.post(env.baseUrl+'/cycj/news/add', data, {
@@ -307,26 +299,32 @@ export default {
     },
 
     modifyEconomics(item){
-      console.log(item);
       this.modifyNew = ! this.modifyNew;
       this.modifyType = item.type;
       this.Title = item.title;
       this.modifyImg = item.imgurl;
-      this.Content = item.content;
       this.modifyId = item.id;
+      // 创建编辑器
+      let modifyeditor = new E('#modifyeditor');
+
+      modifyeditor.create();
+
+      modifyeditor.txt.html(item.content);
+
+      this.modifyeditor = modifyeditor;
     },
 
     modifyItem(){
       let input = this.$refs.uploadmodify;
 
       let data = new FormData();
-      console.log(this.Content)
+
       data.append('sid',this.Sid);
       data.append('nid',this.modifyId);
       data.append('type',this.modifyType);
       data.append('title',this.Title);
       data.append('img',input.files[0]);
-      data.append('content',this.Content);
+      data.append('content',this.modifyeditor.txt.html());
 
       let that = this;
 
@@ -551,7 +549,7 @@ export default {
     },
 
     upDown(){
-      $('.content').toggle()
+      $('.content').toggle();
     }
   }
 }
