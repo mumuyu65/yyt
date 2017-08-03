@@ -79,20 +79,7 @@ export default {
   },
   methods:{
     initData(){
-        // let that = this;
-        // let params={
-        //     sid:that.Sid
-        // };
-        // api.authList(params).then(function(res){
-        //     if(res.data.Code ==3){
-        //         that.authList = res.data.Data;
-        //         console.log(res.data.Data)
-        //     }else{
-        //         alert(res.data.Msg);
-        //     }
-        // }).catch(function(err){
-        //     console.log(err);
-        // });
+
     },
     qxLists(){
         this.authList = []
@@ -107,10 +94,8 @@ export default {
             account:this.account,
             flag:1
         };
-        console.log(params)
         api.authQuery(params).then(function(res){
             if(res.data.Code == 3){
-                console.log(res.data)
                 that.authList = res.data.Data;
             }else{
                 alert(res.data.Msg)
@@ -128,10 +113,8 @@ export default {
             account:this.account,
             flag:0
         };
-        console.log(params)
         api.authQuery(params).then(function(res){
             if(res.data.Code == 3){
-                console.log(res.data)
                 that.authList = res.data.Data;
             }else{
                 alert(res.data.Msg)
@@ -155,7 +138,6 @@ export default {
             uid:uid,
             aod:aod
         };
-        console.log(params)
         api.authUser(params).then(function(res){
             alert(res.data.Msg);
             if(res.data.Code == 3){
