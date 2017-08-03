@@ -83,12 +83,8 @@ import activities from '@/pages/activities'
 
 //聊天图片管理
 import chatImg from '@/pages/chatImg'
-<<<<<<< HEAD
 
 // 用户管理
-=======
-//用户权限管理
->>>>>>> 295d7217f03cbee56c0a93767cbd82ab5740ae88
 import userManage from '@/pages/userManage'
 
 // 权限分配
