@@ -1,5 +1,5 @@
 <template>
-    <div id="page-wrapper" >
+<div id="page-wrapper" >
         <div id="page-inner">
             <div style="margin:0 auto; padding:20px;">
                 <div class="row">
@@ -39,7 +39,7 @@
                 </div>
             </div>
          </div>
-    </div>
+</div>
 </template>
 
 <script>
@@ -52,6 +52,8 @@ import axios from 'axios'
 import env from '@/config/env'
 
 import { mapGetters } from 'vuex';
+
+const endpoint = 'https://yingdedao.com:10022'
 
 export default {
   name: 'Settings',
@@ -75,7 +77,7 @@ export default {
     this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
     this.user.nick = user.Nick;
     this.user.intro = user.Intro;
-    this.initData(user.Flag,user.Account);
+    this.initData(user.UserId);
   },
   methods:{
     //上传头像
@@ -120,29 +122,9 @@ export default {
         });
     },
 
-    initData(Flag,Account){
-       let params={
-          sid:this.Sid,
-          flag:Flag,
-          begidx:0,
-          counts:100,
-       };
-
-       let that = this;
-       api.queryUser(params).then(function(res){
-          if(res.data.Code ==3){
-            let usersInfos = res.data.Data.Detail;
-            for(let i=0; i<usersInfos.length;i++){
-              if(usersInfos[i].account == Account){
-                  that.user.img = usersInfos[i].headurl;
-              }
-            }
-          }else{
-              // alert(res.data.Msg);
-          }
-       }).catch(function(err){
-          console.log(err);
-      });
+    // 初始化
+    initData(uid){
+      this.user.img = endpoint+'/cycj/head/head'+uid;
     }
   },
 }
