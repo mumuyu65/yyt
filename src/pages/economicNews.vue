@@ -24,7 +24,7 @@
                   <!-- 展示 -->
                   <div style="margin-top: 2rem; background-color:transparent" class="row">
                         <div class="col-md-6" v-for="(item,index) in newsLists">
-                            <div class="prize-item" style="">
+                            <div class="prize-item">
                               <div class="col-md-12" style="border-bottom: 1px solid #c0c0c0;">
                                   <div class="p-img col-md-6">
                                       <img class="thumbnail-image" v-bind:src="item.imgurl"  alt="奖品图片" style="height:100px;" />
@@ -92,7 +92,6 @@
                       <div id="editor" v-model='content'>
 
                       </div>
-                      <!-- <textarea cols='40' rows='10' class="form-control" v-model='content'></textarea>  -->
                       <div style="margin-top:20px;">
                               <button class="btn btn-danger" @click="addNews()">提交</button>
                               <button class="btn btn-default pull-right" @click="Cancel()">取消</button>
@@ -556,7 +555,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-     #page-inner .row{
+    #page-inner .row{
         padding:20px;
         background-color:#F3F3F3;
         margin-bottom:10px;

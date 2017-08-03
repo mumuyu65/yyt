@@ -13,36 +13,34 @@
                     </li>
                 </ul>
                 <hr/>
-                <table class="text-center" border="1" width="100%" id="productsTable">
-                    <thead>
-                        <th  class="text-center">编号</th>
-                        <th  class="text-center">分类</th>
-                        <th  class="text-center">标题</th>
-                        <th  class="text-center">封面图片</th>
-                        <th  class="text-center">简介</th>
-                        <th  class="text-center">审核</th>
-                        <th  class="text-center">操作</th>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(item,index) in dayComments" v-if="item.status">
-                          <td>{{index+1}}</td>
-                          <td>{{item.flag | filterValue}}</td>
-                          <td>{{item.title}}</td>
-                          <td>
-                            <img v-bind:src='item.cover_img' />
-                          </td>
-                          <td>{{item.intro}}</td>
-                          <td><button class="btn btn-default" @click="Check(item)">{{item.status | filterCheck }}</button></td>
-                          <td>
-                            <button class="btn btn-primary" @click="modifyComment(item)">修改</button>
-                            <button class="btn btn-danger" @click="removeComment(item,index)">删除</button>
-                          </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <!-- 展示  -->
+                <div style="margin-top: 2rem; background-color:transparent" class="row">
+                      <div class="col-md-6" v-for="(item,index) in dayComments" v-if="item.status">
+                          <div class="prize-item" style="padding:10px;border: 1px solid #c0c0c0;border-radius: .7rem;margin-bottom: 3rem;
+                                height: 500px;overflow: hidden;">
+                            <div class="col-md-12" style="border-bottom: 1px solid #c0c0c0;">
+                                <div class="p-img col-md-6">
+                                    <img class="thumbnail-image" v-bind:src='item.cover_img'  alt="奖品图片" style="height:100px;" />
+                                </div>
+                                <div class="p-info col-md-6" style="height:100px;">
+                                    <h5>标题：{{item.title}}</h5>
+                                    <span class="pull-left">资讯类型:{{item.flag | filterValue}}</span>
+                                    <p class="beans">{{item.unix | dateStamp }}</p>
+                                </div>
+                            </div>
+                              <div style="height:320px; padding:20px; overflow:auto; border:1px solid transparent;" v-html="item.intro"></div>
+                              <div class="btn-group" style="padding:20px;">
+                                  <button class="btn btn-default" @click="Check(item)">{{item.status | filterCheck }}</button>
+                                  <div class="btn btn-primary" @click="modifyComment(item)">修改</div>
+                                  <div class="btn btn-danger" @click="removeComment(item,index)">删除</div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
               </div>
           </div>
-          <div style="width:700px;margin:0 auto; margin-top:50px;" v-show="AddComments">
+          <!-- 添加  -->
+          <div style="margin:50px 20px;" v-show="AddComments">
                 <div class="row">
                     <div class="col-sm-3 col-md-3 col-xs-6">
                          <span class="required">*</span>早晚评：
@@ -84,7 +82,9 @@
                        <span class="required">*</span>简介 :
                     </div>
                     <div class="col-sm-9 col-md-9 col-xs-6">
-                        <textarea cols='40' rows='10' class="form-control" v-model="Intro"></textarea>
+                        <div id="editor" v-model="Intro">
+
+                        </div>
                         <div style="margin-top:20px;">
                                 <button class="btn btn-danger" @click="addDayComment()">提交</button>
                                 <button style="margin-left:50px;" class="btn btn-default" @click="Cancel()">取消</button>
@@ -92,7 +92,8 @@
                     </div>
                 </div>
           </div>
-          <div style="width:700px;margin:0 auto; margin-top:50px;" v-show="modifyComments">
+          <!-- 修改  -->
+          <div style="margin:50px 20px;" v-show="modifyComments">
                 <div class="row">
                     <div class="col-sm-3 col-md-3 col-xs-6">
                          <span class="required">*</span>早晚评：
@@ -134,7 +135,8 @@
                        <span class="required">*</span>简介 :
                     </div>
                     <div class="col-sm-9 col-md-9 col-xs-6">
-                        <textarea cols='40' rows='10' class="form-control" v-model="modifyIntro"></textarea>
+                        <div id="modifyeditor" v-model="modifyIntro">
+                        </div>
                         <div style="margin-top:20px;">
                                 <button class="btn btn-danger" @click="modifyDayComment()">提交</button>
                                 <button style="margin-left:50px;" class="btn btn-default" @click="modifyCancel()">取消</button>
@@ -154,6 +156,8 @@ const api = new API();
 import axios from 'axios'
 
 import env from '@/config/env'
+
+import * as E from 'wangeditor'
 
 export default {
   name: 'dayComments',
@@ -175,6 +179,9 @@ export default {
         modifyImg:'',
         modifyIntro:'',
         modifyId:'',
+
+        modifyeditor:'',
+        editor:'',
     }
   },
   filters: {
@@ -190,7 +197,25 @@ export default {
                 case '0': return '关闭'; break;
                 case '1': return '开启'; break;
              }
-        }
+        },
+
+        dateStamp:function(value){
+        //获取一个事件戳
+         var time = new Date(value*1000);
+         //获取年份信息
+         var y = time.getFullYear();
+         //获取月份信息，月份是从0开始的
+         var m = (time.getMonth()+1)<10?('0'+(time.getMonth()+1)):(time.getMonth()+1);
+         //获取天数信息
+         //获取天数信息
+         var d = (time.getDate())<10?('0'+time.getDate()):time.getDate();
+
+         var H=(time.getHours())<10?('0'+time.getHours()):time.getHours();
+
+         var M=(time.getMinutes())<10?('0'+time.getMinutes()):time.getMinutes();
+         //返回拼接信息
+         return y+'-'+m + '-' + d+'    '+H+":"+M;
+    },
   },
   mounted (){
     this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
@@ -259,6 +284,10 @@ export default {
 
     addComment(){
       this.AddComments = !this.AddComments;
+      // 创建编辑器
+      let editor = new E('#editor');
+      editor.create();
+      this.editor = editor;
     },
 
     //提交
@@ -269,7 +298,7 @@ export default {
       data.append('title', this.Title);
       data.append('img', input.files[0]);
       data.append('flag',this.selected);
-      data.append('intro',this.Intro);
+      data.append('intro',this.editor.txt.html());
 
       let that = this;
 
@@ -294,14 +323,22 @@ export default {
       this.AddComments = !this.AddComments;
     },
 
-
+    //修改
     modifyComment(item){
       this.modifyComments = !this.modifyComments;
       this.ModifySelected = item.flag;
       this.modifyTitle = item.title;
       this.modifyImg = item.cover_img;
-      this.modifyIntro = item.intro;
       this.modifyId = item.id;
+
+      // 创建编辑器
+      let modifyeditor = new E('#modifyeditor');
+
+      modifyeditor.create();
+
+      modifyeditor.txt.html(item.intro);
+
+      this.modifyeditor = modifyeditor;
     },
 
     modifyCancel(){
@@ -316,7 +353,7 @@ export default {
       data.append('title',this.modifyTitle);
       data.append('img', input.files[0]);
       data.append('flag',this.ModifySelected);
-      data.append('intro',this.modifyIntro);
+      data.append('intro',this.modifyeditor.txt.html());
 
       let that = this;
 
@@ -385,29 +422,52 @@ export default {
 }
 </script>
 
-<style scoped>
-   #page-inner .row{
+<style scoped lang="scss">
+  #page-inner .row{
         padding:20px;
         background-color:#F3F3F3;
         margin-bottom:10px;
     }
 
-    .required{
-        color:#e60000;
-        margin-right:5px;
+  .prizemall-box{
+    padding: 1rem 3rem;
+    .prize-item{
+        border: 1px solid #c0c0c0;
+        border-radius: .7rem;
+        margin-bottom: 3rem;
+        height:500px;
+        overflow:hidden;
+        .p-img {
+            padding: 1rem;
+            text-align: center;
+            .thumbnail-image {
+                max-width: 100%;
+                height: auto;
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-position: center center;
+            }
+        }
+        .p-info {
+            padding: 1rem;
+            &:after {
+                display: table;
+                content: ' ';
+                clear: both;
+            }
+            .beans {
+                color: #e80000;
+            }
+        }
+        .p-intro, .btn-group {
+            padding: 1rem;
+            padding-top: 0;
+            color: #ccc;
+        }
     }
+  }
 
-    #productsTable th,#productsTable td{
-        padding:5px 0;
-        border:1px solid #ececec;
-   }
-
-    #productsTable tr:hover{
-        background-color:#f7f7f7;
-    }
-
-   #productsTable tr:nth-child(odd){
-        background-color:#f7f7f7;
-   }
-
+  .required{
+    color:#f00;
+  }
 </style>
