@@ -1,5 +1,5 @@
 <template>
-    <div id="page-wrapper" >
+<div id="page-wrapper" >
         <div id="page-inner">
           <div v-show="!AddComments">
               <div v-show="!modifyComments">
@@ -46,7 +46,7 @@
               </div>
           </div>
           <!--添加 -->
-          <div style="width:700px;margin:0 auto; margin-top:50px;" v-show="AddComments">
+          <div style="margin:50px 20px;" v-show="AddComments">
                 <div class="row">
                     <div class="col-sm-3 col-md-3 col-xs-6">
                         <span class="required">*</span> 标题:
@@ -99,7 +99,7 @@
                 </div>
           </div>
           <!--修改 -->
-          <div style="width:700px;margin:0 auto; margin-top:50px;" v-show="modifyComments">
+          <div style="margin:50px 20px;" v-show="modifyComments">
                 <div class="row">
                     <div class="col-sm-3 col-md-3 col-xs-6">
                         <span class="required">*</span> 标题:
@@ -152,7 +152,7 @@
                 </div>
           </div>
         </div>
-    </div>
+</div>
 </template>
 
 <script>
@@ -199,7 +199,7 @@ export default {
   methods:{
     initData(){
       let params={
-        flag:'1',
+        flag:1,
         begidx:0,
         counts:10,
       };
