@@ -35,7 +35,7 @@
                                       <p class="beans">{{item.unix | dateStamp }}</p>
                                   </div>
                               </div>
-                                <div class="p-intro" style="height:320px; overflow:auto;" v-html="item.content"></div>
+                                <div class="p-intro" style="height:220px; overflow:auto;" v-html="item.content"></div>
                                 <div class="btn-group">
                                     <div class="btn btn-primary" @click="modifyEconomics(item)">修改</div>
                                     <div class="btn btn-danger" @click="delNew(item,index)">删除</div>
@@ -413,17 +413,18 @@ export default {
                        }
                    };
                    $('#economic_pagnation').bootstrapPaginator(options);
+               }else{
+                for(let i=0;i<TotalNum;i++){
+                    for(let j =0;j<that.newsType.length;j++){
+                        if(templateObj[i].type == that.newsType[j].type){
+                            templateObj[i].typename = that.newsType[j].text;
+                        }
+                    }
+                  }
+                that.newsLists= templateObj;
                }
           }else{
-            let templateObj = res.data.Data.Detail;
-            for(let i=0;i<6;i++){
-                for(let j =0;j<that.newsType.length;j++){
-                    if(templateObj[i].type == that.newsType[j].type){
-                        templateObj[i].typename = that.newsType[j].text;
-                    }
-                }
-              }
-            that.newsLists= templateObj;
+            alert(res.data.Msg);
           }
       });
     },
@@ -567,7 +568,7 @@ export default {
             border: 1px solid #c0c0c0;
             border-radius: .7rem;
             margin-bottom: 3rem;
-            height:500px;
+            height:400px;
             overflow:hidden;
             .p-img {
                 padding: 1rem;
@@ -594,7 +595,6 @@ export default {
             .p-intro, .btn-group {
                 padding: 1rem;
                 padding-top: 0;
-                color: #ccc;
             }
         }
     }

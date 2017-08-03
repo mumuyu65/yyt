@@ -481,5 +481,4 @@ export default {
    #productsTable tr:nth-child(odd){
         background-color:#f7f7f7;
    }
-
 </style>
