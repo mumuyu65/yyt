@@ -107,8 +107,8 @@
             <div class="living" v-show="living">
                 <button class="btn btn-default" @click="backToLiving()">返回</button>
                 <div class="zhibo-box text-center" style="width:100%; height:454px;">
-                    <div id="player" style="width:100%; height:454px;" ></div>
-                    <div id="clanPlayer"></div>
+                    <div id="player" style="width:100%; height:454px;" v-if="!clanplayer" ></div>
+                    <div id="clanPlayer" style="width:100%; height:454px;" v-if="clanplayer"></div>
                 </div>
                 <div class="comment-box" style="background-color:#f5f5f5; margin-top:50px;">
                     聊天内容审核：
@@ -175,6 +175,7 @@ data() {
         chatFaces:[],  //表情图片
         ws:'',        //长链接
         sid:'',     //用户的sessionId
+        clanplayer:false,  //直播间切换
     }
 },
 filters:{
@@ -233,7 +234,6 @@ mounted(){
     //查询表情
     Jsonp('https://api.weibo.com/2/emotions.json?source=1362404091',function (err, res) {
        that.chatFaces=res.data;
-       console.log(that.chatFaces);
     });
 },
 methods: {
@@ -270,24 +270,6 @@ methods: {
                 }
                 _this.liveList = res.data.Data.Detail;
                 _this.allOnline = res.data.Data.AllOnline;
-                let templateRoom=res.data.Data.Detail;
-                for(let i=0; i<templateRoom.length;i++){
-                    if(templateRoom[i].type == 0){
-                        //大厅直播间
-                        let objectPlayer = new Player.aodianPlayer({
-                            container: 'player', //播放器容器ID，必要参数
-                            rtmpUrl:templateRoom[i].liveurl.trim(), //控制台开通的APP rtmp地址，必要参数
-                            width: '858', //播放器宽度，可用数字、百分比等
-                            height: '454', //播放器高度，可用数字、百分比等
-                            autostart: true, //是否自动播放，默认为false
-                            bufferlength: '3', //视频缓冲时间，默认为3秒。hls不支持！手机端不支持
-                            maxbufferlength: '2', //最大视频缓冲时间，默认为2秒。hls不支持！手机端不支持
-                            stretching: '1', //设置全屏模式,1代表按比例撑满至全屏,2代表铺满全屏,3代表视频原始大小,默认值为1。hls初始设置不支持，手机端不支持
-                            controlbardisplay: 'enable', //是否显示控制栏，值为：disable、enable默认为disable。
-                            isfullscreen: true, //是否双击全屏，默认为true
-                        });
-                    }
-                }
             }else{
                 alert(res.data.Msg);
             }
@@ -314,7 +296,29 @@ methods: {
             let roomid = item.roomno;
             this.roomId = item.roomno;
             this.ConnSvr();  //长连接开启
+            if(item.type ==1){
+                this.Player(item.liveurl.trim(),'clanPlayer');
+                this.clanplayer = !this.clanplayer;
+            }else{
+                this.Player(item.liveurl.trim(),'player');
+            }
         }
+    },
+
+    Player(liveurl,containerId){
+        //大厅直播间
+        let objectPlayer = new Player.aodianPlayer({
+            container: containerId, //播放器容器ID，必要参数
+            rtmpUrl:liveurl, //控制台开通的APP rtmp地址，必要参数
+            width: '858', //播放器宽度，可用数字、百分比等
+            height: '454', //播放器高度，可用数字、百分比等
+            autostart: true, //是否自动播放，默认为false
+            bufferlength: '3', //视频缓冲时间，默认为3秒。hls不支持！手机端不支持
+            maxbufferlength: '2', //最大视频缓冲时间，默认为2秒。hls不支持！手机端不支持
+            stretching: '1', //设置全屏模式,1代表按比例撑满至全屏,2代表铺满全屏,3代表视频原始大小,默认值为1。hls初始设置不支持，手机端不支持
+            controlbardisplay: 'enable', //是否显示控制栏，值为：disable、enable默认为disable。
+            isfullscreen: true, //是否双击全屏，默认为true
+        });
     },
 
     //返回直播间
@@ -402,7 +406,6 @@ methods: {
         else if(imgArr !== -1 ){
             value = '<img src="' + value + '"/>';
         }
-        console.log(value);
         return value;
     },
 
