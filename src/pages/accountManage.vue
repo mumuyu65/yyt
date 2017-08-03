@@ -173,7 +173,6 @@ export default {
         },
         Uid:'',
         options: [
-          { text: '普通用户', value: '0' },
           { text: '老师', value: '1' },
           { text: '审核员', value: '2' },
           { text: '管理员', value: '3' }

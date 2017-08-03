@@ -29,11 +29,6 @@
                         <td>{{item.login_unix | unixTodate}}</td>
                         <td>
                             <button class="btn btn-primary" @click="isShow(item.id)">修改</button>
-                            <!-- <select v-model="selected" style="width:80px" @change="modifyLevel(item.id)">
-                                <option v-for="option in options">
-                                    {{ option.text }}
-                                </option>
-                            </select> -->
                         </td>
                     </tr>
                 </tbody>

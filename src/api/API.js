@@ -86,6 +86,24 @@ class API {
         return axios.post('/cycj/admin/specifyuser', {}, config);
     }
 
+    //查询权限列表
+    authList(param) {
+        config.data = param;
+        return axios.post('/cycj/admin/authlist', {}, config);
+    }
+
+    //查询特定用户权限
+    authQuery(param) {
+        config.data = param;
+        return axios.post('/cycj/admin/authquery', {}, config);
+    }
+
+    //用户授权
+    authUser(param) {
+        config.data = param;
+        return axios.post('/cycj/admin/authuser', {}, config);
+    }
+
     //资讯类型管理
     newsType(param) {
         config.data = param;
