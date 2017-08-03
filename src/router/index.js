@@ -84,7 +84,11 @@ import activities from '@/pages/activities'
 //聊天图片管理
 import chatImg from '@/pages/chatImg'
 
+// 用户管理
 import userManage from '@/pages/userManage'
+
+// 权限分配
+import authorization from '@/pages/authorization'
 
 Vue.use(Router)
 
@@ -144,6 +148,15 @@ export default new Router({
             path: '/userManage',
             component: userManage,
             name: '用户管理',
+            meta: {
+                role: ['admin']
+            },
+            icon: 'fa fa-dashboard fa-2x',
+            noDropdown: true,
+        },{ //权限分配
+            path: '/authorization',
+            component: authorization,
+            name: '权限分配',
             meta: {
                 role: ['admin']
             },
@@ -362,6 +375,15 @@ export const asyncRouterMap = [{ //个人中心
     path: '/userManage',
     component: userManage,
     name: '用户管理',
+    meta: {
+        role: ['admin']
+    },
+    icon: 'fa fa-dashboard fa-2x',
+    noDropdown: true,
+},{ //权限分配
+    path: '/authorization',
+    component: authorization,
+    name: '权限分配',
     meta: {
         role: ['admin']
     },
