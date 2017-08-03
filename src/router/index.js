@@ -83,7 +83,7 @@ import activities from '@/pages/activities'
 
 //聊天图片管理
 import chatImg from '@/pages/chatImg'
-
+//用户权限管理
 import userManage from '@/pages/userManage'
 
 Vue.use(Router)

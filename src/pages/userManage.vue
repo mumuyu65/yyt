@@ -117,6 +117,7 @@ export default {
             flag:0,
         };
         api.queryUser(params).then(function(res){
+            console.log(res.data);
             if(res.data.Code ==3){
                 that.userlists = res.data.Data.Detail;
             }else{

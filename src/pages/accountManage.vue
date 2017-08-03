@@ -47,7 +47,7 @@
             </div>
             </div>
             <!-- 新增用户 -->
-            <div style="width:700px;margin:0 auto; margin-top:50px;" v-show='User'>
+            <div style="margin:50px 20px;" v-show='User'>
                 <div class="row">
                     <div class="col-sm-3 col-md-3 col-xs-6">
                          <span class="required">*</span>  角色选择：
@@ -282,7 +282,6 @@ export default {
     submitModify(user){
         let input = this.$refs.upload;
         let data = new FormData();
-        console.log(input.files[0]);
         data.append('sid',this.Sid);
         data.append('uid',user.id);
         data.append('nick',this.user.nick);
