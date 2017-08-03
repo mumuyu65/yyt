@@ -121,7 +121,7 @@
                                 {{item.msginfo.username}}
                                 <span>{{item.msginfo.time | unixTodate}}</span>
                             </div>
-                            <div class="description">{{item.msginfo.message}}</div>
+                            <div class="description" v-html="item.msginfo.message"></div>
                         </div>
                         <div class="btn btn-primary pull-right" @click="refuse(item.msgid)">拒绝</div>
                         <div class="btn btn-danger pull-right" @click="pass(item.msgid)">通过</div>
@@ -174,6 +174,7 @@ data() {
         roomId:'',
         chatFaces:[],  //表情图片
         ws:'',        //长链接
+        sid:'',     //用户的sessionId
     }
 },
 filters:{
@@ -218,12 +219,22 @@ filters:{
             }
         })
         return img_url
-    }
+    },
 },
 mounted(){
     this.user = JSON.parse(window.localStorage.getItem('user'));
+
     this.sid = this.user.SessionId;
-    this.initData();
+
+    this.initData();  //查询直播老师
+
+    this.queryLive();  //查询直播间
+
+    //查询表情
+    Jsonp('https://api.weibo.com/2/emotions.json?source=1362404091',function (err, res) {
+       that.chatFaces=res.data;
+       console.log(that.chatFaces);
+    });
 },
 methods: {
     initData(){
@@ -243,15 +254,9 @@ methods: {
         }).catch(function(err){
             console.log(err);
         });
-
-        this.queryLive();  //查询直播间
-
-        //查询表情
-        Jsonp('https://api.weibo.com/2/emotions.json?source=1362404091',function (err, res) {
-           that.chatFaces=res.data;
-        });
-
     },
+
+    //查询直播间列表
     queryLive(){
         let _this = this;
         let param = {
@@ -261,7 +266,7 @@ methods: {
         api.getLive(param).then(function(res){
             if(res.data.Code ==3){
                 if(res.data.Data == 'no data'){
-                    alert('没有直播房间')
+                    alert('没有直播房间!');
                 }
                 _this.liveList = res.data.Data.Detail;
                 _this.allOnline = res.data.Data.AllOnline;
@@ -299,21 +304,25 @@ methods: {
         this.modifylive = !this.modifylive
     },
 
+    //进入直播间
     showLiving(item){
         if(item.state == 1){
-            alert('该直播尚未开启！请开启后重试')
+            alert('该直播尚未开启！请开启后重试');
             return
+        }else{
+            this.living = !this.living;
+            let roomid = item.roomno;
+            this.roomId = item.roomno;
+            this.ConnSvr();  //长连接开启
         }
-        this.living = !this.living;
-        let roomid = item.roomno;
-        this.roomId = item.roomno;
-        this.ConnSvr();  //长连接开启
     },
 
+    //返回直播间
     backToLiving(){
         this.living = !this.living;
     },
 
+    //长连接
     ConnSvr(){
         let that = this;
         let ws = new WebSocket("ws://61.147.124.143:10015/sub");
@@ -332,59 +341,83 @@ methods: {
             }));
         };
         ws.onmessage = function(evt){
-            let _that = that;
             var receives = JSON.parse(evt.data);   //从字符窜中解析出json对象
 
-            var data = receives[0];
+            let data = receives[0];
 
-            if (data.op == 8) { //认证回复
-                var rcvbody=data.body;
-                console.log('认证回复')
-                // 启动计时器发送心跳包
-                _that.heartbeat();
-                var heartbeatInterval = setInterval(_that.heartbeat, 20000);
-                _that.EnterRoom();  //进入房间
-            }
-            else if (data.op == 3) { //心跳包回复
-                console.log("收到心跳回复")
-            }
-            else if (data.op == 23) { //心跳包回复
-                // console.log("发送成功")
-            }
-            else if (data.op == 28) {
-                var rcvbody=data.body;
-                var data = JSON.parse(JSON.stringify(rcvbody));
-                console.log(data);
-                if(data.code == 100){
-                    alert('进入直播成功!');
-                }else{
-                    alert("进入直播失败");
-                    _that.showLiving = !_that.showLiving;
-                }
-            }
-            else if(data.op == 46){
-                var data = JSON.parse(JSON.stringify(data.body));
-                _that.comment_list.unshift(data);
-                console.log(data);
-            }else{
-                var data = JSON.parse(JSON.stringify(data));
-                //console.log(data);
+            switch(data.op){
+                case 3:
+                        console.log("收到心跳回复");
+                        break;
+                case 8:
+                        console.log('认证回复');
+                        var rcvbody=data.body;
+                        // 启动计时器发送心跳包
+                        var heartbeatInterval = setInterval(that.heartbeat, 20000);
+                        that.EnterRoom();  //进入房间
+                        break;
+                case 23:
+                        //心跳包回复
+                        console.log("发送成功");
+                        break;
+                case 28:
+                        var rcvbody=JSON.parse(JSON.stringify(data.body));
+                        if(rcvbody.code == 100){
+                            alert('进入直播间成功!');
+                        }else{
+                            alert("进入直播间失败");
+                            that.showLiving = !that.showLiving;
+                        };
+                        break;
+                case 46:
+                        var data_46 = JSON.parse(JSON.stringify(data.body));
+                        let templeData = data_46;
+                        templeData.msginfo.message = that.analysis(templeData.msginfo.message);
+                        that.comment_list.unshift(templeData);
+                        break;
             }
         };
         ws.onclose = this.onclose;
         ws.onerror = this.onerror;
     },
 
+    //分析输入的聊天内容
+     /*进行解析*/
+    analysis (value) {
+        let arr = value.match(/\[.{1,5}\]/g);
+
+        let imgArr = value.indexOf("http");
+
+        if (arr && imgArr == -1) {
+            for (let i = 0; i < arr.length; i++) {
+                for (let j in this.chatFaces) {
+                    if (arr[i] == this.chatFaces[j].phrase) {
+                        var ex = '<img src="' + this.chatFaces[j].url + '"/>';
+                        value = value.replace(arr[i], ex);
+                    }
+
+                }
+            }
+        }
+        else if(imgArr !== -1 ){
+            value = '<img src="' + value + '"/>';
+        }
+        console.log(value);
+        return value;
+    },
+
+    //连接断开
     onclose(){
         //2秒后启动重连
         setTimeout("this.ConnSvr",2000);
     },
 
+    //连接出错
     onerror(evt){
        console.log("WebSocket Error." + evt.data);
     },
 
-    // /im/liveroom/in http协议请求进入房间
+    //进入房间
     EnterRoom(){
         // 进入房间
         var body = this.roomId;
@@ -398,6 +431,7 @@ methods: {
             'body': Number(body)
         }));
     },
+
     //心跳
     heartbeat() {
         if (this.ws) {
@@ -412,6 +446,7 @@ methods: {
         }
     },
 
+    //通过
     pass(msgId){
         let _this = this;
         let params = {
@@ -432,6 +467,7 @@ methods: {
         });
     },
 
+    //拒绝
     refuse(msgId){
         let _this = this;
         let params = {
@@ -472,7 +508,8 @@ methods: {
             console.log(err);
         });
     },
-    // 管理直播间
+
+    // 管理直播间状态
     changeState(state,id){
         if(Number(state) == 1){
             var state = 2;
@@ -485,7 +522,7 @@ methods: {
             id:id,
             state:state
         }
-        console.log(params)
+
         api.changeLive(params).then(function(res){
             alert(res.data.Msg);
             if(res.data.Code == 3){
@@ -551,7 +588,7 @@ methods: {
         }).catch(function(err){
             console.log(err);
         });
-    }
+    },
  }
 }
 </script>
