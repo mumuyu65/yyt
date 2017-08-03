@@ -90,7 +90,6 @@ export default {
                     templateObj[i].flag = false;
                 }
                  that.currentItems = templateObj;
-                console.log(that.currentItems)
             }
             else{
                 alert(res.data.Msg);

@@ -83,8 +83,12 @@ import activities from '@/pages/activities'
 
 //聊天图片管理
 import chatImg from '@/pages/chatImg'
+<<<<<<< HEAD
 
 // 用户管理
+=======
+//用户权限管理
+>>>>>>> 295d7217f03cbee56c0a93767cbd82ab5740ae88
 import userManage from '@/pages/userManage'
 
 // 权限分配
@@ -147,9 +151,9 @@ export default new Router({
         }, { //用户管理
             path: '/userManage',
             component: userManage,
-            name: '用户管理',
+            name: '用户权限管理',
             meta: {
-                role: ['admin']
+                role: ['admin', 'superman']
             },
             icon: 'fa fa-dashboard fa-2x',
             noDropdown: true,
@@ -196,7 +200,7 @@ export default new Router({
             noDropdown: false,
             component: Comment,
             meta: {
-                role: ['teacher', 'admin', 'superman']
+                role: ['teacher', 'superman']
             },
             icon: 'fa fa-comments fa-2x',
             children: [{
@@ -215,7 +219,7 @@ export default new Router({
             noDropdown: false,
             component: Classes,
             meta: {
-                role: ['teacher', 'admin', 'superman']
+                role: ['teacher', 'superman']
             },
             icon: 'fa fa-book fa-2x',
             children: [{
@@ -255,7 +259,7 @@ export default new Router({
             component: HandleSuggestion,
             name: '操作建议管理',
             meta: {
-                role: ['teacher', 'admin', 'superman']
+                role: ['teacher', 'superman']
             },
             icon: 'fa fa-sitemap fa-2x',
             noDropdown: true,
@@ -271,7 +275,7 @@ export default new Router({
         }, { //用户等级管理
             path: '/userlevel',
             component: userLevel,
-            name: '用户等级管理',
+            name: '用户等级图标管理',
             meta: {
                 role: ['admin', 'superman']
             },
@@ -286,7 +290,7 @@ export default new Router({
             },
             icon: 'fa fa-qrcode fa-2x',
             noDropdown: true,
-        },{ //活动专区管理
+        }, { //活动专区管理
             path: '/activities',
             component: activities,
             name: '活动专区管理',
@@ -374,9 +378,9 @@ export const asyncRouterMap = [{ //个人中心
 }, { //用户管理
     path: '/userManage',
     component: userManage,
-    name: '用户管理',
+    name: '用户权限管理',
     meta: {
-        role: ['admin']
+        role: ['admin', 'superman']
     },
     icon: 'fa fa-dashboard fa-2x',
     noDropdown: true,
@@ -422,7 +426,7 @@ export const asyncRouterMap = [{ //个人中心
     redirect: '/comment/dayComment',
     noDropdown: false,
     meta: {
-        role: ['teacher', 'admin', 'superman']
+        role: ['teacher', 'superman']
     },
     icon: 'fa fa-comments fa-2x',
     children: [{
@@ -440,7 +444,7 @@ export const asyncRouterMap = [{ //个人中心
     redirect: '/classes/juniorclasses',
     noDropdown: false,
     meta: {
-        role: ['teacher', 'admin', 'superman']
+        role: ['teacher', 'superman']
     },
     icon: 'fa fa-book fa-2x',
     children: [{
@@ -479,7 +483,7 @@ export const asyncRouterMap = [{ //个人中心
     component: HandleSuggestion,
     name: '操作建议管理',
     meta: {
-        role: ['teacher', 'admin', 'superman']
+        role: ['teacher', 'superman']
     },
     icon: 'fa fa-sitemap fa-2x',
     noDropdown: true,
@@ -488,7 +492,7 @@ export const asyncRouterMap = [{ //个人中心
     component: productsManage,
     name: '品类管理',
     meta: {
-        role: ['admin']
+        role: ['admin', 'superman']
     },
     icon: 'fa fa-joomla fa-2x',
     noDropdown: true,
@@ -510,7 +514,7 @@ export const asyncRouterMap = [{ //个人中心
     },
     icon: 'fa fa-qrcode fa-2x',
     noDropdown: true,
-},{ //活动专区管理
+}, { //活动专区管理
     path: '/activities',
     component: activities,
     name: '活动专区管理',

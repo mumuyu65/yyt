@@ -13,7 +13,7 @@
                     </li>
                 </ul>
                 <!-- 搜索区域  -->
-                <ol class="list-inline">
+                <ol class="list-inline" v-show="!searchArea">
                     <li>开始时间：</li>
                     <li><input type="text" class="form-control form_datetime" id="start_time" /></li>
                     <li>结束时间:</li>
@@ -256,6 +256,8 @@ data (){
             wheat_type:'',
         },
         ModifyId:'',
+
+        searchArea:false, //根据权限来看是否显示
     }
 },
 filters:{
@@ -297,7 +299,6 @@ methods:{
         let that = this;
         api.queryCategory().then(function(res){
             if(res.data.Code ==3){
-                //console.log(res.data);
                 that.all_prizes = res.data.Data;
                 that.category = res.data.Data;
             }
@@ -317,12 +318,11 @@ methods:{
         };
 
         api.categoryUser(params).then(function(res){
-            //console.log(res.data);
             if(res.data.Code ==3){
                 that.all_teachers = res.data.Data.Detail;
             }
             else{
-                alert(res.data.Msg);
+                that.searchArea = !that.searchArea;
             }
         }).catch(function(err){
             console.log(err);
