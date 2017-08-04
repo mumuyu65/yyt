@@ -241,6 +241,7 @@ export default {
             alert(res.data.Msg);
             if(res.data.Code ==3){
               that.User = !that.User;
+              that.initData();
             }
         }).catch(function(err){
             console.log(err);
