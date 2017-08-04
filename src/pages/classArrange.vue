@@ -1,169 +1,181 @@
 <template>
     <div id="page-wrapper" >
         <div id="page-inner">
-            <ul class="list-inline">
-                <li><h3>课程安排管理</h3></li>
-                <li class="pull-right" style="margin-top:15px;">
-                    <button @click="addSchedule()"
-                        style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
-                        <i class="fa fa-plus fa-1x"></i>添加课程
-                    </button>
-                </li>
-            </ul>
-            <hr/>
-            <div class="schedule" style="margin-top:50px; margin-left:50px; height:99%;" v-show="!addSchedules">
-                <ul>
-                    <li>时间</li>
-                    <li>星期一</li>
-                    <li>星期二</li>
-                    <li>星期三</li>
-                    <li>星期四</li>
-                    <li>星期五</li>
-                    <li>星期六</li>
-                    <li>星期日</li>
-                    <li class="border-r">操作</li>
+            <div v-show="!addSchedules">
+                <ul class="list-inline">
+                    <li><h3>课程安排管理</h3></li>
+                    <li class="pull-right" style="margin-top:15px;">
+                        <button @click="addSchedule()"
+                            style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
+                            <i class="fa fa-plus fa-1x"></i>添加课程
+                        </button>
+                    </li>
                 </ul>
-                <div style="clear:both; float:none;"></div>
-                <ul name="point1">
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li class="border-r"></li>
-                </ul>
-                 <div style="clear:both; float:none;"></div>
-                <ul name="point2">
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li class="border-r"></li>
-                </ul>
-                <div style="clear:both; float:none;"></div>
-                <ul name="point3">
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li class="border-r"></li>
-                </ul>
-                <div style="clear:both; float:none;"></div>
-                <ul name="point4">
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li class="border-r"></li>
-                </ul>
-                <div style="clear:both; float:none;"></div>
-                <ul name="point5">
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li class="border-r"></li>
-                </ul>
-                 <div style="clear:both; float:none;"></div>
-                <ul name="point6">
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li class="border-r"></li>
-                </ul>
-                 <div style="clear:both; float:none;"></div>
-                <ul name="point7">
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li class="border-r"></li>
-                </ul>
-                 <div style="clear:both; float:none;"></div>
-                <ul name="point8">
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li class="border-r"></li>
-                </ul>
-                <div style="clear:both; float:none;"></div>
-                <ul name="point9">
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li class="border-r"></li>
-                </ul>
-                <div style="clear:both; float:none;"></div>
-                <ul name="point10">
-                    <li class="border-b"></li>
-                    <li class="border-b"></li>
-                    <li class="border-b"></li>
-                    <li class="border-b"></li>
-                    <li class="border-b"></li>
-                    <li class="border-b"></li>
-                    <li class="border-b"></li>
-                    <li class="border-b"></li>
-                    <li class="border-l"></li>
-                </ul>
-                <div style="clear:both; float:none;"></div>
+                <hr/>
+                <div class="schedule" style="margin:50px 20px; height:99%;" >
+                    <ul>
+                        <li>时间</li>
+                        <li>星期一</li>
+                        <li>星期二</li>
+                        <li>星期三</li>
+                        <li>星期四</li>
+                        <li>星期五</li>
+                        <li>星期六</li>
+                        <li>星期日</li>
+                        <li class="border-r">操作</li>
+                    </ul>
+                    <div style="clear:both; float:none;"></div>
+                    <ul name="point1">
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li class="border-r"></li>
+                    </ul>
+                     <div style="clear:both; float:none;"></div>
+                    <ul name="point2">
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li class="border-r"></li>
+                    </ul>
+                    <div style="clear:both; float:none;"></div>
+                    <ul name="point3">
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li class="border-r"></li>
+                    </ul>
+                    <div style="clear:both; float:none;"></div>
+                    <ul name="point4">
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li class="border-r"></li>
+                    </ul>
+                    <div style="clear:both; float:none;"></div>
+                    <ul name="point5">
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li class="border-r"></li>
+                    </ul>
+                     <div style="clear:both; float:none;"></div>
+                    <ul name="point6">
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li class="border-r"></li>
+                    </ul>
+                     <div style="clear:both; float:none;"></div>
+                    <ul name="point7">
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li class="border-r"></li>
+                    </ul>
+                     <div style="clear:both; float:none;"></div>
+                    <ul name="point8">
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li class="border-r"></li>
+                    </ul>
+                    <div style="clear:both; float:none;"></div>
+                    <ul name="point9">
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                        <li class="border-r"></li>
+                    </ul>
+                    <div style="clear:both; float:none;"></div>
+                    <ul name="point10">
+                        <li class="border-b"></li>
+                        <li class="border-b"></li>
+                        <li class="border-b"></li>
+                        <li class="border-b"></li>
+                        <li class="border-b"></li>
+                        <li class="border-b"></li>
+                        <li class="border-b"></li>
+                        <li class="border-b"></li>
+                        <li class="border-l"></li>
+                    </ul>
+                    <div style="clear:both; float:none;"></div>
+                </div>
             </div>
-            <div v-show="addSchedules" style="width:700px;margin:0 auto; margin-top:50px;">
+            <!--  添加 -->
+            <div v-show="addSchedules" style="margin:50px 20px;" v-if="!TimeDistance">
                 <div class="row">
-                        <div class="col-sm-3 col-md-3 col-xs-6">
-                            <span class="required">*</span> 时间段:
-                        </div>
-                        <div class="col-sm-9 col-md-9 col-xs-6">
-                            <select v-model="Period" class="form-control">
-                                <option v-for="option in PeriodOptions" v-bind:value="option.value">
-                                        {{ option.text }}
-                                </option>
-                            </select>
-                        </div>
+                    <div class="col-sm-3 col-md-3 col-xs-6">
+                        <span class="required">*</span> 年/月/日:
                     </div>
+                    <div class="col-sm-9 col-md-9 col-xs-6">
+                        <input type="text" id="month_date" style="height:30px;border-radius:0;width:220px;" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3 col-md-3 col-xs-6">
+                        <span class="required">*</span> 时间段:
+                    </div>
+                    <div class="col-sm-9 col-md-9 col-xs-6">
+                        <select v-model="Period">
+                            <option v-for="option in PeriodOptions" v-bind:value="option.value">
+                                    {{ option.text }}
+                            </option>
+                        </select>
+                        <button class="btn btn-danger" @click="addTimeDistance()">添加时间段</button>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-sm-3 col-md-3 col-xs-6">
                          <span class="required">*</span>  星期：
                     </div>
                     <div class="col-sm-9 col-md-9 col-xs-6">
-                        <select v-model="selected" class="form-control">
+                        <select v-model="selected" >
                             <option v-for="option in options" v-bind:value="option.value">
                                     {{ option.text }}
                             </option>
@@ -175,7 +187,7 @@
                        <span class="required">*</span> 老师:
                     </div>
                     <div class="col-sm-9 col-md-9 col-xs-6">
-                        <input type='text' value="" style="height:30px;" v-model="teacher" class="form-control"/>
+                        <input type='text' value="" style="height:30px;border-radius:0;width:220px;" v-model="teacher" />
                         <div style="margin-top:20px;">
                                 <button class="btn btn-danger" @click="add()">提交</button>
                                 <button style="margin-left:50px;" class="btn btn-default" @click="Cancel()">取消</button>
@@ -183,6 +195,22 @@
                     </div>
                 </div>
             </div>
+
+            <div class="row" v-show="TimeDistance" style="margin:50px 20px;">
+                <div class="col-sm-3 col-md-3 col-xs-6">
+                     <span class="required">*</span>时间选择:
+                </div>
+                <div class="col-sm-9 col-md-9 col-xs-6">
+                    <ul class="list-inline">
+                        <li>开始时间:</li>
+                        <li><input type="text" class="form-control form_datetime" id="start_time" /></li>
+                        <li>结束时间:</li>
+                        <li><input type="text" class="form-control form_datetime" id="end_time" /></li>
+                        <li><button class="btn btn-danger" @click="submitTimeDistance()">添加</button></li>
+                    </ul>
+                </div>
+            </div>
+
          </div>
     </div>
 </template>
@@ -211,7 +239,7 @@ export default {
         ],
         Period:'',
         PeriodOptions:[
-          { text: '9:00--10:00' ,  value: '9:00--10:00' },
+          { text: '9:00--10:00' , value: '9:00--10:00' },
           { text: '10:00--11:30', value: '10:00--11:30' },
           { text: '11:30--13:00', value: '11:30--13:00' },
           { text: '13:00--14:30', value: '13:00--14:30' },
@@ -223,13 +251,42 @@ export default {
           { text: '22:00--23:30', value: '22:00--23:30' },
         ],
         teacher:'',
+
+        TimeDistance:false,  //时间段
     }
   },
   mounted (){
     this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
-    this.initSchedule();
+    this.initSchedule(); //查询课程表
+    this.initData();
   },
   methods:{
+    initData(){
+         //时间
+        $(".form_datetime").datetimepicker({
+            format: "hh:ii",
+            autoclose: true,
+            todayBtn: true,
+            language:'zh-CN',
+            pickerPosition: "bottom",
+            minView: 0,
+            startView:0,
+            minuteStep:10
+        });
+
+
+        $("#month_date").datetimepicker({
+            format: "yyyy-mm-dd",
+            autoclose: true,
+            todayBtn: true,
+            language:'zh-CN',
+            pickerPosition: "bottom",
+            minView: 2,
+            startView:3,
+            minuteStep:10
+        });
+    },
+
     addSchedule(){
         let that = this;
         this.addSchedules = !this.addSchedules;
@@ -252,6 +309,11 @@ export default {
         }).catch(function(err){
             console.log(err);
         });
+    },
+
+    //选择时间段
+    addTimeDistance(){
+        this.TimeDistance = !this.TimeDistance;
     },
 
     initSchedule(){
