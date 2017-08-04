@@ -5,7 +5,7 @@
     <title>测试</title>
 </head>
 <body>
-    <button onclick="saveToDesktop('百度一下','https://www.baidu.com')">保存到桌面</button>
+    <button onclick="saveToDesktop('百度一下.html','https://www.baidu.com')">保存到桌面</button>
 
     <script type="text/javascript">
           /**
@@ -32,11 +32,11 @@
                     var newScript = document.createElement('script');
                     newScript.type = 'text/javascript';
                     newScript.innerHTML ='location.href="'+data+'";';
+                    console.log(newScript);
                     var blob = new Blob([newScript]);
                     var link = document.createElementNS("http://www.w3.org/1999/xhtml", "a");
-                    console.log(link);
                     link.href = urlObj.createObjectURL(blob);
-                    link.download = fileName+'.html';
+                    link.download = fileName;
                     saveClick(link);
                 }
 
