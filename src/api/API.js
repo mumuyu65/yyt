@@ -317,6 +317,11 @@ class API {
         return axios.post('/cycj/schedule/query', {}, config);
     }
 
+    periodQuery(param) {
+        config.data = param;
+        return axios.post('/cycj/schedule/period', {}, config);
+    }
+
     scheduleAdd(param) {
         config.data = param;
         return axios.post('/cycj/schedule/add', {}, config);
@@ -422,7 +427,7 @@ class API {
         config.data = param
         return axios.post('/cycj/dj/check', {}, config)
     }
-    
+
     // 赢豆记录
     getBeansChangeRecord(param) {
         config.data = param

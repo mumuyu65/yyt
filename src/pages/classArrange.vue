@@ -13,6 +13,7 @@
                 </ul>
                 <hr/>
                 <div class="schedule" style="margin:50px 20px; height:99%;" >
+                    <h3 style="margin:20px 0">日期:{{month_date}}</h3>
                     <ul>
                         <li>时间</li>
                         <li>星期一</li>
@@ -21,12 +22,10 @@
                         <li>星期四</li>
                         <li>星期五</li>
                         <li>星期六</li>
-                        <li>星期日</li>
-                        <li class="border-r">操作</li>
+                        <li class="border-r">星期日</li>
                     </ul>
                     <div style="clear:both; float:none;"></div>
                     <ul name="point1">
-                        <li></li>
                         <li></li>
                         <li></li>
                         <li></li>
@@ -45,12 +44,10 @@
                         <li></li>
                         <li></li>
                         <li></li>
-                        <li></li>
                         <li class="border-r"></li>
                     </ul>
                     <div style="clear:both; float:none;"></div>
                     <ul name="point3">
-                        <li></li>
                         <li></li>
                         <li></li>
                         <li></li>
@@ -69,12 +66,10 @@
                         <li></li>
                         <li></li>
                         <li></li>
-                        <li></li>
                         <li class="border-r"></li>
                     </ul>
                     <div style="clear:both; float:none;"></div>
                     <ul name="point5">
-                        <li></li>
                         <li></li>
                         <li></li>
                         <li></li>
@@ -93,12 +88,10 @@
                         <li></li>
                         <li></li>
                         <li></li>
-                        <li></li>
                         <li class="border-r"></li>
                     </ul>
                      <div style="clear:both; float:none;"></div>
                     <ul name="point7">
-                        <li></li>
                         <li></li>
                         <li></li>
                         <li></li>
@@ -117,12 +110,10 @@
                         <li></li>
                         <li></li>
                         <li></li>
-                        <li></li>
                         <li class="border-r"></li>
                     </ul>
                     <div style="clear:both; float:none;"></div>
                     <ul name="point9">
-                        <li></li>
                         <li></li>
                         <li></li>
                         <li></li>
@@ -141,15 +132,15 @@
                         <li class="border-b"></li>
                         <li class="border-b"></li>
                         <li class="border-b"></li>
-                        <li class="border-b"></li>
                         <li class="border-l"></li>
                     </ul>
                     <div style="clear:both; float:none;"></div>
                 </div>
             </div>
             <!--  添加 -->
-            <div v-show="addSchedules" style="margin:50px 20px;" v-if="!TimeDistance">
-                <div class="row">
+            <div v-show="addSchedules" style="margin:50px 20px;">
+                <div v-show="!TimeDistance">
+                    <div class="row">
                     <div class="col-sm-3 col-md-3 col-xs-6">
                         <span class="required">*</span> 年/月/日:
                     </div>
@@ -193,6 +184,7 @@
                                 <button style="margin-left:50px;" class="btn btn-default" @click="Cancel()">取消</button>
                         </div>
                     </div>
+                </div>
                 </div>
             </div>
 
@@ -238,27 +230,21 @@ export default {
           { text: '周日', value: '周日' },
         ],
         Period:'',
-        PeriodOptions:[
-          { text: '9:00--10:00' , value: '9:00--10:00' },
-          { text: '10:00--11:30', value: '10:00--11:30' },
-          { text: '11:30--13:00', value: '11:30--13:00' },
-          { text: '13:00--14:30', value: '13:00--14:30' },
-          { text: '14:30--16:00', value: '14:30--16:00' },
-          { text: '16:00--17:30', value: '16:00--17:30' },
-          { text: '17:30--19:00', value: '17:30--19:00' },
-          { text: '19:00--20:30', value: '19:00--20:30' },
-          { text: '20:30--22:00', value: '20:30--22:00' },
-          { text: '22:00--23:30', value: '22:00--23:30' },
-        ],
+        PeriodOptions:[],
         teacher:'',
 
         TimeDistance:false,  //时间段
+        month_date:'',
+
+        tempPeriod:[],
     }
   },
   mounted (){
     this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
-    this.initSchedule(); //查询课程表
+
     this.initData();
+
+    this.queryPeriod();  //查询时间段
   },
   methods:{
     initData(){
@@ -287,6 +273,51 @@ export default {
         });
     },
 
+    queryPeriod(){
+        let that = this;
+        api.periodQuery().then(function(res){
+            if(res.data.Code ==3){
+                let templatObj= res.data.Data;
+                let tempPeriod=[];
+                for(let i =0 ; i<templatObj.length;i++){
+                    that.PeriodOptions.push({text:templatObj[i].period,value:templatObj[i].period});
+                    tempPeriod.push(templatObj[i].period);
+                }
+
+                that.tempPeriod=that.sortPeriod(tempPeriod);
+
+                that.initSchedule(); //查询课程表
+            }
+        }).catch(function(err){
+            console.log(err);
+        });
+    },
+
+    sortPeriod(tempPeriod){
+        //时间点排序
+        tempPeriod.sort(function (a, b) {
+            var a1 = parseInt(a.split(":")[0]);
+            var a2 = parseInt(a.split(":")[1]);
+            var b1 = parseInt(b.split(":")[0]);
+            var b2 = parseInt(b.split(":")[1]);
+            if (a1 < b1 || (a1 == b1 && a2 < b2)) {
+                return -1;
+            } else {
+                return 1;
+            }
+        });
+        tempPeriod=tempPeriod.join().split(",");//排序后赋值
+        return tempPeriod;
+    },
+
+    submitTimeDistance(){
+        this.TimeDistance = !this.TimeDistance;
+        let start_time=$("#start_time").val();
+        let end_time=$("#end_time").val();
+        let tempTime = start_time+'--'+end_time;
+        this.PeriodOptions.push({text:tempTime,value:tempTime});
+    },
+
     addSchedule(){
         let that = this;
         this.addSchedules = !this.addSchedules;
@@ -296,6 +327,7 @@ export default {
         let that = this;
         let params={
             sid:this.Sid,
+            date:$("#month_date").val(),
             dayofweek:this.selected,
             period:this.Period,
             lecturer:this.teacher
@@ -316,14 +348,14 @@ export default {
         this.TimeDistance = !this.TimeDistance;
     },
 
+    //查询课程表
     initSchedule(){
         let that = this;
-        let params={
-            sid:this.Sid
-        };
-        api.scheduleQuery(params).then(function(res){
+        api.scheduleQuery().then(function(res){
             if(res.data.Code ==3){
+                that.month_date = res.data.Data[0].date;
                 that.resetSchedule(res.data.Data);
+                console.log(res.data.Data);
             }else{
                 alert(res.data.Msg);
             }
@@ -344,37 +376,39 @@ export default {
             {weekday:7,course:[]},
         ];
 
+        console.log(this.tempPeriod[0]);
+
         let that = this;
 
         for(let i =0; i<items.length;i++){
             switch(items[i].dayofweek){
                 case '周一':
                     var pointName;
-                    if(items[i].period == '9:00--10:00'){
+                    if(items[i].period == this.tempPeriod[0]){
                          pointName = 1;
                     }
-                    else if(items[i].period =='10:00--11:30'){
+                    else if(items[i].period == this.tempPeriod[1]){
                          pointName = 2;
                     }
-                    else if(items[i].period =='11:30--13:00'){
+                    else if(items[i].period ==this.tempPeriod[2]){
                          pointName = 3;
                     }
-                    else if(items[i].period =='13:00--14:30'){
+                    else if(items[i].period ==this.tempPeriod[3]){
                          pointName = 4;
                     }
-                    else if(items[i].period =='14:30--16:00'){
+                    else if(items[i].period ==this.tempPeriod[4]){
                          pointName = 5;
                     }
-                    else if(items[i].period =='16:00--17:30'){
+                    else if(items[i].period ==this.tempPeriod[5]){
                          pointName = 6;
                     }
-                    else if(items[i].period =='17:30--19:00'){
+                    else if(items[i].period ==this.tempPeriod[6]){
                          pointName = 7;
                     }
-                    else if(items[i].period =='19:00--20:30'){
+                    else if(items[i].period ==this.tempPeriod[7]){
                          pointName = 8;
                     }
-                    else if(items[i].period =='20:30--22:00'){
+                    else if(items[i].period ==this.tempPeriod[8]){
                          pointName = 9;
                     }
                     else {
@@ -384,31 +418,31 @@ export default {
                     DataSource[0].course.push({teacherName:items[i].lecturer,pointName:pointName,pointTime:items[i].period,id:items[i].id}); break;
                 case '周二':
                     var pointName;
-                    if(items[i].period == '9:00--10:00'){
+                    if(items[i].period == this.tempPeriod[0]){
                          pointName = 1;
                     }
-                    else if(items[i].period =='10:00--11:30'){
+                    else if(items[i].period ==this.tempPeriod[1]){
                          pointName = 2;
                     }
-                    else if(items[i].period =='11:30--13:00'){
+                    else if(items[i].period ==this.tempPeriod[2]){
                          pointName = 3;
                     }
-                    else if(items[i].period =='13:00--14:30'){
+                    else if(items[i].period ==this.tempPeriod[3]){
                          pointName = 4;
                     }
-                    else if(items[i].period =='14:30--16:00'){
+                    else if(items[i].period ==this.tempPeriod[4]){
                          pointName = 5;
                     }
-                    else if(items[i].period =='16:00--17:30'){
+                    else if(items[i].period ==this.tempPeriod[5]){
                          pointName = 6;
                     }
-                    else if(items[i].period =='17:30--19:00'){
+                    else if(items[i].period ==this.tempPeriod[6]){
                          pointName = 7;
                     }
-                    else if(items[i].period =='19:00--20:30'){
+                    else if(items[i].period ==this.tempPeriod[7]){
                          pointName = 8;
                     }
-                    else if(items[i].period =='20:30--22:00'){
+                    else if(items[i].period ==this.tempPeriod[8]){
                          pointName = 9;
                     }
                     else {
@@ -418,31 +452,31 @@ export default {
                     DataSource[1].course.push({teacherName:items[i].lecturer,pointName:pointName,pointTime:items[i].period,id:items[i].id}); break;
                 case '周三':
                     var pointName;
-                    if(items[i].period == '9:00--10:00'){
+                    if(items[i].period == this.tempPeriod[0]){
                          pointName = 1;
                     }
-                    else if(items[i].period =='10:00--11:30'){
+                    else if(items[i].period ==this.tempPeriod[1]){
                          pointName = 2;
                     }
-                    else if(items[i].period =='11:30--13:00'){
+                    else if(items[i].period ==this.tempPeriod[2]){
                          pointName = 3;
                     }
-                    else if(items[i].period =='13:00--14:30'){
+                    else if(items[i].period ==this.tempPeriod[3]){
                          pointName = 4;
                     }
-                    else if(items[i].period =='14:30--16:00'){
+                    else if(items[i].period ==this.tempPeriod[4]){
                          pointName = 5;
                     }
-                    else if(items[i].period =='16:00--17:30'){
+                    else if(items[i].period ==this.tempPeriod[5]){
                          pointName = 6;
                     }
-                    else if(items[i].period =='17:30--19:00'){
+                    else if(items[i].period ==this.tempPeriod[6]){
                          pointName = 7;
                     }
-                    else if(items[i].period =='19:00--20:30'){
+                    else if(items[i].period ==this.tempPeriod[7]){
                          pointName = 8;
                     }
-                    else if(items[i].period =='20:30--22:00'){
+                    else if(items[i].period ==this.tempPeriod[8]){
                          pointName = 9;
                     }
                     else {
@@ -451,31 +485,31 @@ export default {
                     DataSource[2].course.push({teacherName:items[i].lecturer,pointName:pointName,pointTime:items[i].period,id:items[i].id}); break;
                 case '周四':
                     var pointName;
-                    if(items[i].period == '9:00--10:00'){
+                    if(items[i].period == this.tempPeriod[0]){
                          pointName = 1;
                     }
-                    else if(items[i].period =='10:00--11:30'){
+                    else if(items[i].period ==this.tempPeriod[1]){
                          pointName = 2;
                     }
-                    else if(items[i].period =='11:30--13:00'){
+                    else if(items[i].period ==this.tempPeriod[2]){
                          pointName = 3;
                     }
-                    else if(items[i].period =='13:00--14:30'){
+                    else if(items[i].period ==this.tempPeriod[3]){
                          pointName = 4;
                     }
-                    else if(items[i].period =='14:30--16:00'){
+                    else if(items[i].period ==this.tempPeriod[4]){
                          pointName = 5;
                     }
-                    else if(items[i].period =='16:00--17:30'){
+                    else if(items[i].period ==this.tempPeriod[5]){
                          pointName = 6;
                     }
-                    else if(items[i].period =='17:30--19:00'){
+                    else if(items[i].period ==this.tempPeriod[6]){
                          pointName = 7;
                     }
-                    else if(items[i].period =='19:00--20:30'){
+                    else if(items[i].period ==this.tempPeriod[7]){
                          pointName = 8;
                     }
-                    else if(items[i].period =='20:30--22:00'){
+                    else if(items[i].period ==this.tempPeriod[8]){
                          pointName = 9;
                     }
                     else {
@@ -484,31 +518,31 @@ export default {
                     DataSource[3].course.push({teacherName:items[i].lecturer,pointName:pointName,pointTime:items[i].period,id:items[i].id}); break;
                     case '周五':
                     var pointName;
-                    if(items[i].period == '9:00--10:00'){
+                    if(items[i].period == this.tempPeriod[0]){
                          pointName = 1;
                     }
-                    else if(items[i].period =='10:00--11:30'){
+                    else if(items[i].period ==this.tempPeriod[1]){
                          pointName = 2;
                     }
-                    else if(items[i].period =='11:30--13:00'){
+                    else if(items[i].period ==this.tempPeriod[2]){
                          pointName = 3;
                     }
-                    else if(items[i].period =='13:00--14:30'){
+                    else if(items[i].period ==this.tempPeriod[3]){
                          pointName = 4;
                     }
-                    else if(items[i].period =='14:30--16:00'){
+                    else if(items[i].period ==this.tempPeriod[4]){
                          pointName = 5;
                     }
-                    else if(items[i].period =='16:00--17:30'){
+                    else if(items[i].period ==this.tempPeriod[5]){
                          pointName = 6;
                     }
-                    else if(items[i].period =='17:30--19:00'){
+                    else if(items[i].period ==this.tempPeriod[6]){
                          pointName = 7;
                     }
-                    else if(items[i].period =='19:00--20:30'){
+                    else if(items[i].period ==this.tempPeriod[7]){
                          pointName = 8;
                     }
-                    else if(items[i].period =='20:30--22:00'){
+                    else if(items[i].period ==this.tempPeriod[8]){
                          pointName = 9;
                     }
                     else {
@@ -517,31 +551,31 @@ export default {
                     DataSource[4].course.push({teacherName:items[i].lecturer,pointName:pointName,pointTime:items[i].period,id:items[i].id}); break;
                     case '周六':
                     var pointName;
-                    if(items[i].period == '9:00--10:00'){
+                    if(items[i].period == this.tempPeriod[0]){
                          pointName = 1;
                     }
-                    else if(items[i].period =='10:00--11:30'){
+                    else if(items[i].period ==this.tempPeriod[1]){
                          pointName = 2;
                     }
-                    else if(items[i].period =='11:30--13:00'){
+                    else if(items[i].period ==this.tempPeriod[2]){
                          pointName = 3;
                     }
-                    else if(items[i].period =='13:00--14:30'){
+                    else if(items[i].period ==this.tempPeriod[3]){
                          pointName = 4;
                     }
-                    else if(items[i].period =='14:30--16:00'){
+                    else if(items[i].period ==this.tempPeriod[4]){
                          pointName = 5;
                     }
-                    else if(items[i].period =='16:00--17:30'){
+                    else if(items[i].period ==this.tempPeriod[5]){
                          pointName = 6;
                     }
-                    else if(items[i].period =='17:30--19:00'){
+                    else if(items[i].period ==this.tempPeriod[6]){
                          pointName = 7;
                     }
-                    else if(items[i].period =='19:00--20:30'){
+                    else if(items[i].period ==this.tempPeriod[7]){
                          pointName = 8;
                     }
-                    else if(items[i].period =='20:30--22:00'){
+                    else if(items[i].period ==this.tempPeriod[8]){
                          pointName = 9;
                     }
                     else {
@@ -550,31 +584,31 @@ export default {
                     DataSource[5].course.push({teacherName:items[i].lecturer,pointName:pointName,pointTime:items[i].period,id:items[i].id}); break;
                     case '周日':
                     var pointName;
-                    if(items[i].period == '9:00--10:00'){
+                    if(items[i].period == this.tempPeriod[0]){
                          pointName = 1;
                     }
-                    else if(items[i].period =='10:00--11:30'){
+                    else if(items[i].period ==this.tempPeriod[1]){
                          pointName = 2;
                     }
-                    else if(items[i].period =='11:30--13:00'){
+                    else if(items[i].period ==this.tempPeriod[2]){
                          pointName = 3;
                     }
-                    else if(items[i].period =='13:00--14:30'){
+                    else if(items[i].period ==this.tempPeriod[3]){
                          pointName = 4;
                     }
-                    else if(items[i].period =='14:30--16:00'){
+                    else if(items[i].period ==this.tempPeriod[4]){
                          pointName = 5;
                     }
-                    else if(items[i].period =='16:00--17:30'){
+                    else if(items[i].period ==this.tempPeriod[5]){
                          pointName = 6;
                     }
-                    else if(items[i].period =='17:30--19:00'){
+                    else if(items[i].period ==this.tempPeriod[6]){
                          pointName = 7;
                     }
-                    else if(items[i].period =='19:00--20:30'){
+                    else if(items[i].period ==this.tempPeriod[7]){
                          pointName = 8;
                     }
-                    else if(items[i].period =='20:30--22:00'){
+                    else if(items[i].period ==this.tempPeriod[8]){
                          pointName = 9;
                     }
                     else {
@@ -582,7 +616,6 @@ export default {
                     }
                     DataSource[6].course.push({teacherName:items[i].lecturer,pointName:pointName,pointTime:items[i].period,id:items[i].id}); break;
             }
-
         }
         $.each(DataSource,function(i,n){//遍历数据源 填充课程表信息
                 $.each(n.course,function(j,k){
@@ -719,5 +752,4 @@ export default {
             border-right: #CBD8AC solid 1px;
             border-bottom: #CBD8AC solid 1px;
         }
-
 </style>
