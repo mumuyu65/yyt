@@ -43,7 +43,7 @@
               </div>
             </div>
             <!-- 添加 -->
-            <div style="width:700px;margin:0 auto; margin-top:50px;" v-show="AddComments">
+            <div style="margin:0 auto; margin:50px 20px;" v-show="AddComments">
                 <div class="row">
                     <div class="col-sm-3 col-md-3 col-xs-6">
                          <span class="required">*</span>产品类别：
@@ -85,7 +85,9 @@
                        <span class="required">*</span>简介 :
                     </div>
                     <div class="col-sm-9 col-md-9 col-xs-6">
-                        <textarea cols='40' rows='10' class="form-control" v-model="Intro"></textarea>
+                        <div id="editor" v-model="Intro">
+
+                        </div>
                         <div style="margin-top:20px;">
                                 <button class="btn btn-danger" @click="addComment()">提交</button>
                                 <button style="margin-left:50px;" class="btn btn-default" @click="Cancel()">取消</button>
@@ -94,7 +96,7 @@
                 </div>
             </div>
             <!-- 修改 -->
-            <div style="width:700px;margin:0 auto; margin-top:50px;" v-show="modifyComments">
+            <div style="margin:0 auto; margin:50px 20px;" v-show="modifyComments">
                 <div class="row">
                     <div class="col-sm-3 col-md-3 col-xs-6">
                          <span class="required">*</span>产品类别：
@@ -136,7 +138,8 @@
                        <span class="required">*</span>简介 :
                     </div>
                     <div class="col-sm-9 col-md-9 col-xs-6">
-                        <textarea cols='40' rows='10' class="form-control" v-model="modifyIntro"></textarea>
+                        <div id="modifyeditor" v-model="modifyIntro">
+                        </div>
                         <div style="margin-top:20px;">
                                 <button class="btn btn-danger" @click="modifyProductsComment()">提交</button>
                                 <button style="margin-left:50px;" class="btn btn-default" @click="modifyCancel()">取消</button>
@@ -157,6 +160,8 @@ import axios from 'axios'
 
 import env from '@/config/env'
 
+import * as E from 'wangeditor'
+
 export default {
   name: 'productsManage',
   data (){
@@ -176,6 +181,9 @@ export default {
         modifyImg:'',
         modifyIntro:'',
         modifyId:'',
+
+        editor:'',   //富文本编辑器
+        modifyeditor:'',  //修改时的富文本编辑器
     }
   },
   filters: {
@@ -188,9 +196,9 @@ export default {
         filterManage:function(cgid){
             var url = 'http://yingdedao.com:10021/cycj/category/query';
             var str;
-            $.ajaxSetup({  
-                async : false  
-            }); 
+            $.ajaxSetup({
+                async : false
+            });
             $.post(url,function(res){
                for(let i = 0;i<res.Data.length;i++){
                     if(cgid == res.Data[i].id){
@@ -253,6 +261,35 @@ export default {
     //添加
     addProductComment(){
         this.AddComments = !this.AddComments;
+        // 创建编辑器
+        let editor = new E('#editor');
+        // 自定义菜单配置
+        editor.customConfig.menus = [
+            'head',  // 标题
+            'bold',  // 粗体
+            'italic',  // 斜体
+            'underline',  // 下划线
+            'strikeThrough',  // 删除线
+            'foreColor',  // 文字颜色
+            'backColor',  // 背景颜色
+            'link',  // 插入链接
+            'list',  // 列表
+            'justify',  // 对齐方式
+            'quote',  // 引用
+            'image',  // 插入图片
+            'table',  // 表格
+            'undo',  // 撤销
+            'redo'  // 重复
+        ];
+
+        // 隐藏“网络图片”tab
+        editor.customConfig.showLinkImg = false;
+
+        editor.customConfig.uploadImgShowBase64 = true;   // 使用 base64 保存图片
+
+        editor.create();
+
+        this.editor = editor;
     },
     addComment(){
         let input = this.$refs.uploadadd;
@@ -329,13 +366,46 @@ export default {
     },
 
     modifyComment(item){
-      console.log(item);
       this.modifyComments =!this.modifyComments;
-      this.modifySelected = item.id;
+      this.modifySelected = item.cgid;
       this.modifyTitle = item.title;
       this.modifyImg = item.cover_img;
-      this.modifyIntro = item.intro;
+      //this.modifyIntro = item.intro;
       this.modifyId = item.cgid;
+
+      // 创建编辑器
+      let modifyeditor = new E('#modifyeditor');
+
+      // 自定义菜单配置
+      modifyeditor.customConfig.menus = [
+          'head',  // 标题
+          'bold',  // 粗体
+          'italic',  // 斜体
+          'underline',  // 下划线
+          'strikeThrough',  // 删除线
+          'foreColor',  // 文字颜色
+          'backColor',  // 背景颜色
+          'link',  // 插入链接
+          'list',  // 列表
+          'justify',  // 对齐方式
+          'quote',  // 引用
+          'image',  // 插入图片
+          'table',  // 表格
+          'undo',  // 撤销
+          'redo'  // 重复
+      ];
+
+       // 隐藏“网络图片”tab
+      modifyeditor.customConfig.showLinkImg = false;
+
+      modifyeditor.customConfig.uploadImgShowBase64 = true;   // 使用 base64 保存图片
+
+      modifyeditor.create();
+
+      this.modifyeditor = modifyeditor;
+
+      modifyeditor.txt.html(item.intro);
+
     },
 
     modifyProductsComment(){
