@@ -13,33 +13,30 @@
                     </li>
                 </ul>
                 <hr/>
-                <table class="text-center" border="1" width="100%" id="productsTable">
-                    <thead>
-                        <th  class="text-center">编号</th>
-                        <th  class="text-center">产品类别</th>
-                        <th  class="text-center">产品名称</th>
-                        <th  class="text-center">封面图片</th>
-                        <th  class="text-center">简介</th>
-                        <th  class="text-center">审核</th>
-                        <th  class="text-center">操作</th>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(item,index) in productComments" v-if="item.status">
-                          <td>{{index+1}}</td>
-                          <td>{{item.cgid | filterManage}}</td>
-                          <td>{{item.title}}</td>
-                          <td>
-                            <img v-bind:src='item.cover_img' style="height:50px;" />
-                          </td>
-                          <td>{{item.intro}}</td>
-                          <td><button class="btn btn-default" @click="Check(item)">{{item.status | filterCheck }}</button></td>
-                          <td>
-                            <button class="btn btn-primary" @click="modifyComment(item)">修改</button>
-                            <button class="btn btn-danger" @click="removeComment(item,index)">删除</button>
-                          </td>
-                        </tr>
-                    </tbody>
-                </table>
+              <!--  展示 -->
+              <div style="margin-top: 2rem; background-color:transparent" class="row">
+                      <div class="col-md-6" v-for="(item,index) in  productComments" v-if="item.status">
+                          <div class="prize-item" style="padding:10px;border: 1px solid #c0c0c0;border-radius: .7rem;margin-bottom: 3rem;
+                                height: 500px;overflow: hidden;">
+                            <div class="col-md-12" style="border-bottom: 1px solid #c0c0c0;">
+                                <div class="p-img col-md-6">
+                                    <img class="thumbnail-image" v-bind:src='item.cover_img'  alt="奖品图片" style="height:100px;" />
+                                </div>
+                                <div class="p-info col-md-6" style="height:100px;">
+                                    <h5>产品名称:{{item.title}}</h5>
+                                    <span class="pull-left">产品类别:{{item.cgid | filterManage}}</span>
+                                    <p class="beans">{{item.unix | dateStamp }}</p>
+                                </div>
+                            </div>
+                              <div style="height:320px; padding:20px; overflow:auto; border:1px solid transparent;" v-html="item.intro"></div>
+                              <div class="btn-group" style="padding:20px;">
+                                  <button class="btn btn-default" @click="Check(item)">{{item.status | filterCheck }}</button>
+                                  <div class="btn btn-primary" @click="modifyComment(item)">修改</div>
+                                  <div class="btn btn-danger" @click="removeComment(item,index)">删除</div>
+                              </div>
+                          </div>
+                      </div>
+                </div>
               </div>
             </div>
             <!-- 添加 -->
@@ -207,6 +204,24 @@ export default {
                   }
             })
             return str
+      },
+
+      dateStamp:function(value){
+        //获取一个事件戳
+         var time = new Date(value*1000);
+         //获取年份信息
+         var y = time.getFullYear();
+         //获取月份信息，月份是从0开始的
+         var m = (time.getMonth()+1)<10?('0'+(time.getMonth()+1)):(time.getMonth()+1);
+         //获取天数信息
+         //获取天数信息
+         var d = (time.getDate())<10?('0'+time.getDate()):time.getDate();
+
+         var H=(time.getHours())<10?('0'+time.getHours()):time.getHours();
+
+         var M=(time.getMinutes())<10?('0'+time.getMinutes()):time.getMinutes();
+         //返回拼接信息
+         return y+'-'+m + '-' + d+'    '+H+":"+M;
       }
   },
   mounted (){

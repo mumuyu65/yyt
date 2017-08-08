@@ -36,7 +36,8 @@
                               </div>
                           </div>
                       </div>
-                  </div>
+                </div>
+                <div id="daycomment_pagnation"></div>
               </div>
           </div>
           <!-- 添加  -->
@@ -158,6 +159,8 @@ import axios from 'axios'
 
 import env from '@/config/env'
 
+import '../../static/pagnation/bootstrap-paginator.js';
+
 import * as E from 'wangeditor'
 
 export default {
@@ -183,6 +186,8 @@ export default {
 
         modifyeditor:'',
         editor:'',
+
+        BegIdx:'',  //分页
     }
   },
   filters: {
@@ -227,14 +232,47 @@ export default {
       let params={
         flag:'',
         begidx:0,
-        counts:30,
+        counts:6,
       };
 
       let that = this;
 
       api.dayCommentQuery(params).then(function(res){
         if(res.data.Code ==3){
-            that.dayComments = res.data.Data;
+            let TotalNum;  //总数据条数
+            TotalNum=res.data.Data.Total;
+             //    分页
+            if(TotalNum>6){
+              var options = {
+                       currentPage: 1,
+                       totalPages: parseInt(TotalNum /6) + 1,
+                       onPageClicked: function (e, originalEvent, type, page) {
+                           switch (type) {
+                               case 'first':
+                                   that.daycommentListContent(0);
+                                   break;
+                               case 'page':
+                                   that.BegIdx = (page - 1) * 6;
+                                   that.daycommentListContent(that.BegIdx);
+                                   break;
+                               case 'next':
+                                   that.BegIdx  += 6;
+                                   that.daycommentListContent(that.BegIdx);
+                                   break;
+                               case 'last':
+                                   that.BegIdx = TotalNum - TotalNum % 6;
+                                   that.daycommentListContent(that.BegIdx);
+                                   break;
+                               case 'prev':
+                                   that.BegIdx -= 6;
+                                   that.daycommentListContent(that.BegIdx);
+                                   break;
+                           }
+                       }
+                   };
+                   $('#daycomment_pagnation').bootstrapPaginator(options);
+            }
+            that.dayComments = res.data.Data.Detail;
         }else{
           alert(res.data.Msg);
         }
@@ -243,6 +281,28 @@ export default {
       });
     },
 
+    //分页显示
+    daycommentListContent(begIdx){
+      let params={
+        flag:'',
+        begidx:begIdx,
+        counts:6,
+      };
+
+      let that = this;
+
+      api.dayCommentQuery(params).then(function(res){
+          if(res.data.Code ==3){
+            //console.log(res.data.Data);
+            that.dayComments = res.data.Data.Detail;
+          }
+      }).catch(function(err){
+          console.log(err);
+      });
+
+    },
+
+    //上传图片
     onFileChange(e) {
           var files = e.target.files || e.dataTransfer.files;
           if (!files.length)
