@@ -226,7 +226,26 @@ export default {
         this.queryAllNews();
         // 创建编辑器
         let editor = new E('#editor');
+
+        // 自定义菜单配置
+        editor.customConfig.menus = [
+            'head',  // 标题
+            'bold',  // 粗体
+            'italic',  // 斜体
+            'underline',  // 下划线
+            'strikeThrough',  // 删除线
+            'foreColor',  // 文字颜色
+            'backColor',  // 背景颜色
+            'link',  // 插入链接
+            'list',  // 列表
+            'justify',  // 对齐方式
+            'quote',  // 引用
+            'table',  // 表格
+            'undo',  // 撤销
+            'redo'  // 重复
+        ];
         editor.create();
+
         this.editor = editor;
     },
 
@@ -285,7 +304,7 @@ export default {
           if (!files.length)
            return;
            this.createImage(files[0]);
-     },
+    },
 
     createImage(file) {
       var reader = new FileReader();
@@ -305,6 +324,24 @@ export default {
       this.modifyId = item.id;
       // 创建编辑器
       let modifyeditor = new E('#modifyeditor');
+
+      // 自定义菜单配置
+        modifyeditor.customConfig.menus = [
+            'head',  // 标题
+            'bold',  // 粗体
+            'italic',  // 斜体
+            'underline',  // 下划线
+            'strikeThrough',  // 删除线
+            'foreColor',  // 文字颜色
+            'backColor',  // 背景颜色
+            'link',  // 插入链接
+            'list',  // 列表
+            'justify',  // 对齐方式
+            'quote',  // 引用
+            'table',  // 表格
+            'undo',  // 撤销
+            'redo'  // 重复
+        ];
 
       modifyeditor.create();
 

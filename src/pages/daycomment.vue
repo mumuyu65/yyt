@@ -362,10 +362,6 @@ export default {
       // 创建编辑器
       let modifyeditor = new E('#modifyeditor');
 
-      modifyeditor.create();
-
-      this.modifyeditor = modifyeditor;
-
       // 自定义菜单配置
       modifyeditor.customConfig.menus = [
           'head',  // 标题
@@ -389,6 +385,10 @@ export default {
       modifyeditor.customConfig.showLinkImg = false;
 
       modifyeditor.customConfig.uploadImgShowBase64 = true;   // 使用 base64 保存图片
+
+      modifyeditor.create();
+
+      this.modifyeditor = modifyeditor;
 
       modifyeditor.txt.html(item.intro);
 
