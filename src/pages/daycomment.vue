@@ -85,6 +85,7 @@
                         <div id="editor" v-model="Intro">
 
                         </div>
+                        <span class="required">注意事项:上传图片大小在80-100像素之间</span>
                         <div style="margin-top:20px;">
                                 <button class="btn btn-danger" @click="addDayComment()">提交</button>
                                 <button style="margin-left:50px;" class="btn btn-default" @click="Cancel()">取消</button>
@@ -311,6 +312,7 @@ export default {
       editor.customConfig.uploadImgShowBase64 = true;   // 使用 base64 保存图片
 
       editor.create();
+
       this.editor = editor;
     },
 
@@ -332,10 +334,12 @@ export default {
             }
         })
         .then(function (res) {
-          alert(res.data.Msg);
           if(res.data.Code ==3){
             that.AddComments = !that.AddComments;
             that.initData();
+            alert(res.data.Msg);
+          }else{
+            alert("上传的图片或文字过大，请重新输入！");
           }
         })
         .catch(function (error) {
@@ -360,9 +364,34 @@ export default {
 
       modifyeditor.create();
 
+      this.modifyeditor = modifyeditor;
+
+      // 自定义菜单配置
+      modifyeditor.customConfig.menus = [
+          'head',  // 标题
+          'bold',  // 粗体
+          'italic',  // 斜体
+          'underline',  // 下划线
+          'strikeThrough',  // 删除线
+          'foreColor',  // 文字颜色
+          'backColor',  // 背景颜色
+          'link',  // 插入链接
+          'list',  // 列表
+          'justify',  // 对齐方式
+          'quote',  // 引用
+          'image',  // 插入图片
+          'table',  // 表格
+          'undo',  // 撤销
+          'redo'  // 重复
+      ];
+
+       // 隐藏“网络图片”tab
+      modifyeditor.customConfig.showLinkImg = false;
+
+      modifyeditor.customConfig.uploadImgShowBase64 = true;   // 使用 base64 保存图片
+
       modifyeditor.txt.html(item.intro);
 
-      this.modifyeditor = modifyeditor;
     },
 
     modifyCancel(){
