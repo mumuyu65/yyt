@@ -156,7 +156,7 @@
                         <ul class="list-inline">
                             <li style="vertical-align:top;">
                                 <div class="dropdown" v-bind:class="{open:isActive}" >
-                                    <input type="text" @focus="dropdown" v-model="Period" style="height:30px; width:220px;"/><span class="caret" style="position:absolute; right:10px;top:6px;"></span>
+                                    <input type="text" @focus="dropdown" v-model="Period" style="height:30px; width:220px; cursor:pointer;"/><span class="caret" style="position:absolute; right:10px;top:6px;"></span>
                                     <ul class="dropdown-menu text-center" style="top:70%; width:220px;">
                                         <li v-for="option in PeriodOptions" >
                                             <span style="cursor:pointer;"  @click="selectTimeDistance(option)">{{ option.text }}</span>
