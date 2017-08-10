@@ -20,7 +20,7 @@
                                 height: 500px;overflow: hidden;">
                             <div class="col-md-12" style="border-bottom: 1px solid #c0c0c0;">
                                 <div class="p-img col-md-6">
-                                    <img class="thumbnail-image" v-bind:src='item.cover_img'  alt="奖品图片" style="height:100px;" />
+                                    <img class="thumbnail-image" v-bind:src='item.cover_img'  alt="早晚评图片" style="height:100px;" />
                                 </div>
                                 <div class="p-info col-md-6" style="height:100px;">
                                     <h5>标题：{{item.title}}</h5>

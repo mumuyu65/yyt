@@ -9,6 +9,8 @@ import 'bootstrap-table'
 
 import store from './store/store'
 
+import 'babel-polyfill'
+
 //关闭生产模式下给出的提示
 Vue.config.productionTip = false
 
