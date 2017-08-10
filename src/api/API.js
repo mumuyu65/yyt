@@ -7,6 +7,12 @@ import axios from 'axios'
 import config from './config'
 
 class API {
+    //删除时间段
+    delTimeDistance(param) {
+        config.data = param;
+        return axios.post('/cycj/schedule/delperiod', {}, config);
+    }
+
     //登录
     login(param) {
         config.data = param;

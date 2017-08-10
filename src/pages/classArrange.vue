@@ -153,12 +153,20 @@
                         <span class="required">*</span> 时间段:
                     </div>
                     <div class="col-sm-9 col-md-9 col-xs-6">
-                        <select v-model="Period">
-                            <option v-for="option in PeriodOptions" v-bind:value="option.value">
-                                    {{ option.text }}
-                            </option>
-                        </select>
-                        <button class="btn btn-danger" @click="addTimeDistance()">添加时间段</button>
+                        <ul class="list-inline">
+                            <li style="vertical-align:top;">
+                                <div class="dropdown" v-bind:class="{open:isActive}" >
+                                    <input type="text" @focus="dropdown" v-model="Period" style="height:30px; width:220px; cursor:pointer;"/><span class="caret" style="position:absolute; right:10px;top:6px;"></span>
+                                    <ul class="dropdown-menu text-center" style="top:70%; width:220px;">
+                                        <li v-for="option in PeriodOptions" >
+                                            <span style="cursor:pointer;"  @click="selectTimeDistance(option)">{{ option.text }}</span>
+                                            <b style="font-size:18px; margin-left:30px; cursor:pointer;" @click="delTimeDistance(option)">&times;</b>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li><button class="btn btn-danger" @click="addTimeDistance()">添加时间段</button></li>
+                        </ul>
                     </div>
                 </div>
                 <div class="row">
@@ -202,7 +210,6 @@
                     </ul>
                 </div>
             </div>
-
          </div>
     </div>
 </template>
@@ -237,6 +244,8 @@ export default {
         month_date:'',
 
         tempPeriod:[],
+
+        isActive:false,  //下拉框
     }
   },
   mounted (){
@@ -270,6 +279,33 @@ export default {
             minView: 2,
             startView:3,
             minuteStep:10
+        });
+    },
+    //dropdown
+    dropdown(){
+        this.isActive = !this.isActive;
+    },
+
+    //选择时间段
+    selectTimeDistance(item){
+        this.Period = item.text;
+        this.isActive = !this.isActive;
+    },
+    //删除时间段
+    delTimeDistance(item){
+        let params={
+            sid:this.Sid,
+            period:item.text
+        };
+
+
+        api.delTimeDistance(params).then(function(res){
+            alert(res.data.Msg);
+            if(res.data.Code ==3){
+                window.location.reload();
+            }
+        }).catch(function(err){
+            console.log(err);
         });
     },
 
@@ -355,7 +391,6 @@ export default {
             if(res.data.Code ==3){
                 that.month_date = res.data.Data[0].date;
                 that.resetSchedule(res.data.Data);
-                console.log(res.data.Data);
             }else{
                 alert(res.data.Msg);
             }
@@ -375,8 +410,6 @@ export default {
             {weekday:6,course:[]},
             {weekday:7,course:[]},
         ];
-
-        console.log(this.tempPeriod[0]);
 
         let that = this;
 
@@ -752,4 +785,16 @@ export default {
             border-right: #CBD8AC solid 1px;
             border-bottom: #CBD8AC solid 1px;
         }
+
+        .dropdown-menu>li>span{
+            padding:5px 0;
+            display:inline-block;
+            width:60%;
+            cursor:pointer;
+        }
+
+        .dropdown-menu>li:hover>span{
+            background-color:#f5f5f5;
+        }
+
 </style>
