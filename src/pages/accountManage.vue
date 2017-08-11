@@ -22,7 +22,6 @@
                         <th class="text-center">用户头像</th>
                         <th class="text-center" style="max-width:200px">用户简介</th>
                         <th class="text-center">用户等级</th>
-                        <th class="text-center">开启或关闭</th>
                         <th class="text-center">操作</th>
                     </thead>
                     <tbody>
@@ -34,9 +33,6 @@
                             <td><img v-bind:src="item.headurl" alt="用户头像" style="height:50px;"/></td>
                             <td style="max-width:200px">{{item.intro}}</td>
                             <td>{{item.level}}</td>
-                            <td>
-                                <button class="btn" v-bind:class="{'btn-primary':item.active,'btn-danger':!item.active}">{{item.active | checkStatus }}</button></span>
-                            </td>
                             <td>
                                 <button class="btn btn-primary" @click="modifyuser(item)">修改</button>
                                 <button class="btn btn-danger" @click="delUser(item,index)" v-if="item.flag!=4">删除</button>
@@ -193,13 +189,6 @@ export default {
                 case '4': return '超级管理员'; break;
             }
         },
-
-        checkStatus:function(value){
-               switch(value) {
-                   case '0': return '关闭'; break;
-                   case '1': return '开启'; break;
-               }
-           },
   },
   methods:{
     initData(){
