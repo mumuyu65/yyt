@@ -13,6 +13,7 @@
                     </li>
                 </ul>
                 <hr/>
+                <!-- 展示图片 -->
                 <table class="text-center" border="1" width="100%" id="productsTable">
                     <thead>
                         <th class="text-center">编号</th>
@@ -37,7 +38,7 @@
               </div>
           </div>
           <!-- 添加图片 -->
-          <div style="width:700px;margin:0 auto; margin-top:50px;" v-show="AddComments">
+          <div style="margin:0 auto; margin:50px 20px;" v-show="AddComments">
                 <div class="row">
                     <div class="col-sm-3 col-md-3 col-xs-6">
                         <span class="required">*</span> 标题:
@@ -53,7 +54,7 @@
                     <div class="col-sm-9 col-md-9 col-xs-6">
                       <ul class="list-inline">
                           <li><img id="file" v-bind:src="Img" class="profile"/></li>
-                          <li style="position:relative;">
+                          <li style="position:relative;" >
                             <input type="file" @change="onFileChange" ref="upload"  value="上传图片" style="position:absolute; opacity:0;"/>
                             <button style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
                                 上传图片
@@ -64,7 +65,7 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-9 col-md-9 col-xs-6">
-                        <div style="margin-top:20px;">
+                        <div style="margin-top:20px;" class="text-center">
                                 <button class="btn btn-danger" @click="addDayComment()">提交</button>
                                 <button style="margin-left:50px;" class="btn btn-default" @click="Cancel()">取消</button>
                         </div>
@@ -72,7 +73,7 @@
                 </div>
           </div>
           <!-- 修改图片 -->
-          <div style="width:700px;margin:0 auto; margin-top:50px;" v-show="modifyComments">
+          <div style="margin:50px 20px;" v-show="modifyComments">
                 <div class="row">
                     <div class="col-sm-3 col-md-3 col-xs-6">
                         <span class="required">*</span> 标题:
@@ -99,7 +100,7 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-9 col-md-9 col-xs-6">
-                        <div style="margin-top:20px;">
+                        <div style="margin-top:20px;" class="text-center">
                                 <button class="btn btn-danger" @click="modifyDayComment()">提交</button>
                                 <button style="margin-left:50px;" class="btn btn-default" @click="modifyCancel()">取消</button>
                         </div>
@@ -152,7 +153,7 @@ export default {
       api.getImg(params).then(function(res){
         if(res.data.Code ==3){
             that.imgList = res.data.Data;
-            console.log(that.imgList)
+            console.log(res.data);
         }else{
           alert(res.data.Msg);
         }
@@ -320,5 +321,4 @@ export default {
    #productsTable tr:nth-child(odd){
         background-color:#f7f7f7;
    }
-
 </style>
