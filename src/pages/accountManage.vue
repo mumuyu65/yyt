@@ -266,8 +266,6 @@ export default {
         }).catch(function(err){
             console.log(err);
         });
-
-
     },
 
     //新增用户

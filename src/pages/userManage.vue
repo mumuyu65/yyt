@@ -57,6 +57,8 @@ import axios from 'axios'
 
 import env from '@/config/env'
 
+import '../../static/pagnation/bootstrap-paginator.js'
+
 export default {
   name: 'userManage',
   mounted (){
@@ -78,7 +80,9 @@ export default {
         User:false,
         selected:0,
         is_show:false,
-        id:''
+        id:'',
+
+        BegIdx:0,
     }
   },
   filters:{
@@ -108,13 +112,65 @@ export default {
         let params={
             sid:that.Sid,
             begidx:0,
-            counts:100,
+            counts:10,
             flag:0,
         };
         api.queryUser(params).then(function(res){
             console.log(res.data);
             if(res.data.Code ==3){
-                that.userlists = res.data.Data.Detail;
+                let TotalNum = res.data.Data.Total;
+                let templateObj = res.data.Data.Detail;
+                that.userlists= templateObj;
+                 //    分页
+                if(TotalNum>10) {
+                     var options = {
+                         currentPage: 1,
+                         totalPages: parseInt(TotalNum /10) + 1,
+                         onPageClicked: function (e, originalEvent, type, page) {
+                             switch (type) {
+                                 case 'first':
+                                     that.userListQuery(0);
+                                     break;
+                                 case 'page':
+                                     that.BegIdx = (page - 1) * 10;
+                                     that.userListQuery(that.BegIdx);
+                                     break;
+                                 case 'next':
+                                     that.BegIdx  += 10;
+                                     that.userListQuery(that.BegIdx);
+                                     break;
+                                 case 'last':
+                                     that.BegIdx = TotalNum - TotalNum % 10;
+                                     that.userListQuery(that.BegIdx);
+                                     break;
+                                 case 'prev':
+                                     that.BegIdx -= 10;
+                                     that.userListQuery(that.BegIdx);
+                                     break;
+                             }
+                         }
+                     };
+                     $('#user_pagnation').bootstrapPaginator(options);
+                }
+            }else{
+                alert(res.data.Msg);
+            }
+        }).catch(function(err){
+            console.log(err);
+        });
+    },
+
+    userListQuery(idx){
+      let that = this;
+        let params={
+            sid:that.Sid,
+            begidx:idx,
+            counts:10,
+            flag:0,
+        };
+        api.queryUser(params).then(function(res){
+            if(res.data.Code ==3){
+                 that.userlists=res.data.Data.Detail;
             }else{
                 alert(res.data.Msg);
             }
