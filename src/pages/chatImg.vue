@@ -15,25 +15,6 @@
                 <hr/>
                 <!-- 展示图片 -->
                 <table class="text-center" border="1" width="100%" id="productsTable">
-                    <thead>
-                        <th class="text-center">编号</th>
-                        <th class="text-center">标题</th>
-                        <th class="text-center">图片</th>
-                        <th class="text-center">操作</th>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(item,index) in imgList">
-                          <td>{{index+1}}</td>
-                          <td>{{item.title}}</td>
-                          <td>
-                            <img v-bind:src='item.imgurl' style="width:87px; height:87px;"/>
-                          </td>
-                          <td>
-                            <button class="btn btn-primary" @click="modifyComment(item)">修改</button>
-                            <button class="btn btn-danger" @click="removeComment(item,index)">删除</button>
-                          </td>
-                        </tr>
-                    </tbody>
                 </table>
               </div>
           </div>

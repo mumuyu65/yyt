@@ -30,7 +30,7 @@
                             <td>{{item.account}}</td>
                             <td>{{item.nick}}</td>
                             <td>{{item.flag | userLevel }}</td>
-                            <td><img v-bind:src="item.headurl" alt="用户头像" style="height:50px;"/></td>
+                            <td><img v-bind:src="item.headurl" alt="" style="height:50px;" v-if="item.headurl"/></td>
                             <td style="max-width:200px">{{item.intro}}</td>
                             <td>{{item.level}}</td>
                             <td>
@@ -40,6 +40,7 @@
                         </tr>
                     </tbody>
                 </table>
+                <div id="account_pagnation" class="text-center"></div>
             </div>
             </div>
             <!-- 新增用户 -->
@@ -113,7 +114,7 @@
                     </div>
                     <div class="col-sm-9 col-md-9 col-xs-6">
                          <ul class="list-inline">
-                          <li><img v-bind:src="user.img" id="file" class="profile img-circle"/></li>
+                          <li><img v-bind:src="user.img" id="file" class="profile img-circle" /></li>
                           <li style="position:relative;">
                             <input type="file" @change="onFileChange" ref="upload" value="上传图片" style="position:absolute; opacity:0;"/>
                             <button style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
@@ -149,6 +150,8 @@ import axios from 'axios'
 
 import env from '@/config/env'
 
+import '../../static/pagnation/bootstrap-paginator.js'
+
 export default {
   name: 'Home',
   mounted (){
@@ -177,6 +180,8 @@ export default {
         selected: '1',
         phone:'',
         pwd:'',
+
+        BegIdx:0,
     }
   },
   filters:{
@@ -187,6 +192,7 @@ export default {
                 case '2': return '审核员'; break;
                 case '3': return '管理员'; break;
                 case '4': return '超级管理员'; break;
+                case '5': return '水军'; break;
             }
         },
   },
@@ -196,19 +202,72 @@ export default {
         let params={
             sid:that.Sid,
             begidx:0,
-            counts:100,
+            counts:10,
             flag:-1,
         };
         api.queryUser(params).then(function(res){
             if(res.data.Code ==3){
-                that.userlists = res.data.Data.Detail;
-                //console.log(that.userlists);
+                let TotalNum = res.data.Data.Total;
+                let templateObj = res.data.Data.Detail;
+                that.userlists= templateObj;
+                //    分页
+                if(TotalNum>10) {
+                     var options = {
+                         currentPage: 1,
+                         totalPages: parseInt(TotalNum /10) + 1,
+                         onPageClicked: function (e, originalEvent, type, page) {
+                             switch (type) {
+                                 case 'first':
+                                     that.accountListQuery(0);
+                                     break;
+                                 case 'page':
+                                     that.BegIdx = (page - 1) * 10;
+                                     that.accountListQuery(that.BegIdx);
+                                     break;
+                                 case 'next':
+                                     that.BegIdx  += 10;
+                                     that.accountListQuery(that.BegIdx);
+                                     break;
+                                 case 'last':
+                                     that.BegIdx = TotalNum - TotalNum % 10;
+                                     that.accountListQuery(that.BegIdx);
+                                     break;
+                                 case 'prev':
+                                     that.BegIdx -= 10;
+                                     that.accountListQuery(that.BegIdx);
+                                     break;
+                             }
+                         }
+                     };
+                     $('#account_pagnation').bootstrapPaginator(options);
+                }
             }else{
                 alert(res.data.Msg);
             }
         }).catch(function(err){
             console.log(err);
         });
+    },
+
+    accountListQuery(idx){
+        let params={
+            sid:this.Sid,
+            begidx:idx,
+            counts:10,
+            flag:-1,
+        };
+
+        let that = this;
+
+        api.queryUser(params).then(function(res){
+            if(res.data.Code ==3){
+                that.userlists=res.data.Data.Detail;
+            }
+        }).catch(function(err){
+            console.log(err);
+        });
+
+
     },
 
     //新增用户

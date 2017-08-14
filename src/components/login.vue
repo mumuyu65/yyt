@@ -37,8 +37,8 @@ export default {
   data (){
     return {
         user:{
-          name:'13545267411',
-          pwd:'123456',
+          name:'',
+          pwd:'',
         },
     }
   },
