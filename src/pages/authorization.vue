@@ -3,15 +3,15 @@
         <div id="page-inner">
             <ul class="list-inline">
                 <li><h3>权限分配</h3></li>
-                 <li>
+                <li style=" vertical-align:middle">
                     <input type="number" class="form-control" placeholder="请输入用户手机号" v-model="account">
                 </li>
-                <li><div class="btn btn-primary" @click="qxLists()">搜索</div></li>
+                <li><button class="btn btn-primary" @click="qxLists()" style="margin-bottom:10px;">搜索</button></li>
             </ul>
             <hr/>
             <ul class="nav nav-tabs">
-                <li role="presentation" class="active" @click="qxList()"><a>未开通权限</a></li>
-                <li role="presentation" @click="haveAuth()"><a>已开通权限</a></li>
+                <li role="presentation" @click="haveAuth()" style="cursor:pointer;"><a >已开通权限</a></li>
+                <li role="presentation" class="active" @click="qxList()" style="cursor:pointer"><a>未开通权限</a></li>
             </ul>
             <table id="qxTable" class="text-center" width="100%" border="1" >
                 <thead>
@@ -52,7 +52,7 @@ export default {
     return {
         Sid:'',
         authList:[],
-        account:'',
+        account:'13545267410',
         state:'添加'
     }
   },
@@ -79,15 +79,12 @@ export default {
   },
   methods:{
     initData(){
-
-    },
-    qxLists(){
-        this.authList = []
-        this.qxList();
+        this.haveAuth();
+        this.authList = [];
     },
     qxList(){
         this.state = '添加';
-        $('.nav-tabs li:first-of-type').addClass('active').siblings().removeClass('active');
+        $('.nav-tabs li:last-of-type').addClass('active').siblings().removeClass('active');
         let that = this;
         let params={
             sid:that.Sid,
@@ -104,9 +101,9 @@ export default {
             console.log(err);
         });
     },
-    haveAuth(id){
+    haveAuth(){
         this.state = '移除';
-        $('.nav-tabs li:last-of-type').addClass('active').siblings().removeClass('active');
+        $('.nav-tabs li:first-of-type').addClass('active').siblings().removeClass('active');
         let that = this;
         let params={
             sid:that.Sid,
