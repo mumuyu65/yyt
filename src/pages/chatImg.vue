@@ -26,7 +26,7 @@
                           <td>{{index+1}}</td>
                           <td>{{item.title}}</td>
                           <td>
-                            <img v-bind:src='item.imgurl' />
+                            <img v-bind:src='item.imgurl' style="width:87px; height:87px;"/>
                           </td>
                           <td>
                             <button class="btn btn-primary" @click="modifyComment(item)">修改</button>
@@ -120,6 +120,8 @@ import axios from 'axios'
 
 import env from '@/config/env'
 
+import 'bootstrap-table'
+
 export default {
   name: 'chatImg',
   data (){
@@ -152,8 +154,46 @@ export default {
 
       api.getImg(params).then(function(res){
         if(res.data.Code ==3){
-            that.imgList = res.data.Data;
-            console.log(res.data);
+              //console.log(res.data.Data);
+              that.dayComments =  res.data.Data;
+              $('#productsTable').bootstrapTable({
+                data:that.dayComments,
+                pagination:true,
+                pageSize:10,
+                striped:true,
+                columns: [{
+                    field: 'id',
+                    title: '序列号',
+                    formatter:function(val,row,idx){
+                      return idx;
+                    }
+                }, {
+                    field: 'title',
+                    title: '标题'
+                }, {
+                    field: 'imgurl',
+                    title: '图片',
+                    formatter:function(index,item,id){
+                      return '<img src="'+item.imgurl+'" style="width:87px; height:87px;" />'
+                    }
+                },{
+                  field:'group',
+                  title:'操作',
+                  formatter:function(val,row,idx){
+                    return '<button class="btn btn-primary mod">修改</button>'+'<button class="btn btn-danger delete">删除</button>'
+                  },
+                  events:{
+                    'click .mod': function(e, value, row, index) {
+                          //修改操作
+                          that.modifyComment(row);
+                        },
+                    'click .delete' : function(e, value, row, index) {
+                          //删除操作
+                          that.removeComment(row,index);
+                        }
+                    }
+                }]
+          });
         }else{
           alert(res.data.Msg);
         }
@@ -268,7 +308,7 @@ export default {
           alert(res.data.Msg);
           if(res.data.Code ==3){
             that.modifyComments = !that.modifyComments;
-            that.initData();
+            that.InitTable();
           }
         })
         .catch(function (error) {
@@ -287,7 +327,8 @@ export default {
       api.delImg(params).then(function(res){
         alert(res.data.Msg);
         if(res.data.Code ==3){
-            that.dayComments.splice(index,1);
+            //that.dayComments.splice(index,1);
+            that.initData();
         }
       }).catch(function(err){
           console.log(err);
