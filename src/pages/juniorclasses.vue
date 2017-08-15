@@ -12,7 +12,8 @@
                         </button>
                     </li>
                 </ul>
-                <hr/>
+                <hr style="margin:0;"/>
+                <div id="classes_pagnation" class="text-center"></div>
                 <table class="text-center" border="1" width="100%" id="productsTable">
                     <thead>
                         <th class="text-center">编号</th>
@@ -42,7 +43,6 @@
                         </tr>
                     </tbody>
                 </table>
-                <div id="classes_pagnation" class="text-center"></div>
               </div>
           </div>
           <!--添加 -->

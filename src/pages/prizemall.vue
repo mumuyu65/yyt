@@ -14,7 +14,7 @@
                     </li>
                     </ul>
                     <hr/>
-                    <div style="margin-top: 2rem;">
+                    <div>
                         <div class="col-md-3" v-for="item in prizes">
                             <div class="prize-item">
                                 <div class="p-img">
@@ -35,7 +35,7 @@
                     </div>
                 </div>
                 <!-- 新增 -->
-                <div class="col-md-6 col-md-offset-3" v-if="is_show_add">
+                <div class="row" v-if="is_show_add">
                     <div class="form-group">
                         <label>奖品名称</label>
                         <input type="text" class="form-control" placeholder="请输入奖品名称" v-model="add_prizes.name">
@@ -55,8 +55,8 @@
                     <div class="col-md-12" style="margin-bottom: 1rem; text-align: center">
                         <img :src="add_prizes.img" alt="" class="thumbnail-img">
                     </div>
-                    <div class="btn btn-primary col-md-4" @click="addPrize">确认</div>
-                    <div class="btn btn-default col-md-4 col-md-offset-4" @click="isShowAdd">取消</div>
+                    <div class="btn btn-primary" @click="addPrize">确认</div>
+                    <div class="btn btn-default pull-right" @click="isShowAdd">取消</div>
                 </div>
                 <!-- 修改 -->
                 <div class="col-md-6 col-md-offset-3" v-if="is_show_modify">
@@ -79,8 +79,8 @@
                         <label>奖品图片</label>
                         <input type="file" class="form-control" ref="update" @change="onFileChange" style="width: 100%;">
                     </div>
-                    <div class="btn btn-primary col-md-4" @click="modifyPrize">确认</div>
-                    <div class="btn btn-default col-md-4 col-md-offset-4" @click="isShowModify">取消</div>
+                    <div class="btn btn-primary" @click="modifyPrize">确认</div>
+                    <div class="btn btn-default" @click="isShowModify">取消</div>
                 </div>
             </div>
         </div>
@@ -292,5 +292,11 @@ export default {
                 color: #ccc;
             }
         }
+    }
+
+    #page-inner .row{
+        padding:20px;
+        background-color:#F3F3F3;
+        margin-bottom:10px;
     }
 </style>

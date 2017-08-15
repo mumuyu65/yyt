@@ -39,7 +39,7 @@
             </div>
           </div>
           <!-- 新增qq账号 -->
-          <div v-show="addQQ" style="width:700px;margin:0 auto; margin-top:50px;">
+          <div v-show="addQQ" style="margin:50px 20px;">
              <div class="row">
                     <div class="col-sm-3 col-md-3 col-xs-6">
                          <span class="required">*</span>qq：
@@ -63,7 +63,7 @@
           </div>
 
           <!-- 修改qq账号 -->
-          <div v-show="modifyqq" style="width:700px;margin:0 auto; margin-top:50px;">
+          <div v-show="modifyqq" style="margin:50px 20px;">
              <div class="row">
                     <div class="col-sm-3 col-md-3 col-xs-6">
                          <span class="required">*</span>qq：

@@ -42,7 +42,7 @@
           <div v-show="showAddLevel" >
             <h3>添加用户等级</h3>
             <hr/>
-            <div style="width:700px; margin:0 auto; margin-top:50px;">
+            <div style=" margin:50px 20px;">
                   <div class="row">
                       <div class="col-sm-3 col-md-3 col-xs-6">
                           等级名称：
@@ -90,7 +90,7 @@
             </div>
           </div>
           <!-- 修改 -->
-          <div style="width:700px; margin:0 auto; margin-top:50px;" v-show="modify">
+          <div style="margin:50px 20px;" v-show="modify">
                 <div class="row">
                     <div class="col-sm-3 col-md-3 col-xs-6">
                         等级名称：

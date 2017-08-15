@@ -62,22 +62,27 @@ export default {
   },
   methods:{
     addProduct(){
-        this.Num ++;
-        let that = this;
-        let params ={
-            sid: this.Sid,
-            num:this.Num,
-            name:this.newData,
-        };
-        this.currentItems.push({ id:this.Num,name:this.newData,flag:false});
-        api.addCategory(params).then(function(res){
-            if(res.data.Code ==3){
-                that.newData ='';
-            }
-            alert(res.data.Msg);
-        }).catch(function(err){
-            console.log(err);
-        });
+        if(this.newData){
+            this.Num ++;
+            let that = this;
+            let params ={
+                sid: this.Sid,
+                num:this.Num,
+                name:this.newData,
+            };
+            this.currentItems.push({ id:this.Num,name:this.newData,flag:false});
+            api.addCategory(params).then(function(res){
+                if(res.data.Code ==3){
+                    that.newData ='';
+                }
+                alert(res.data.Msg);
+            }).catch(function(err){
+                console.log(err);
+            });
+        }else{
+            alert("产品类型不能为空！");
+        }
+
     },
 
     initProduct(){

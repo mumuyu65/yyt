@@ -140,8 +140,9 @@ export default {
               $('#productsTable').bootstrapTable({
                 data:that.dayComments,
                 pagination:true,
-                pageSize:10,
                 striped:true,
+                paginationVAlign:'top',
+                paginationHAlign:'right',
                 columns: [{
                     field: 'id',
                     title: '序列号',
@@ -155,7 +156,7 @@ export default {
                     field: 'imgurl',
                     title: '图片',
                     formatter:function(index,item,id){
-                      return '<img src="'+item.imgurl+'" style="width:87px; height:87px;" />'
+                      return '<img src="'+item.imgurl+'" style="width:65px; height:65px;" />'
                     }
                 },{
                   field:'group',

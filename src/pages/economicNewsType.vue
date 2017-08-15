@@ -94,23 +94,26 @@ export default {
     },
 
     addType(){
-      let params={
-        sid:this.Sid,
-        type:this.Num,
-        text:this.newData
-      };
-      let that = this;
-      api.addnewsType(params).then(function(res){
-        if(res.data.Code ==3){
-            that.newData ='';
-            that.initData();
-          }
-        alert(res.data.Msg);
-      }).catch(function(err){
-        console.log(err);
-      });
+      if(this.newData){
+        let params={
+          sid:this.Sid,
+          type:this.Num,
+          text:this.newData
+        };
+        let that = this;
+        api.addnewsType(params).then(function(res){
+          if(res.data.Code ==3){
+              that.newData ='';
+              that.initData();
+            }
+          alert(res.data.Msg);
+        }).catch(function(err){
+          console.log(err);
+        });
+      }else{
+        alert("资讯类型的输入内容不能为空！");
+      }
     },
-
   },
 }
 </script>

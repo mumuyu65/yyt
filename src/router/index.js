@@ -151,16 +151,16 @@ export default new Router({
             meta: {
                 role: ['admin', 'superman']
             },
-            icon: 'fa fa-dashboard fa-2x',
+            icon: 'fa fa-vcard fa-2x',
             noDropdown: true,
-        },{ //权限分配
+        }, { //权限分配
             path: '/authorization',
             component: authorization,
             name: '权限分配',
             meta: {
                 role: ['admin']
             },
-            icon: 'fa fa-dashboard fa-2x',
+            icon: 'fa fa-address-book-o fa-2x',
             noDropdown: true,
         }, { //新闻资讯类别管理
             path: '/economicNewsType',
@@ -236,7 +236,7 @@ export default new Router({
             meta: {
                 role: ['admin', 'superman']
             },
-            icon: 'fa fa-book fa-2x',
+            icon: 'fa fa-gamepad fa-2x',
             children: [{
                 path: '/smallgame/prizemall',
                 component: prizemall,
@@ -293,7 +293,7 @@ export default new Router({
             meta: {
                 role: ['admin', 'superman']
             },
-            icon: 'fa fa-qrcode fa-2x',
+            icon: 'fa fa-heart-o fa-2x',
             noDropdown: true,
         }, { //产品介绍管理
             path: '/productsintro',
@@ -338,7 +338,7 @@ export default new Router({
             meta: {
                 role: ['admin', 'superman']
             },
-            icon: 'fa fa-download fa-2x',
+            icon: 'fa fa-file-image-o fa-2x',
             noDropdown: true,
         }, { //下载中心
             path: '/download',
@@ -378,16 +378,16 @@ export const asyncRouterMap = [{ //个人中心
     meta: {
         role: ['admin', 'superman']
     },
-    icon: 'fa fa-dashboard fa-2x',
+    icon: 'fa fa-vcard fa-2x',
     noDropdown: true,
-},{ //权限分配
+}, { //权限分配
     path: '/authorization',
     component: authorization,
     name: '权限分配',
     meta: {
         role: ['admin']
     },
-    icon: 'fa fa-dashboard fa-2x',
+    icon: 'fa fa-address-book-o fa-2x',
     noDropdown: true,
 }, { //新闻资讯类别管理
     path: '/economicNewsType',
@@ -460,7 +460,7 @@ export const asyncRouterMap = [{ //个人中心
     meta: {
         role: ['admin', 'superman']
     },
-    icon: 'fa fa-book fa-2x',
+    icon: 'fa fa-gamepad fa-2x',
     children: [{
         path: '/smallgame/prizemall',
         component: prizemall,
@@ -517,7 +517,7 @@ export const asyncRouterMap = [{ //个人中心
     meta: {
         role: ['admin', 'superman']
     },
-    icon: 'fa fa-qrcode fa-2x',
+    icon: 'fa fa-heart-o fa-2x',
     noDropdown: true,
 }, { //产品介绍管理
     path: '/productsintro',
@@ -562,7 +562,7 @@ export const asyncRouterMap = [{ //个人中心
     meta: {
         role: ['admin', 'superman']
     },
-    icon: 'fa fa-download fa-2x',
+    icon: 'fa fa-file-image-o fa-2x',
     noDropdown: true,
 }, { //下载中心
     path: '/download',

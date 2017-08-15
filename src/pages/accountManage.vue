@@ -13,6 +13,7 @@
                     </li>
                 </ul>
                 <hr/>
+                <div id="account_pagnation" class="text-center"></div>
                 <table id="userTable" class="text-center" width="100%" border="1" >
                     <thead>
                         <th class="text-center">序列号</th>
@@ -40,7 +41,6 @@
                         </tr>
                     </tbody>
                 </table>
-                <div id="account_pagnation" class="text-center"></div>
             </div>
             </div>
             <!-- 新增用户 -->
@@ -387,6 +387,10 @@ export default {
         padding:20px;
         background-color:#F3F3F3;
         margin-bottom:10px;
+    }
+
+    hr{
+      margin:0;
     }
 
     .required{

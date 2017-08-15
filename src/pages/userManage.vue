@@ -5,6 +5,7 @@
                 <li><h3>用户管理</h3></li>
             </ul>
             <hr/>
+            <div id="user_pagnation"></div>
             <table id="userTable" class="text-center" width="100%" border="1" >
                 <thead>
                     <th class="text-center">序列号</th>
@@ -116,7 +117,6 @@ export default {
             flag:0,
         };
         api.queryUser(params).then(function(res){
-            console.log(res.data);
             if(res.data.Code ==3){
                 let TotalNum = res.data.Data.Total;
                 let templateObj = res.data.Data.Detail;
@@ -209,6 +209,10 @@ export default {
         padding:20px;
         background-color:#F3F3F3;
         margin-bottom:10px;
+    }
+
+    hr{
+      margin:10px 0;
     }
 
     .required{

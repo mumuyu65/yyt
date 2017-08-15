@@ -48,5 +48,13 @@ export default {
   .router-link-active{
     background-color:#C90000 !important;
   }
+
+  .fa-2x{
+    font-size:20px;
+  }
+
+  .sidebar-collapse > .nav > li > a {
+    padding:10px;
+  }
 </style>
 

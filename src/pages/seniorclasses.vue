@@ -12,7 +12,8 @@
                         </button>
                     </li>
                 </ul>
-                <hr/>
+                <hr style="margin:0;"/>
+                <div id="classes_pagnation"></div>
                 <table class="text-center" border="1" width="100%" id="productsTable">
                     <thead>
                         <th class="text-center">编号</th>
@@ -42,7 +43,6 @@
                         </tr>
                     </tbody>
                 </table>
-                <div id="classes_pagnation"></div>
               </div>
           </div>
           <!--添加 -->
@@ -481,5 +481,4 @@ export default {
    #productsTable tr:nth-child(odd){
         background-color:#f7f7f7;
    }
-
 </style>

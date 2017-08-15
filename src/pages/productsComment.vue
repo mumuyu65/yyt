@@ -14,10 +14,10 @@
                 </ul>
                 <hr/>
               <!--  展示 -->
-              <div style="margin-top: 2rem; background-color:transparent" class="row">
+              <div style="background-color:transparent; padding:0;" class="row">
                       <div class="col-md-6" v-for="(item,index) in  productComments" v-if="item.status">
                           <div class="prize-item" style="padding:10px;border: 1px solid #c0c0c0;border-radius: .7rem;margin-bottom: 3rem;
-                                height: 500px;overflow: hidden;">
+                                height: 350px;overflow: hidden;">
                             <div class="col-md-12" style="border-bottom: 1px solid #c0c0c0;">
                                 <div class="p-img col-md-6">
                                     <img class="thumbnail-image" v-bind:src='item.cover_img'  alt="奖品图片" style="height:100px;" />
@@ -28,7 +28,7 @@
                                     <p class="beans">{{item.unix | dateStamp }}</p>
                                 </div>
                             </div>
-                              <div style="height:320px; padding:20px; overflow:auto; border:1px solid transparent;" v-html="item.intro"></div>
+                              <div style="height:180px; padding:20px; overflow:auto; border:1px solid transparent;" v-html="item.intro"></div>
                               <div class="btn-group" style="padding:20px;">
                                   <button class="btn btn-default" @click="Check(item)">{{item.status | filterCheck }}</button>
                                   <div class="btn btn-primary" @click="modifyComment(item)">修改</div>
