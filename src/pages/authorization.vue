@@ -4,7 +4,7 @@
             <ul class="list-inline">
                 <li><h3>权限分配</h3></li>
                 <li style=" vertical-align:middle">
-                    <input type="number" class="form-control" placeholder="请输入用户手机号" v-model="account">
+                    <input type="number" class="form-control" placeholder="请输入用户手机号" @keyup.enter="initData()" v-model="account">
                 </li>
                 <li><button class="btn btn-primary" @click="initData()" style="margin-bottom:10px;">搜索</button></li>
             </ul>
