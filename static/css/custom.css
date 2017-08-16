@@ -360,7 +360,7 @@ line-height: 1.428571429;
         z-index: 1;
         position: absolute;
         width: 260px;
-        height:calc(100%-60px);
+        height:100%;
     }
 
    .navbar {

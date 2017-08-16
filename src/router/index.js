@@ -255,7 +255,7 @@ export default new Router({
             component: HandleSuggestion,
             name: '操作建议管理',
             meta: {
-                role: ['teacher', 'superman']
+                role: ['teacher', 'checker', 'superman']
             },
             icon: 'fa fa-sitemap fa-2x',
             noDropdown: true,
@@ -479,7 +479,7 @@ export const asyncRouterMap = [{ //个人中心
     component: HandleSuggestion,
     name: '操作建议管理',
     meta: {
-        role: ['teacher', 'superman']
+        role: ['teacher', 'checker', 'superman']
     },
     icon: 'fa fa-sitemap fa-2x',
     noDropdown: true,

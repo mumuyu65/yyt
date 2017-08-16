@@ -178,8 +178,9 @@
                 <div class="form-group col-md-6">
                     <label>结果</label>
                     <select class="form-control" v-model="modifyhandlesuggestion.result">
-                        <option value="赢单">赢单</option>
-                        <option value="输单">输单</option>
+                        <option value="持仓单">持仓单</option>
+                        <option value="建仓单">建仓单</option>
+                        <option value="平仓单">平仓单</option>
                     </select>
                 </div>
             </div>
