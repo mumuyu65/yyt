@@ -24,7 +24,7 @@ export default {
     logout (){
         window.localStorage.removeItem("user");
         window.localStorage.removeItem("routes");
-        this.$router.push('/');
+        window.location.replace("/");
     }
   }
 }

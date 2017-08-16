@@ -141,7 +141,7 @@ export default {
                 data:that.dayComments,
                 pagination:true,
                 striped:true,
-                paginationVAlign:'top',
+                paginationVAlign:'bottom',
                 paginationHAlign:'right',
                 columns: [{
                     field: 'id',

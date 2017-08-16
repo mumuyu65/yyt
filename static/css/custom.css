@@ -297,7 +297,6 @@ font-weight: 700;
 .navbar-side {
 	border:none;
 	background-color: #202020;
-
 }
 .navbar-cls-top {
 	background:#4D4D4D;
@@ -361,6 +360,7 @@ line-height: 1.428571429;
         z-index: 1;
         position: absolute;
         width: 260px;
+        height:calc(100%-60px);
     }
 
    .navbar {
