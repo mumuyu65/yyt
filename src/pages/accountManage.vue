@@ -79,7 +79,7 @@
                 </div>
             </div>
             <!-- 修改用户 -->
-            <div style="width:700px;margin:0 auto; margin-top:50px;" v-show="modifyUser">
+            <div style="margin:50px 20px;" v-show="modifyUser">
                 <div class="row">
                     <div class="col-sm-3 col-md-3 col-xs-6">
                          <span class="required">*</span>用户账户：
@@ -390,7 +390,7 @@ export default {
     }
 
     hr{
-      margin:0;
+      margin:10px 0;
     }
 
     .required{

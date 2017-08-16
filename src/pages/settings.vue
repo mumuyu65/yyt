@@ -53,8 +53,6 @@ import env from '@/config/env'
 
 import { mapGetters } from 'vuex';
 
-const endpoint = 'https://yingdedao.com:10022'
-
 export default {
   name: 'Settings',
   data (){
@@ -77,7 +75,7 @@ export default {
     this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
     this.user.nick = user.Nick;
     this.user.intro = user.Intro;
-    this.initData(user.UserId);
+    this.user.img = env.baseUrl+'/cycj/head/head'+user.UserId;
   },
   methods:{
     //上传头像
@@ -116,16 +114,15 @@ export default {
         })
         .then(function (res) {
           alert(res.data.Msg);
+          if(res.data.Code ==3){
+            window.localStorage.setItem("user",JSON.stringify(res.data.Data));
+          }
         })
         .catch(function (error) {
           console.log(error);
         });
     },
 
-    // 初始化
-    initData(uid){
-      this.user.img = endpoint+'/cycj/head/head'+uid;
-    }
   },
 }
 </script>
