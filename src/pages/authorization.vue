@@ -45,13 +45,11 @@ export default {
         account:'13545267410',
         TableList:[
         {id:0,title:'已开通权限',active:false},{id:1,title:'未开通权限',active:false}],
-        uid:'',
     }
   },
    mounted (){
     this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
     this.initData();
-    this.uid = JSON.parse(window.localStorage.getItem('user')).UserId;
   },
   methods:{
     initData(){
@@ -104,12 +102,12 @@ export default {
                       events:{
                         'click .mod': function(e, value, row, index) {
                               //移除操作
-                              that.changeState(row.id,1);
+                              that.changeState(row.id,1,row.uid);
                             },
 
                         'click .del': function(e, value, row, index) {
                               //添加操作
-                              that.changeState(row.id,0);
+                              that.changeState(row.id,0,row.uid);
                             }
                         },
 
@@ -130,13 +128,13 @@ export default {
         });
     },
 
-    changeState(aid,aod){
+    changeState(aid,aod,uid){
         let that = this;
         let params={
             sid:that.Sid,
             aid:aid,
             account:this.account,
-            uid:this.uid,
+            uid:uid,
             aod:aod
         };
         api.authUser(params).then(function(res){
