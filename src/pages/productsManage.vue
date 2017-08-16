@@ -6,7 +6,7 @@
                         <ul class="list-inline">
                             <li><h3>产品管理</h3></li>
                             <li class="pull-right" style="margin-top:15px;">
-                                <input type="text" value="" v-model="newData" style="height:35px; vertical-align:top;"/>
+                                <input type="text" value="" @keyup.enter="addProduct()" v-model="newData" style="height:35px; vertical-align:top;"/>
                                 <button @click="addProduct()"
                                     style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
                                     <i class="fa fa-plus fa-1x"></i>新增产品

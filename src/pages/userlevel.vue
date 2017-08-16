@@ -26,7 +26,7 @@
                         <tr v-for="(item, index) in userLevels">
                             <td>{{index +1}}</td>
                             <td>{{item.role_name}}</td>
-                            <td><img v-bind:src="item.role_css" alt="用户图标"/></td>
+                            <td><img v-bind:src="item.role_css" alt="用户图标" v-if="item.role_css"/></td>
                             <td>{{item.score_lower}}</td>
                             <td>{{item.score_upper}}</td>
                             <td>
@@ -45,7 +45,7 @@
             <div style=" margin:50px 20px;">
                   <div class="row">
                       <div class="col-sm-3 col-md-3 col-xs-6">
-                          等级名称：
+                        <span class="required">*</span>等级名称：
                       </div>
                       <div class="col-sm-9 col-md-9 col-xs-6">
                           <input type='text' value="" class="form-control" v-model="leveladd"/>
@@ -53,7 +53,7 @@
                   </div>
                   <div class="row">
                       <div class="col-sm-3 col-md-3 col-xs-6">
-                          等级图标:
+                          <span class="required">*</span>等级图标:
                       </div>
                       <div class="col-sm-9 col-md-9 col-xs-6">
                           <ul class="list-inline">
@@ -69,7 +69,7 @@
                   </div>
                    <div class="row">
                       <div class="col-sm-3 col-md-3 col-xs-6">
-                          积分上限:
+                         <span class="required">*</span> 积分上限:
                       </div>
                       <div class="col-sm-9 col-md-9 col-xs-6">
                           <input type="number" class="form-control" v-model="score_lower_add"/>
@@ -77,7 +77,7 @@
                   </div>
                    <div class="row">
                       <div class="col-sm-3 col-md-3 col-xs-6">
-                          积分下限:
+                        <span class="required">*</span>  积分下限:
                       </div>
                       <div class="col-sm-9 col-md-9 col-xs-6">
                           <input type="number" class="form-control" v-model="score_higher_add"/>
@@ -93,7 +93,7 @@
           <div style="margin:50px 20px;" v-show="modify">
                 <div class="row">
                     <div class="col-sm-3 col-md-3 col-xs-6">
-                        等级名称：
+                       <span class="required">*</span> 等级名称：
                     </div>
                     <div class="col-sm-9 col-md-9 col-xs-6">
                         <input type='text' value="" class="form-control" v-model="level" disabled/>
@@ -101,7 +101,7 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-3 col-md-3 col-xs-6">
-                        等级图标:
+                       <span class="required">*</span> 等级图标:
                     </div>
                     <div class="col-sm-9 col-md-9 col-xs-6">
                         <ul class="list-inline">
@@ -117,7 +117,7 @@
                 </div>
                  <div class="row">
                     <div class="col-sm-3 col-md-3 col-xs-6">
-                        积分上限:
+                       <span class="required">*</span> 积分上限:
                     </div>
                     <div class="col-sm-9 col-md-9 col-xs-6">
                         <input type="number" class="form-control" v-model="score_lower"/>
@@ -125,7 +125,7 @@
                 </div>
                  <div class="row">
                     <div class="col-sm-3 col-md-3 col-xs-6">
-                        积分下限:
+                        <span class="required">*</span>积分下限:
                     </div>
                     <div class="col-sm-9 col-md-9 col-xs-6">
                         <input type="number" class="form-control" v-model="score_higher"/>
@@ -334,5 +334,9 @@ export default {
         padding:20px;
         background-color:#F3F3F3;
         margin-bottom:10px;
+   }
+
+   .required{
+    color:#f00;
    }
 </style>

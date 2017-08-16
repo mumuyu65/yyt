@@ -12,7 +12,7 @@
                         </button>
                     </li>
                 </ul>
-                <hr style="margin:0;"/>
+                <hr style="margin:10px 0;"/>
                 <div id="classes_pagnation"></div>
                 <table class="text-center" border="1" width="100%" id="productsTable">
                     <thead>
