@@ -637,6 +637,6 @@ export default {
     }
 
     hr{
-      margin:0;
+      margin:10px 0;
     }
 </style>
