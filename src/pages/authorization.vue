@@ -6,7 +6,7 @@
                 <li style=" vertical-align:middle">
                     <input type="number" class="form-control" placeholder="请输入用户手机号" v-model="account">
                 </li>
-                <li><button class="btn btn-primary" @click="qxLists()" style="margin-bottom:10px;">搜索</button></li>
+                <li><button class="btn btn-primary" @click="initData()" style="margin-bottom:10px;">搜索</button></li>
             </ul>
             <hr/>
             <ul class="nav nav-tabs">
@@ -55,6 +55,8 @@ export default {
     initData(){
         this.haveAuth(this.TableList[0]);
         this.authList = [];
+        $('#qxTable').bootstrapTable('destroy');
+        $('#unqxTable').bootstrapTable('destroy');
     },
     haveAuth(item){
         let that = this;
@@ -73,6 +75,7 @@ export default {
         api.authQuery(params).then(function(res){
             if(res.data.Code == 3){
                 that.authList = res.data.Data;
+                //console.log(that.authList);
                 let options ={
                     data:that.authList,
                     pagination:true,
