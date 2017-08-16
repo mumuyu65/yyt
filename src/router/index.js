@@ -158,7 +158,7 @@ export default new Router({
             component: authorization,
             name: '权限分配',
             meta: {
-                role: ['admin']
+                role: ['admin', 'superman']
             },
             icon: 'fa fa-address-book-o fa-2x',
             noDropdown: true,
