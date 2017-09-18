@@ -227,29 +227,29 @@ export default new Router({
                 component: seniorclasses,
                 name: '高级课件',
             }]
-        }, {
-            path: '/smallgame',
-            name: '小游戏',
-            redirect: '/smallgame/prizemall',
-            noDropdown: false,
-            component: Smallgame,
-            meta: {
-                role: ['admin', 'superman']
-            },
-            icon: 'fa fa-gamepad fa-2x',
-            children: [{
-                path: '/smallgame/prizemall',
-                component: prizemall,
-                name: '积分商城',
-            }, {
-                path: '/smallgame/exchangerecord',
-                component: exchangerecord,
-                name: '兑换记录',
-            }, {
-                path: '/smallgame/beansrecord',
-                component: beansrecord,
-                name: '赢豆记录',
-            }]
+        // }, {
+        //     path: '/smallgame',
+        //     name: '小游戏',
+        //     redirect: '/smallgame/prizemall',
+        //     noDropdown: false,
+        //     component: Smallgame,
+        //     meta: {
+        //         role: ['admin', 'superman']
+        //     },
+        //     icon: 'fa fa-gamepad fa-2x',
+        //     children: [{
+        //         path: '/smallgame/prizemall',
+        //         component: prizemall,
+        //         name: '积分商城',
+        //     }, {
+        //         path: '/smallgame/exchangerecord',
+        //         component: exchangerecord,
+        //         name: '兑换记录',
+        //     }, {
+        //         path: '/smallgame/beansrecord',
+        //         component: beansrecord,
+        //         name: '赢豆记录',
+        //     }]
         }, { //操作建议管理
             path: '/handlesuggestion',
             component: HandleSuggestion,
@@ -452,28 +452,28 @@ export const asyncRouterMap = [{ //个人中心
         component: seniorclasses,
         name: '高级课件',
     }]
-}, {
-    path: '/smallgame',
-    name: '小游戏',
-    redirect: '/smallgame/prizemall',
-    noDropdown: false,
-    meta: {
-        role: ['admin', 'superman']
-    },
-    icon: 'fa fa-gamepad fa-2x',
-    children: [{
-        path: '/smallgame/prizemall',
-        component: prizemall,
-        name: '积分商城',
-    }, {
-        path: '/smallgame/exchangerecord',
-        component: exchangerecord,
-        name: '兑换记录',
-    }, {
-        path: '/smallgame/beansrecord',
-        component: beansrecord,
-        name: '赢豆记录',
-    }]
+    // }, {
+    //     path: '/smallgame',
+    //     name: '小游戏',
+    //     redirect: '/smallgame/prizemall',
+    //     noDropdown: false,
+    //     meta: {
+    //         role: ['admin', 'superman']
+    //     },
+    //     icon: 'fa fa-gamepad fa-2x',
+    //     children: [{
+    //         path: '/smallgame/prizemall',
+    //         component: prizemall,
+    //         name: '积分商城',
+    //     }, {
+    //         path: '/smallgame/exchangerecord',
+    //         component: exchangerecord,
+    //         name: '兑换记录',
+    //     }, {
+    //         path: '/smallgame/beansrecord',
+    //         component: beansrecord,
+    //         name: '赢豆记录',
+    //     }]
 }, { //操作建议管理
     path: '/handlesuggestion',
     component: HandleSuggestion,
