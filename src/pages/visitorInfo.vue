@@ -5,6 +5,23 @@
               <li><h3>游客信息管理</h3></li>
           </ul>
           <hr/>
+
+          <table id="visitorTable" class="text-center" width="100%" border="1" >
+                <thead>
+                    <th class="text-center">游客序列号</th>
+                    <th class="text-center">访问时间</th>
+                    <th class="text-center">访问端</th>
+                    <th class="text-center">IP地址</th>
+                </thead>
+                <tbody>
+                    <tr v-for="(item, index) in visitorlists">
+                        <td>{{index +1}}</td>
+                        <td>{{item.unix | unixTodate }}</td>
+                        <td>{{item.platform | visitEnd }}</td>
+                        <td>{{item.ip}}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </template>
@@ -23,12 +40,31 @@ export default {
   data (){
     return {
         Sid:'',
+        visitorlists:[]
     }
   },
   mounted (){
     this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
     this.initData();
     this.checkLogin();
+  },
+  filters:{
+    unixTodate(tm) {
+        let time = new Date(tm*1000);
+        let y = time.getFullYear();
+        let m = (time.getMonth()+1)<10?('0'+(time.getMonth()+1)):(time.getMonth()+1);
+        let d = (time.getDate())<10?('0'+time.getDate()):time.getDate();
+        let h = (time.getHours())<10?('0'+time.getHours()):time.getHours();
+        let min = (time.getMinutes())<10?('0'+time.getMinutes()):time.getMinutes();
+        return y+'-'+m+'-'+d+' '+h+':'+m;
+    },
+
+    visitEnd(value){
+      switch(value){
+        case '5': return '手机端'; break;
+        case '4': return '电脑端'; break;
+      }
+    }
   },
   methods:{
     checkLogin(){
@@ -50,16 +86,33 @@ export default {
     initData(){
       let that = this;
 
+      let params={
+        begidx:0,
+        counts:10
+      };
+
+      api.queryVisitor(params).then(function(res){
+          console.log(res.data);
+          if(res.data.Code ==3){
+            that.visitorlists = res.data.Data;
+          }
+      }).catch(function(err){
+        console.log(err);
+      });
     },
   },
 }
 </script>
 
-<style scoped>
-   #page-inner .row{
+<style scoped lang="scss">
+    #page-inner .row{
         padding:20px;
         background-color:#F3F3F3;
         margin-bottom:10px;
+    }
+
+    hr{
+      margin:10px 0;
     }
 
     .required{
@@ -67,4 +120,16 @@ export default {
         margin-right:5px;
     }
 
+    #visitorTable th,#visitorTable td{
+        padding:20px 0;
+        border:1px solid #ececec;
+   }
+
+    #visitorTable tr:hover{
+        background-color:#f7f7f7;
+    }
+
+   #visitorTable tr:nth-child(odd){
+        background-color:#f7f7f7;
+   }
 </style>
