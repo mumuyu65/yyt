@@ -495,5 +495,10 @@ class API {
         config.data = param
         return axios.post('/yyt/live/images', {}, config)
     }
+
+    queryVisitor(param) {
+        config.data = param
+        return axios.post('/yyt/visitor/query', {}, config)
+    }
 }
 export default API;

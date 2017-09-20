@@ -11,6 +11,7 @@
  *
  */
 let baseUrl = 'http://47.52.19.212:9000';
+
 let routerMode = 'history';
 let baseImgPath = '';
 

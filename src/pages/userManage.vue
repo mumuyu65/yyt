@@ -180,9 +180,6 @@ export default {
         api.queryUser(params).then(function(res){
             if(res.data.Code ==3){
                 let TotalNum = res.data.Data.Total;
-                let templateObj = res.data.Data.Detail;
-                console.log(templateObj);
-                that.userlists= templateObj;
                  //    分页
                 if(TotalNum>10) {
                      var options = {
@@ -213,6 +210,9 @@ export default {
                          }
                      };
                      $('#user_pagnation').bootstrapPaginator(options);
+                }else{
+                    let templateObj = res.data.Data.Detail;
+                    that.userlists= templateObj;
                 }
             }else{
                 alert(res.data.Msg);
@@ -224,24 +224,24 @@ export default {
 
     initTimer(){
       let options={
-          maxDate : moment(), //最大时间
+          //maxDate : moment(), //最大时间
           dateLimit : {
-            days : 30
+            days : 60
           }, //起止时间的最大间隔
-          showDropdowns : true,
+          showDropdowns : false,
           showWeekNumbers : false, //是否显示第几周
           timePicker : false, //是否显示小时和分钟
-          timePickerSeconds:true,
+          timePickerSeconds:false,
           timePickerIncrement : 1, //时间的增量，单位为分钟
           timePicker12Hour : false, //是否使用12小时制来显示时间
           ranges : {
-            '最近1小时': [moment().subtract('hours',1), moment()],
+            '最近1小时': [moment().subtract(1,'hours'), moment()],
             '今日': [moment().startOf('day'), moment()],
-            '昨日': [moment().subtract('days', 1).startOf('day'), moment().subtract('days', 1).endOf('day')],
-            '最近7日': [moment().subtract('days', 6), moment()],
-            '最近30日': [moment().subtract('days', 29), moment()]
+            '昨日': [moment().subtract(1,'days').startOf('day'), moment().subtract(1,'days').endOf('day')],
+            '最近7日': [moment().subtract(6,'days'), moment()],
+            '最近30日': [moment().subtract(29,'days' ), moment()]
           },
-          opens : 'right', //日期选择框的弹出位置
+          opens : 'left', //日期选择框的弹出位置
           buttonClasses : [ 'btn btn-default' ],
           applyClass : 'btn-small btn-primary blue',
           cancelClass : 'btn-small',
@@ -259,18 +259,28 @@ export default {
             firstDay : 1
           }
         };
+
+        let that =  this;
        $('#reportrange').daterangepicker(options, function(start, end, label) {//格式化日期显示框
             $('#searchDateRange').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
-            this.regisStart = start.format('YYYY-MM-DD HH:mm:ss');
+            let starttime = start.format('YYYY-MM-DD HH:mm:ss').replace(new RegExp("-","gm"),"/");
 
-            this.regisEnd = end.format('YYYY-MM-DD HH:mm:ss');
+            that.regisStart= (new Date(starttime)).getTime()/1000;
+
+            let endtime = end.format('YYYY-MM-DD HH:mm:ss').replace(new RegExp("-","gm"),"/");
+
+            that.regisEnd = (new Date(endtime)).getTime()/1000;
        });
 
        $('#loginrange').daterangepicker(options, function(start, end, label) {//格式化日期显示框
             $('#loginDateRange').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
-            this.loginStart = start.format('YYYY-MM-DD HH:mm:ss');
+            let starttime = start.format('YYYY-MM-DD HH:mm:ss').replace(new RegExp("-","gm"),"/");
 
-            this.loginEnd = end.format('YYYY-MM-DD HH:mm:ss');
+            that.loginStart= (new Date(starttime)).getTime()/1000;
+
+            let endtime = end.format('YYYY-MM-DD HH:mm:ss').replace(new RegExp("-","gm"),"/");
+
+            that.loginEnd = (new Date(endtime)).getTime()/1000;
        });
     },
 
@@ -292,6 +302,7 @@ export default {
             console.log(err);
         });
     },
+
     modifyLevel(){
         let that = this;
         let params={
@@ -299,7 +310,6 @@ export default {
             uid:this.id,
             level:this.selected
         };
-        console.log(params)
         api.modifyLevel(params).then(function(res){
             alert(res.data.Msg);
             if(res.data.Code == 3){
@@ -310,17 +320,180 @@ export default {
             console.log(err);
         });
     },
+
     isShow(id){
         this.is_show = !this.is_show
         this.id = id
     },
 
     searchRegister(){
+      if(this.regisStart && this.regisEnd){
+        let params={
+          sid:this.Sid,
+          flag:0,
+          sort_reg:1,
+          sort_log:1,
+          reg_bt:this.regisStart,
+          reg_et:this.regisEnd,
+          begidx:0,
+          counts:10
+        };
 
+        let that = this;
+
+        api.queryUser(params).then(function(res){
+            if(res.data.Code ==3){
+                let TotalNum = res.data.Data.Total;
+
+                if(TotalNum >10){
+                    //分页
+                    var options = {
+                         currentPage: 1,
+                         totalPages: parseInt(TotalNum /10) + 1,
+                         onPageClicked: function (e, originalEvent, type, page) {
+                             switch (type) {
+                                 case 'first':
+                                     that.userListRegQuery(0);
+                                     break;
+                                 case 'page':
+                                     that.BegIdx = (page - 1) * 10;
+                                     that.userListRegQuery(that.BegIdx);
+                                     break;
+                                 case 'next':
+                                     that.BegIdx  += 10;
+                                     that.userListRegQuery(that.BegIdx);
+                                     break;
+                                 case 'last':
+                                     that.BegIdx = TotalNum - TotalNum % 10;
+                                     that.userListRegQuery(that.BegIdx);
+                                     break;
+                                 case 'prev':
+                                     that.BegIdx -= 10;
+                                     that.userListRegQuery(that.BegIdx);
+                                     break;
+                             }
+                         }
+                };
+                $('#user_pagnation').bootstrapPaginator(options);
+                }else{
+                    that.userlists = res.data.Data.Detail;
+                }
+            }
+        }).catch(function(err){
+            console.log(err);
+        });
+      }else{
+        alert("注册时间范围未选择！");
+      }
+    },
+
+    userListRegQuery(idx){
+      let params={
+          sid:this.Sid,
+          flag:0,
+          sort_reg:1,
+          sort_log:1,
+          reg_bt:this.regisStart,
+          reg_et:this.regisEnd,
+          begidx:idx,
+          counts:10
+        };
+
+      let that = this;
+
+      api.queryUser(params).then(function(res){
+        if(res.data.Code ==3){
+             that.userlists=res.data.Data.Detail;
+        }else{
+            alert(res.data.Msg);
+        }
+        }).catch(function(err){
+            console.log(err);
+        });
     },
 
     searchLogin(){
+      if(this.loginStart && this.loginEnd){
+        let params={
+          sid:this.Sid,
+          flag:0,
+          sort_reg:1,
+          sort_log:1,
+          log_bt:this.loginStart,
+          log_et:this.loginEnd,
+          begidx:0,
+          counts:10
+        };
 
+        let that = this;
+
+        api.queryUser(params).then(function(res){
+            if(res.data.Code ==3){
+              let TotalNum = res.data.Data.Total;
+              //分页
+              if(TotalNum > 10){
+                var options = {
+                         currentPage: 1,
+                         totalPages: parseInt(TotalNum /10) + 1,
+                         onPageClicked: function (e, originalEvent, type, page) {
+                             switch (type) {
+                                 case 'first':
+                                     that.userListLoginQuery(0);
+                                     break;
+                                 case 'page':
+                                     that.BegIdx = (page - 1) * 10;
+                                     that.userListLoginQuery(that.BegIdx);
+                                     break;
+                                 case 'next':
+                                     that.BegIdx  += 10;
+                                     that.userListLoginQuery(that.BegIdx);
+                                     break;
+                                 case 'last':
+                                     that.BegIdx = TotalNum - TotalNum % 10;
+                                     that.userListLoginQuery(that.BegIdx);
+                                     break;
+                                 case 'prev':
+                                     that.BegIdx -= 10;
+                                     that.userListLoginQuery(that.BegIdx);
+                                     break;
+                             }
+                         }
+                };
+                $('#user_pagnation').bootstrapPaginator(options);
+              }else{
+                  that.userlists = res.data.Data.Detail;
+              }
+            }
+            console.log(res.data);
+        }).catch(function(err){
+            console.log(err);
+        });
+      }
+    },
+
+    userListLoginQuery(idx){
+      let params={
+          sid:this.Sid,
+          flag:0,
+          sort_reg:1,
+          sort_log:1,
+          log_bt:this.loginStart,
+          log_et:this.loginEnd,
+          begidx:idx,
+          counts:10
+        };
+
+        let that = this;
+
+        api.queryUser(params).then(function(res){
+            if(res.data.Code ==3){
+                 that.userlists=res.data.Data.Detail;
+            }else{
+                alert(res.data.Msg);
+            }
+        }).catch(function(err){
+            console.log(err);
+        });
     },
   },
 }

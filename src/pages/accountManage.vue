@@ -226,7 +226,6 @@ export default {
             if(res.data.Code ==3){
                 let TotalNum = res.data.Data.Total;
                 let templateObj = res.data.Data.Detail;
-                console.log(res.data);
                 that.userlists= templateObj;
                 //    分页
                 if(TotalNum>10) {

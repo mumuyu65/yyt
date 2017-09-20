@@ -19,7 +19,7 @@ import axios from 'axios'
 import env from '@/config/env'
 
 export default {
-  name: 'Visitor information',
+  name: 'Visitor',
   data (){
     return {
         Sid:'',
