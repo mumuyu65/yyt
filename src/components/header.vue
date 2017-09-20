@@ -20,6 +20,11 @@
 <script>
 export default {
   name:'Header',
+  mounted(){
+    if(!window.localStorage.getItem("user")){
+      window.location.replace("/");
+    }
+  },
   methods:{
     logout (){
         window.localStorage.removeItem("user");

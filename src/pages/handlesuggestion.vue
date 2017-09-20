@@ -211,11 +211,16 @@ import '../../static/bootstrap-datetimepicker/bootstrap-datetimepicker.js';
 
 import '../../static/bootstrap-datetimepicker/bootstrap-datetimepicker.zh-CN.js';
 
+import axios from 'axios'
+
+import env from '@/config/env'
+
 export default {
 name: 'handlesuggestion',
 mounted(){
     this.Sid = JSON.parse(window.localStorage.getItem('user')).SessionId;
     this.initData();
+    this.checkLogin();
 },
 data (){
     return {
@@ -286,6 +291,22 @@ filters:{
     },
 },
 methods:{
+    checkLogin(){
+      let obj={
+        sid:this.Sid
+      };
+
+      axios.get(env.baseUrl+'/yyt/check', {params:obj})
+        .then(function (res) {
+          if(res.data.Code ==6){
+            alert(res.data.Msg);
+            window.location.replace("/");
+          }
+        })
+      .catch(function (err) {
+        console.log(err);
+      });
+    },
     initData() {
         //时间
         $(".form_datetime").datetimepicker({

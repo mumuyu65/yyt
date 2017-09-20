@@ -132,14 +132,31 @@ export default {
     },
     mounted() {
         this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
+        this.checkLogin();
     },
     methods: {
+        checkLogin(){
+          let obj={
+            sid:this.Sid
+          };
+
+          axios.get(env.baseUrl+'/yyt/check', {params:obj})
+            .then(function (res) {
+              if(res.data.Code ==6){
+                alert(res.data.Msg);
+                window.location.replace("/");
+              }
+            })
+          .catch(function (err) {
+            console.log(err);
+          });
+        },
         dateToUnix(dateStr) {
-            let newstr = dateStr.replace(/-/g,'/'); 
-            let date =  new Date(newstr); 
+            let newstr = dateStr.replace(/-/g,'/');
+            let date =  new Date(newstr);
             let time_str = date.getTime().toString();
             return time_str.substr(0, 10);
-        },  
+        },
         djList(){
             let _this = this
             let param = {
@@ -225,8 +242,8 @@ export default {
             let date =  new Date(newstr);
             let time_str = date.getTime().toString();
             return time_str.substr(0, 10);
-        } 
-    }   
+        }
+    }
 }
 </script>
 

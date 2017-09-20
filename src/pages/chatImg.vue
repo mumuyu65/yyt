@@ -124,8 +124,25 @@ export default {
   mounted (){
     this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
     this.initData();
+    this.checkLogin();
   },
   methods:{
+    checkLogin(){
+      let obj={
+        sid:this.Sid
+      };
+
+      axios.get(env.baseUrl+'/yyt/check', {params:obj})
+        .then(function (res) {
+          if(res.data.Code ==6){
+            alert(res.data.Msg);
+            window.location.replace("/");
+          }
+        })
+      .catch(function (err) {
+        console.log(err);
+      });
+    },
     initData(){
       let params={
         sid:this.Sid
@@ -135,9 +152,9 @@ export default {
 
       api.getImg(params).then(function(res){
         if(res.data.Code ==3){
-              //console.log(res.data.Data);
               that.dayComments =  res.data.Data;
               $('#productsTable').bootstrapTable({
+                pageSize:8,
                 data:that.dayComments,
                 pagination:true,
                 striped:true,

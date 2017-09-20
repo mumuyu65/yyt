@@ -14,9 +14,8 @@ import 'babel-polyfill'
 //关闭生产模式下给出的提示
 Vue.config.productionTip = false
 
-
 /* eslint-disable no-new */
-new Vue({
+var yytVue = new Vue({
     el: '#app',
     router,
     store,

@@ -13,6 +13,9 @@ import Home from '@/pages/accountManage'
 //个人设置
 import Settings from '@/pages/settings'
 
+//游客信息管理
+import VisitorInfo from '@/pages/visitorInfo'
+
 //新闻资讯
 import EconomicNews from '@/pages/economicNews'
 
@@ -153,6 +156,15 @@ export default new Router({
             },
             icon: 'fa fa-vcard fa-2x',
             noDropdown: true,
+        }, { //游客信息管理
+            path: '/visitorinfo',
+            component: VisitorInfo,
+            name: '游客信息管理',
+            meta: {
+                role: ['superman', 'admin', 'teacher', 'checker']
+            },
+            icon: 'fa fa-handshake-o fa-2x',
+            noDropdown: true,
         }, { //权限分配
             path: '/authorization',
             component: authorization,
@@ -219,37 +231,37 @@ export default new Router({
             },
             icon: 'fa fa-book fa-2x',
             children: [{
-                path: '/classes/juniorclasses',
-                component: juniorclasses,
-                name: '基础课件',
-            }, {
-                path: '/classes/seniorclasses',
-                component: seniorclasses,
-                name: '高级课件',
-            }]
-        // }, {
-        //     path: '/smallgame',
-        //     name: '小游戏',
-        //     redirect: '/smallgame/prizemall',
-        //     noDropdown: false,
-        //     component: Smallgame,
-        //     meta: {
-        //         role: ['admin', 'superman']
-        //     },
-        //     icon: 'fa fa-gamepad fa-2x',
-        //     children: [{
-        //         path: '/smallgame/prizemall',
-        //         component: prizemall,
-        //         name: '积分商城',
-        //     }, {
-        //         path: '/smallgame/exchangerecord',
-        //         component: exchangerecord,
-        //         name: '兑换记录',
-        //     }, {
-        //         path: '/smallgame/beansrecord',
-        //         component: beansrecord,
-        //         name: '赢豆记录',
-        //     }]
+                    path: '/classes/juniorclasses',
+                    component: juniorclasses,
+                    name: '基础课件',
+                }, {
+                    path: '/classes/seniorclasses',
+                    component: seniorclasses,
+                    name: '高级课件',
+                }]
+                // }, {
+                //     path: '/smallgame',
+                //     name: '小游戏',
+                //     redirect: '/smallgame/prizemall',
+                //     noDropdown: false,
+                //     component: Smallgame,
+                //     meta: {
+                //         role: ['admin', 'superman']
+                //     },
+                //     icon: 'fa fa-gamepad fa-2x',
+                //     children: [{
+                //         path: '/smallgame/prizemall',
+                //         component: prizemall,
+                //         name: '积分商城',
+                //     }, {
+                //         path: '/smallgame/exchangerecord',
+                //         component: exchangerecord,
+                //         name: '兑换记录',
+                //     }, {
+                //         path: '/smallgame/beansrecord',
+                //         component: beansrecord,
+                //         name: '赢豆记录',
+                //     }]
         }, { //操作建议管理
             path: '/handlesuggestion',
             component: HandleSuggestion,
@@ -380,6 +392,15 @@ export const asyncRouterMap = [{ //个人中心
     },
     icon: 'fa fa-vcard fa-2x',
     noDropdown: true,
+}, { //游客信息管理
+    path: '/visitorinfo',
+    component: VisitorInfo,
+    name: '游客信息管理',
+    meta: {
+        role: ['superman', 'admin', 'teacher', 'checker']
+    },
+    icon: 'fa fa-handshake-o fa-2x',
+    noDropdown: true,
 }, { //权限分配
     path: '/authorization',
     component: authorization,
@@ -444,36 +465,36 @@ export const asyncRouterMap = [{ //个人中心
     },
     icon: 'fa fa-book fa-2x',
     children: [{
-        path: '/classes/juniorclasses',
-        component: juniorclasses,
-        name: '基础课件',
-    }, {
-        path: '/classes/seniorclasses',
-        component: seniorclasses,
-        name: '高级课件',
-    }]
-    // }, {
-    //     path: '/smallgame',
-    //     name: '小游戏',
-    //     redirect: '/smallgame/prizemall',
-    //     noDropdown: false,
-    //     meta: {
-    //         role: ['admin', 'superman']
-    //     },
-    //     icon: 'fa fa-gamepad fa-2x',
-    //     children: [{
-    //         path: '/smallgame/prizemall',
-    //         component: prizemall,
-    //         name: '积分商城',
-    //     }, {
-    //         path: '/smallgame/exchangerecord',
-    //         component: exchangerecord,
-    //         name: '兑换记录',
-    //     }, {
-    //         path: '/smallgame/beansrecord',
-    //         component: beansrecord,
-    //         name: '赢豆记录',
-    //     }]
+            path: '/classes/juniorclasses',
+            component: juniorclasses,
+            name: '基础课件',
+        }, {
+            path: '/classes/seniorclasses',
+            component: seniorclasses,
+            name: '高级课件',
+        }]
+        // }, {
+        //     path: '/smallgame',
+        //     name: '小游戏',
+        //     redirect: '/smallgame/prizemall',
+        //     noDropdown: false,
+        //     meta: {
+        //         role: ['admin', 'superman']
+        //     },
+        //     icon: 'fa fa-gamepad fa-2x',
+        //     children: [{
+        //         path: '/smallgame/prizemall',
+        //         component: prizemall,
+        //         name: '积分商城',
+        //     }, {
+        //         path: '/smallgame/exchangerecord',
+        //         component: exchangerecord,
+        //         name: '兑换记录',
+        //     }, {
+        //         path: '/smallgame/beansrecord',
+        //         component: beansrecord,
+        //         name: '赢豆记录',
+        //     }]
 }, { //操作建议管理
     path: '/handlesuggestion',
     component: HandleSuggestion,

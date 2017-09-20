@@ -54,9 +54,14 @@
 </template>
 
 <script>
-    import API from '@/api/API'
-    const api = new API()
-    export default {
+import API from '@/api/API'
+const api = new API()
+
+import axios from 'axios'
+
+import env from '@/config/env'
+
+export default {
         name: 'category',
         data() {
             return {
@@ -76,9 +81,26 @@
         },
         mounted() {
             this.sid = JSON.parse(window.localStorage.getItem('user')).SessionId
-            this.queryCategory()
+            this.queryCategory();
+            this.checkLogin();
         },
         methods: {
+            checkLogin(){
+              let obj={
+                sid:this.sid
+              };
+
+              axios.get(env.baseUrl+'/yyt/check', {params:obj})
+                .then(function (res) {
+                  if(res.data.Code ==6){
+                    alert(res.data.Msg);
+                    window.location.replace("/");
+                  }
+                })
+              .catch(function (err) {
+                console.log(err);
+              });
+            },
             isShowAdd() {
                 this.is_show_add = !this.is_show_add
             },
@@ -160,7 +182,7 @@
                 })
             }
         }
-    }
+}
 </script>
 
 <style scoped lang="scss">

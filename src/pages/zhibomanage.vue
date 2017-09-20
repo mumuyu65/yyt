@@ -235,8 +235,26 @@ mounted(){
     Jsonp('https://api.weibo.com/2/emotions.json?source=1362404091',function (err, res) {
        that.chatFaces=res.data;
     });
+
+    this.checkLogin();
 },
 methods: {
+    checkLogin(){
+      let obj={
+        sid:this.sid
+      };
+
+      axios.get(env.baseUrl+'/yyt/check', {params:obj})
+        .then(function (res) {
+          if(res.data.Code ==6){
+            alert(res.data.Msg);
+            window.location.replace("/");
+          }
+        })
+      .catch(function (err) {
+        console.log(err);
+      });
+    },
     initData(){
         let _this = this;
         let params = {

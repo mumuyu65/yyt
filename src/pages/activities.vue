@@ -47,8 +47,25 @@ export default {
   mounted (){
     this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
     this.initData();
+    this.checkLogin();
   },
   methods:{
+    checkLogin(){
+      let obj={
+        sid:this.Sid
+      };
+
+      axios.get(env.baseUrl+'/yyt/check', {params:obj})
+        .then(function (res) {
+          if(res.data.Code ==6){
+            alert(res.data.Msg);
+            window.location.replace("/");
+          }
+        })
+      .catch(function (err) {
+        console.log(err);
+      });
+    },
     initData(){
       let that = this;
       api.activityQuery().then(function(res){

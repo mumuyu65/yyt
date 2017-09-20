@@ -4,6 +4,30 @@
             <ul class="list-inline">
                 <li><h3>用户管理</h3></li>
             </ul>
+            <ol class="list-inline" style="padding:15px 0;">
+                <li style="vertical-align:bottom;">注册时间：</li>
+                <li>
+                  <div id="reportrange" style="margin-bottom:-5px;" class="input-prepend"  data-date-format="yyyy-mm-dd hh:ii:ss">
+                      <span class="add-on input-group-addon" style="height:35px; line-height:26px; ">
+                          <i class="fa fa-calendar">
+                          </i>
+                      </span>
+                  <input type="text" style="width: 300px" name="timeSection" id="searchDateRange"
+                         class="form-control" value=""/>
+                </div>
+                </li>
+                <li style="vertical-align:bottom; margin-bottom:-4px;"><button class="btn btn-primary" @click="searchRegister()">搜索</button></li>
+                <li style="vertical-align:bottom;">最后登录时间:</li>
+                <li><div id="loginrange" style="margin-bottom:-5px;" class="input-prepend"  data-date-format="yyyy-mm-dd hh:ii:ss">
+                      <span class="add-on input-group-addon" style="height:35px; line-height:26px; ">
+                          <i class="fa fa-calendar">
+                          </i>
+                      </span>
+                  <input type="text" style="width: 300px" name="timeSection" id="loginDateRange"
+                         class="form-control" value=""/>
+                         </div></li>
+                <li style="vertical-align:bottom; margin-bottom:-4px;"><button class="btn btn-primary" @click="searchLogin()">搜索</button></li>
+            </ol>
             <hr/>
             <div id="user_pagnation"></div>
             <table id="userTable" class="text-center" width="100%" border="1" >
@@ -16,6 +40,7 @@
                     <th class="text-center">用户等级</th>
                     <th class="text-center">注册时间</th>
                     <th class="text-center">最后登录时间</th>
+                    <th class="text-center">访问端</th>
                     <th class="text-center">修改用户等级</th>
                 </thead>
                 <tbody>
@@ -28,6 +53,7 @@
                         <td>{{item.level | userLevel}}</td>
                         <td>{{item.unix | unixTodate}}</td>
                         <td>{{item.login_unix | unixTodate}}</td>
+                        <td>{{item.platform | Platform}}</td>
                         <td>
                             <button class="btn btn-primary" @click="isShow(item.id)">修改</button>
                         </td>
@@ -60,11 +86,17 @@ import env from '@/config/env'
 
 import '../../static/pagnation/bootstrap-paginator.js'
 
+import moment from 'moment'
+
+import '../../static/bootstrap-daterangepicker/daterangepicker.js'
+
 export default {
   name: 'userManage',
   mounted (){
     this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
     this.initData();
+    this.checkLogin();
+    this.initTimer();
   },
   data (){
     return {
@@ -84,6 +116,12 @@ export default {
         id:'',
 
         BegIdx:0,
+
+        regisStart:'',
+        regisEnd:'',
+
+        loginStart:'',
+        loginEnd:'',
     }
   },
   filters:{
@@ -106,8 +144,31 @@ export default {
             let min = (time.getMinutes())<10?('0'+time.getMinutes()):time.getMinutes();
             return y+'-'+m+'-'+d+' '+h+':'+m;
         },
+
+        Platform:function(value){
+          switch(value){
+            case '1': return '手机端'; break;
+            case '2': return '电脑端'; break;
+          }
+        }
   },
   methods:{
+    checkLogin(){
+      let obj={
+        sid:this.Sid
+      };
+
+      axios.get(env.baseUrl+'/yyt/check', {params:obj})
+        .then(function (res) {
+          if(res.data.Code ==6){
+            alert(res.data.Msg);
+            window.location.replace("/");
+          }
+        })
+      .catch(function (err) {
+        console.log(err);
+      });
+    },
     initData(){
         let that = this;
         let params={
@@ -120,6 +181,7 @@ export default {
             if(res.data.Code ==3){
                 let TotalNum = res.data.Data.Total;
                 let templateObj = res.data.Data.Detail;
+                console.log(templateObj);
                 that.userlists= templateObj;
                  //    分页
                 if(TotalNum>10) {
@@ -158,6 +220,58 @@ export default {
         }).catch(function(err){
             console.log(err);
         });
+    },
+
+    initTimer(){
+      let options={
+          maxDate : moment(), //最大时间
+          dateLimit : {
+            days : 30
+          }, //起止时间的最大间隔
+          showDropdowns : true,
+          showWeekNumbers : false, //是否显示第几周
+          timePicker : false, //是否显示小时和分钟
+          timePickerSeconds:true,
+          timePickerIncrement : 1, //时间的增量，单位为分钟
+          timePicker12Hour : false, //是否使用12小时制来显示时间
+          ranges : {
+            '最近1小时': [moment().subtract('hours',1), moment()],
+            '今日': [moment().startOf('day'), moment()],
+            '昨日': [moment().subtract('days', 1).startOf('day'), moment().subtract('days', 1).endOf('day')],
+            '最近7日': [moment().subtract('days', 6), moment()],
+            '最近30日': [moment().subtract('days', 29), moment()]
+          },
+          opens : 'right', //日期选择框的弹出位置
+          buttonClasses : [ 'btn btn-default' ],
+          applyClass : 'btn-small btn-primary blue',
+          cancelClass : 'btn-small',
+          format : 'YYYY-MM-DD HH:mm:ss', //控件中from和to 显示的日期格式
+          separator : ' to ',
+          locale : {
+            applyLabel : '确定',
+            cancelLabel : '取消',
+            fromLabel : '起始时间',
+            toLabel : '结束时间',
+            customRangeLabel : '自定义',
+            daysOfWeek : [ '日', '一', '二', '三', '四', '五', '六' ],
+            monthNames : [ '一月', '二月', '三月', '四月', '五月', '六月',
+              '七月', '八月', '九月', '十月', '十一月', '十二月' ],
+            firstDay : 1
+          }
+        };
+       $('#reportrange').daterangepicker(options, function(start, end, label) {//格式化日期显示框
+            $('#searchDateRange').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+            this.regisStart = start.format('YYYY-MM-DD HH:mm:ss');
+
+            this.regisEnd = end.format('YYYY-MM-DD HH:mm:ss');
+       });
+
+       $('#loginrange').daterangepicker(options, function(start, end, label) {//格式化日期显示框
+            $('#loginDateRange').val(start.format('YYYY-MM-DD HH:mm:ss') + ' - ' + end.format('YYYY-MM-DD HH:mm:ss'));
+            this.loginStart = start.format('YYYY-MM-DD HH:mm:ss');
+
+            this.loginEnd = end.format('YYYY-MM-DD HH:mm:ss');
+       });
     },
 
     userListQuery(idx){
@@ -200,6 +314,14 @@ export default {
         this.is_show = !this.is_show
         this.id = id
     },
+
+    searchRegister(){
+
+    },
+
+    searchLogin(){
+
+    },
   },
 }
 </script>
@@ -240,7 +362,7 @@ export default {
    .order-box{
         background:#fff;
         width:300px;
-        height:200px;
+        height:240px;
         position:absolute;
         left: 50%;
         top: 50%;

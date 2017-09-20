@@ -75,9 +75,26 @@ export default {
     this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
     this.user.nick = user.Nick;
     this.user.intro = user.Intro;
-    this.user.img = env.baseUrl+'/cycj/head/head'+user.UserId;
+    this.user.img = env.baseUrl+'/yyt/head/head'+user.UserId;
+    this.checkLogin();
   },
   methods:{
+    checkLogin(){
+      let obj={
+        sid:this.Sid
+      };
+
+      axios.get(env.baseUrl+'/yyt/check', {params:obj})
+        .then(function (res) {
+          if(res.data.Code ==6){
+            alert(res.data.Msg);
+            window.location.replace("/");
+          }
+        })
+      .catch(function (err) {
+        console.log(err);
+      });
+    },
     //上传头像
     onFileChange(e) {
           var files = e.target.files || e.dataTransfer.files;
@@ -107,7 +124,7 @@ export default {
         data.append('nick',this.user.nick);
         data.append('intro',this.user.intro);
         let that = this;
-        axios.post(env.baseUrl+'/cycj/userinfo/update', data, {
+        axios.post(env.baseUrl+'/yyt/userinfo/update', data, {
             headers: {
                   'Content-Type': 'application/x-www-form-urlencoded'
             }

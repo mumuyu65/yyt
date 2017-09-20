@@ -157,6 +157,7 @@ export default {
   mounted (){
     this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
     this.initData();
+    this.checkLogin();
   },
   data (){
     return {
@@ -197,6 +198,22 @@ export default {
         },
   },
   methods:{
+    checkLogin(){
+      let obj={
+        sid:this.Sid
+      };
+
+      axios.get(env.baseUrl+'/yyt/check', {params:obj})
+        .then(function (res) {
+          if(res.data.Code ==6){
+            alert(res.data.Msg);
+            window.location.replace("/");
+          }
+        })
+      .catch(function (err) {
+        console.log(err);
+      });
+    },
     initData(){
         let that = this;
         let params={
@@ -209,6 +226,7 @@ export default {
             if(res.data.Code ==3){
                 let TotalNum = res.data.Data.Total;
                 let templateObj = res.data.Data.Detail;
+                console.log(res.data);
                 that.userlists= templateObj;
                 //    分页
                 if(TotalNum>10) {
@@ -261,6 +279,7 @@ export default {
 
         api.queryUser(params).then(function(res){
             if(res.data.Code ==3){
+                console.log(res.data);
                 that.userlists=res.data.Data.Detail;
             }
         }).catch(function(err){
@@ -336,7 +355,7 @@ export default {
 
         let that = this;
 
-        axios.post(env.baseUrl+'/cycj/admin/modifyuser', data, {
+        axios.post(env.baseUrl+'/yyt/admin/modifyuser', data, {
             headers: {
                   'Content-Type': 'application/x-www-form-urlencoded'
             }

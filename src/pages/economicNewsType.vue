@@ -46,6 +46,10 @@ const api = new API();
 
 import 'bootstrap-table'
 
+import axios from 'axios'
+
+import env from '@/config/env'
+
 export default {
   name: 'economicNewsType',
   data(){
@@ -53,20 +57,39 @@ export default {
       Sid:'',
       currentItems:[],
       newData:'',
-      Num:0,
+      Num:1,
     }
   },
   mounted(){
     this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
     this.initData();
+    this.checkLogin();
   },
   methods:{
+    checkLogin(){
+      let obj={
+        sid:this.Sid
+      };
+
+      axios.get(env.baseUrl+'/yyt/check', {params:obj})
+        .then(function (res) {
+          if(res.data.Code ==6){
+            alert(res.data.Msg);
+            window.location.replace("/");
+          }
+        })
+      .catch(function (err) {
+        console.log(err);
+      });
+    },
     initData(){
       let that = this;
       api.newsType().then(function(res){
         if(res.data.Code ==3){
+          if(res.data.Data.Detail){
             that.currentItems = res.data.Data.Detail;
-            that.Num = parseInt(that.currentItems[that.currentItems.length-1].type) +1;
+            that.Num = parseInt(that.currentItems[that.currentItems.length-1].type)+1;
+          }
         }else{
              alert(res.data.Msg);
             }
@@ -100,6 +123,7 @@ export default {
           type:this.Num,
           text:this.newData
         };
+        console.log(params);
         let that = this;
         api.addnewsType(params).then(function(res){
           if(res.data.Code ==3){

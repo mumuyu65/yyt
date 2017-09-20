@@ -37,8 +37,8 @@ export default {
   data (){
     return {
         user:{
-          name:'',
-          pwd:'',
+          name:'18668800630',
+          pwd:'123456',
         },
     }
   },
@@ -46,7 +46,8 @@ export default {
     doLogin() {
       let params={
         account:this.user.name.trim(),
-        pwd:this.user.pwd.trim()
+        pwd:this.user.pwd.trim(),
+        platform:2,
       };
 
       let that= this;

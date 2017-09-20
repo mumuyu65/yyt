@@ -46,6 +46,10 @@ import API from '@/api/API'
 //实例化api
 const api = new API();
 
+import axios from 'axios'
+
+import env from '@/config/env'
+
 export default {
   name: 'productsManage',
   data (){
@@ -59,8 +63,25 @@ export default {
   mounted (){
     this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
     this.initProduct();
+    this.checkLogin();
   },
   methods:{
+    checkLogin(){
+      let obj={
+        sid:this.Sid
+      };
+
+      axios.get(env.baseUrl+'/yyt/check', {params:obj})
+        .then(function (res) {
+          if(res.data.Code ==6){
+            alert(res.data.Msg);
+            window.location.replace("/");
+          }
+        })
+      .catch(function (err) {
+        console.log(err);
+      });
+    },
     addProduct(){
         if(this.newData){
             this.Num ++;
