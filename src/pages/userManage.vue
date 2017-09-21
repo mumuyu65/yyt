@@ -234,13 +234,6 @@ export default {
           timePickerSeconds:false,
           timePickerIncrement : 1, //时间的增量，单位为分钟
           timePicker12Hour : false, //是否使用12小时制来显示时间
-          ranges : {
-            '最近1小时': [moment().subtract(1,'hours'), moment()],
-            '今日': [moment().startOf('day'), moment()],
-            '昨日': [moment().subtract(1,'days').startOf('day'), moment().subtract(1,'days').endOf('day')],
-            '最近7日': [moment().subtract(6,'days'), moment()],
-            '最近30日': [moment().subtract(29,'days' ), moment()]
-          },
           opens : 'left', //日期选择框的弹出位置
           buttonClasses : [ 'btn btn-default' ],
           applyClass : 'btn-small btn-primary blue',
