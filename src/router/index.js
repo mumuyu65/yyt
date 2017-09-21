@@ -212,14 +212,16 @@ export default new Router({
                 },
                 icon: 'fa fa-comments fa-2x',
                 children: [{
-                    path: '/comment/dayComment',
-                    component: DayComment,
-                    name: '早晚评',
-                }, {
-                    path: '/comment/productsComment',
-                    component: productsComment,
-                    name: '果蔬预测',
-                }]
+                        path: '/comment/dayComment',
+                        component: DayComment,
+                        name: '早晚评',
+                    }
+                    // , {
+                    //     path: '/comment/productsComment',
+                    //     component: productsComment,
+                    //     name: '果蔬预测',
+                    // }
+                ]
             }, {
                 path: '/classes',
                 name: '学习课件',
@@ -307,16 +309,17 @@ export default new Router({
                 },
                 icon: 'fa fa-heart-o fa-2x',
                 noDropdown: true,
-            }, { //产品介绍管理
-                path: '/productsintro',
-                component: productIntro,
-                name: '产品介绍管理',
-                meta: {
-                    role: ['admin', 'superman']
-                },
-                icon: 'fa fa-codepen fa-2x',
-                noDropdown: true,
             },
+            //  { //产品介绍管理
+            //     path: '/productsintro',
+            //     component: productIntro,
+            //     name: '产品介绍管理',
+            //     meta: {
+            //         role: ['admin', 'superman']
+            //     },
+            //     icon: 'fa fa-codepen fa-2x',
+            //     noDropdown: true,
+            // },
             // { //战队介绍管理
             //     path: '/clan',
             //     component: Clan,
@@ -451,14 +454,16 @@ export const asyncRouterMap = [{ //个人中心
         },
         icon: 'fa fa-comments fa-2x',
         children: [{
-            path: '/comment/dayComment',
-            component: DayComment,
-            name: '早晚评',
-        }, {
-            path: '/comment/productsComment',
-            component: productsComment,
-            name: '果蔬预测',
-        }]
+                path: '/comment/dayComment',
+                component: DayComment,
+                name: '早晚评',
+            }
+            // , {
+            //     path: '/comment/productsComment',
+            //     component: productsComment,
+            //     name: '果蔬预测',
+            // }
+        ]
     }, {
         path: '/classes',
         name: '学习课件',
@@ -544,16 +549,17 @@ export const asyncRouterMap = [{ //个人中心
         },
         icon: 'fa fa-heart-o fa-2x',
         noDropdown: true,
-    }, { //产品介绍管理
-        path: '/productsintro',
-        component: productIntro,
-        name: '产品介绍管理',
-        meta: {
-            role: ['admin', 'superman']
-        },
-        icon: 'fa fa-codepen fa-2x',
-        noDropdown: true,
     },
+    //  { //产品介绍管理
+    //     path: '/productsintro',
+    //     component: productIntro,
+    //     name: '产品介绍管理',
+    //     meta: {
+    //         role: ['admin', 'superman']
+    //     },
+    //     icon: 'fa fa-codepen fa-2x',
+    //     noDropdown: true,
+    // },
     // { //战队介绍管理
     //     path: '/clan',
     //     component: Clan,

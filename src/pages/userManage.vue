@@ -36,6 +36,7 @@
                     <th class="text-center">用户名</th>
                     <th class="text-center">用户昵称</th>
                     <th class="text-center">用户头像</th>
+                    <th class="text-center">用户最后登录IP</th>
                     <th class="text-center" style="max-width:200px">用户简介</th>
                     <th class="text-center">用户等级</th>
                     <th class="text-center">注册时间</th>
@@ -49,6 +50,7 @@
                         <td>{{item.account}}</td>
                         <td>{{item.nick}}</td>
                         <td><img v-bind:src="item.headurl" alt="用户头像" style="height:50px;"/></td>
+                        <td>{{item.ip}}</td>
                         <td style="max-width:200px">{{item.intro}}</td>
                         <td>{{item.level | userLevel}}</td>
                         <td>{{item.unix | unixTodate}}</td>
