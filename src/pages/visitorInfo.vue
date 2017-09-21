@@ -5,7 +5,7 @@
               <li><h3>游客信息管理</h3></li>
           </ul>
           <hr/>
-
+          <div id="visitor_pagnation" class="text-center"></div>
           <table id="visitorTable" class="text-center" width="100%" border="1" >
                 <thead>
                     <th class="text-center">游客序列号</th>
@@ -35,12 +35,15 @@ import axios from 'axios'
 
 import env from '@/config/env'
 
+import '../../static/pagnation/bootstrap-paginator.js'
+
 export default {
   name: 'Visitor',
   data (){
     return {
         Sid:'',
-        visitorlists:[]
+        visitorlists:[],
+        BegIdx:0,
     }
   },
   mounted (){
@@ -84,22 +87,71 @@ export default {
       });
     },
     initData(){
-      let that = this;
-
       let params={
         begidx:0,
         counts:10
       };
 
+      let that = this;
+
       api.queryVisitor(params).then(function(res){
-          console.log(res.data);
           if(res.data.Code ==3){
-            that.visitorlists = res.data.Data;
+            if(res.data.Data.Total>0){
+              let TotalNum = res.data.Data.Total;
+              if(TotalNum>10){
+                  var options = {
+                         currentPage: 1,
+                         totalPages: parseInt(TotalNum /10) + 1,
+                         onPageClicked: function (e, originalEvent, type, page) {
+                             switch (type) {
+                                 case 'first':
+                                     that.visitorList(0);
+                                     break;
+                                 case 'page':
+                                     that.BegIdx = (page - 1) * 10;
+                                     that.visitorList(that.BegIdx);
+                                     break;
+                                 case 'next':
+                                     that.BegIdx  += 10;
+                                     that.visitorList(that.BegIdx);
+                                     break;
+                                 case 'last':
+                                     that.BegIdx = TotalNum - TotalNum % 10;
+                                     that.visitorList(that.BegIdx);
+                                     break;
+                                 case 'prev':
+                                     that.BegIdx -= 10;
+                                     that.visitorList(that.BegIdx);
+                                     break;
+                             }
+                         }
+                     };
+                     $('#visitor_pagnation').bootstrapPaginator(options);
+              }
+            that.visitorlists = res.data.Data.Detail;
+            }
           }
       }).catch(function(err){
         console.log(err);
       });
     },
+
+    visitorList(idx){
+      let params={
+          begidx:idx,
+          counts:10
+        };
+
+      let that = this;
+
+      api.queryVisitor(params).then(function(res){
+        if(res.data.Code ==3){
+          that.visitorlists = res.data.Data.Detail;
+        }
+      }).catch(function(err){
+          console.log(err);
+        });
+    }
   },
 }
 </script>

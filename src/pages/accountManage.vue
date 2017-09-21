@@ -225,8 +225,6 @@ export default {
         api.queryUser(params).then(function(res){
             if(res.data.Code ==3){
                 let TotalNum = res.data.Data.Total;
-                let templateObj = res.data.Data.Detail;
-                that.userlists= templateObj;
                 //    分页
                 if(TotalNum>10) {
                      var options = {
@@ -258,6 +256,8 @@ export default {
                      };
                      $('#account_pagnation').bootstrapPaginator(options);
                 }
+                let templateObj = res.data.Data.Detail;
+                that.userlists= templateObj;
             }else{
                 alert(res.data.Msg);
             }

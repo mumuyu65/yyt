@@ -16,18 +16,20 @@
                         <div class="zhibo-body text-center" border="1" width="100%">
                            <table class="table table-hover">
                                 <tr>
-                                    <th>发布房间</th>
+                                    <th>聊天房间号</th>
                                     <th>直播老师</th>
                                     <th>直播状态</th>
+                                    <th>直播间</th>
                                     <th>观看人数</th>
                                     <th>更改状态</th>
                                     <th>操作建议</th>
                                     <th>操作</th>
                                 </tr>
                                 <tr v-for="item in liveList">
-                                    <td>{{item.type | typeFilter}}</td>
+                                    <td>{{item.roomno}}</td>
                                     <td>{{item.name}}</td>
                                     <td>{{item.state | stateFilter}}</td>
+                                    <td>{{item.type | typeFilter}}</td>
                                     <td>{{item.online}}</td>
                                     <td><div class="btn btn-warning" @click="changeState(item.state,item.id)">{{item.state | statesFilter}}</div></td>
                                     <td><router-link :to="{ path: '/handlesuggestion' }" class="btn btn-info">查看</router-link></td>
@@ -181,20 +183,20 @@ data() {
 filters:{
     typeFilter:function(type){
         switch(type){
-            case '0': return '大厅直播'; break;
-            case '1': return '战队直播'; break;
+            case 0: return '大厅直播'; break;
+            case 1: return '战队直播'; break;
         }
     },
     stateFilter:function(state){
         switch(state){
-            case '1': return '未直播'; break;
-            case '2': return '直播中'; break;
+            case 1: return '未直播'; break;
+            case 0: return '直播中'; break;
         }
     },
     statesFilter:function(state){
         switch(state){
-            case '1': return '开启'; break;
-            case '2': return '停止'; break;
+            case 0: return '开启'; break;
+            case 1: return '停止'; break;
         }
     },
     unixTodate(tm) {
@@ -207,7 +209,7 @@ filters:{
         return y+'-'+m+'-'+d+' '+h+':'+m;
     },
     imgurl(userlevel){
-        var url = 'http://yingdedao.com:10021/cycj/level/query';
+        var url = 'http://47.52.19.212:9000/yyt/level/query';
         var img_url;
         $.ajaxSetup({
             async : false
@@ -265,7 +267,11 @@ methods: {
         }
         api.queryUser(params).then(function(res){
             if(res.data.Code ==3){
-                _this.teacherList = res.data.Data.Detail;
+                if(res.data.Data.Detail.length >0){
+                    _this.teacherList = res.data.Data.Detail;
+                }else{
+                   alert("尚无参与直播的老师列表，请前往账号管理添加！");
+                }
             }else{
                 // alert(res.data.Msg);
             }
@@ -282,12 +288,14 @@ methods: {
             counts:100
         }
         api.getLive(param).then(function(res){
+            console.log(res.data.Data);
             if(res.data.Code ==3){
-                if(res.data.Data == 'no data'){
-                    alert('没有直播房间!');
+                if(res.data.Data.length == 0){
+                    console.log('没有直播房间!');
+                }else{
+                    _this.liveList = res.data.Data;
+                    _this.allOnline = res.data.Data.length;
                 }
-                _this.liveList = res.data.Data.Detail;
-                _this.allOnline = res.data.Data.AllOnline;
             }else{
                 alert(res.data.Msg);
             }
@@ -586,6 +594,8 @@ methods: {
         this.modifyLiveurl = item.liveurl;
         this.modifyId = item.id;
         this.modifyRoomid = item.roomno;
+
+        console.log(item);
     },
 
     modifyLive(){
@@ -600,6 +610,7 @@ methods: {
             id:this.modifyId,
             roomno:this.modifyRoomid
         }
+        console.log(params);
         api.modifyLive(params).then(function(res){
             alert(res.data.Msg);
             if(res.data.Code == 3){

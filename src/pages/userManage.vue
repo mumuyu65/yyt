@@ -55,7 +55,7 @@
                         <td>{{item.login_unix | unixTodate}}</td>
                         <td>{{item.platform | Platform}}</td>
                         <td>
-                            <button class="btn btn-primary" @click="isShow(item.id)">修改</button>
+                            <button class="btn btn-primary" @click="isShow(item.id)">修改等级</button>
                         </td>
                     </tr>
                 </tbody>
