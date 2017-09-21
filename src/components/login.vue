@@ -1,7 +1,7 @@
 <template>
   <div class="main">
      <div class="login_border">
-        <h3 class="text-center">创利丰直播后台管理系统</h3>
+        <h3 class="text-center">壹言堂直播后台管理系统</h3>
         <div class="row">
           <div class="col-sm-2 col-md-2 col-xs-6 col-sm-offset-1 col-md-offset-1">
              用户名：
