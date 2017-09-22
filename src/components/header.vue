@@ -8,7 +8,7 @@
                   <span class="icon-bar"></span>
                   <span class="icon-bar"></span>
               </button>
-              <router-link class="navbar-brand" to="/index">创立丰直播平台</router-link>
+              <router-link class="navbar-brand" to="/index">壹言堂直播平台</router-link>
           </div>
         <div class="pull-right" style="color:#fff;padding: 15px 50px 5px 50px;font-size: 16px;">
           <a @click="logout()" class="btn btn-danger square-btn-adjust">退出</a>

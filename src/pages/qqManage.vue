@@ -4,7 +4,7 @@
           <div v-show="!addQQ">
             <div v-show="!modifyqq">
               <ul class="list-inline">
-                  <li><h3>qq客服管理</h3></li>
+                  <li><h3>高级助理管理</h3></li>
                   <li class="pull-right" style="margin-top:15px;">
                       <button @click="addqq()"
                           style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
@@ -249,5 +249,4 @@ export default {
    #productsTable tr:nth-child(odd){
         background-color:#f7f7f7;
    }
-
 </style>

@@ -30,7 +30,7 @@
                                     <td>{{item.name}}</td>
                                     <td>{{item.state | stateFilter}}</td>
                                     <td>{{item.type | typeFilter}}</td>
-                                    <td>{{item.online}}</td>
+                                    <td>{{allOnline}}</td>
                                     <td><div class="btn btn-warning" @click="changeState(item.state,item.id)">{{item.state | statesFilter}}</div></td>
                                     <td><router-link :to="{ path: '/handlesuggestion' }" class="btn btn-info">查看</router-link></td>
                                     <td>
@@ -164,7 +164,7 @@ data() {
         addTitle:'',
         addInfo:'',
         addLiveurl:'',
-        allOnline:'',
+        allOnline:0,
         modifyTeacher:'',
         modifySelected:'',
         modifyTitle:'',
@@ -294,7 +294,12 @@ methods: {
                     console.log('没有直播房间!');
                 }else{
                     _this.liveList = res.data.Data;
-                    _this.allOnline = res.data.Data.length;
+
+                    let totalPeople = _this.liveList[0].user_count;
+
+                    for(let j=0; j<totalPeople.length;j++){
+                        _this.allOnline += totalPeople[j].count;
+                    }
                 }
             }else{
                 alert(res.data.Msg);
