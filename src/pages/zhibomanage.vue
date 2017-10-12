@@ -238,7 +238,7 @@ mounted(){
        that.chatFaces=res.data;
     });
 
-    this.checkLogin();
+    //this.checkLogin();
 },
 methods: {
     checkLogin(){

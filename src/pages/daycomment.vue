@@ -227,7 +227,7 @@ export default {
     this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
     this.initData();
 
-    this.checkLogin();
+    //this.checkLogin();
   },
   methods:{
     checkLogin(){

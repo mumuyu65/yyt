@@ -76,7 +76,7 @@ export default {
     this.user.nick = user.Nick;
     this.user.intro = user.Intro;
     this.user.img = env.baseUrl+'/yyt/head/head'+user.UserId;
-    this.checkLogin();
+    //this.checkLogin();
   },
   methods:{
     checkLogin(){
@@ -86,6 +86,7 @@ export default {
 
       axios.get(env.baseUrl+'/yyt/check', {params:obj})
         .then(function (res) {
+          console.log(res);
           if(res.data.Code ==6){
             alert(res.data.Msg);
             window.location.replace("/");

@@ -259,7 +259,7 @@ export default {
 
     this.queryPeriod();  //查询时间段
 
-    this.checkLogin();
+    //this.checkLogin();
   },
   methods:{
     checkLogin(){

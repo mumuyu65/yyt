@@ -220,7 +220,7 @@ name: 'handlesuggestion',
 mounted(){
     this.Sid = JSON.parse(window.localStorage.getItem('user')).SessionId;
     this.initData();
-    this.checkLogin();
+    //this.checkLogin();
 },
 data (){
     return {

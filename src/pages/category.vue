@@ -82,7 +82,7 @@ export default {
         mounted() {
             this.sid = JSON.parse(window.localStorage.getItem('user')).SessionId
             this.queryCategory();
-            this.checkLogin();
+            //this.checkLogin();
         },
         methods: {
             checkLogin(){

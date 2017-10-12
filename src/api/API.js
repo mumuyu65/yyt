@@ -141,7 +141,7 @@ class API {
 
     queryNews(param) {
         config.data = param;
-        return axios.post('/cycj/news/query', {}, config);
+        return axios.post('/yyt/news/query', {}, config);
     }
 
     delNews(param) {
@@ -373,7 +373,7 @@ class API {
 
     coursesAdd(param) {
         config.data = param;
-        return axios.post('/cycj/courware/add', {}, config);
+        return axios.post('/yyt/courware/add', {}, config);
     }
 
     coursesModify(param) {

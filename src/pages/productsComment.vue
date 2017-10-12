@@ -227,7 +227,7 @@ export default {
   mounted (){
     this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
     this.initProduct();
-    this.checkLogin();
+    //this.checkLogin();
   },
   methods:{
     checkLogin(){

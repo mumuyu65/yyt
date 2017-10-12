@@ -195,7 +195,7 @@ export default {
   mounted (){
     this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
     this.initData();
-    this.checkLogin();
+    //this.checkLogin();
   },
   methods:{
     checkLogin(){

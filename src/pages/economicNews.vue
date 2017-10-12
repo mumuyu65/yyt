@@ -220,7 +220,7 @@ export default {
   mounted(){
     this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
     this.initData();
-    this.checkLogin();
+    //this.checkLogin();
   },
   methods:{
     checkLogin(){
@@ -299,7 +299,7 @@ export default {
 
       let that = this;
 
-      axios.post(env.baseUrl+'/cycj/news/add', data, {
+      axios.post(env.baseUrl+'/yyt/news/add', data, {
             headers: {
                   'Content-Type': 'application/x-www-form-urlencoded'
             }
@@ -381,7 +381,7 @@ export default {
 
       let that = this;
 
-      axios.post(env.baseUrl+'/cycj/news/modify', data, {
+      axios.post(env.baseUrl+'/yyt/news/modify', data, {
             headers: {
                   'Content-Type': 'application/x-www-form-urlencoded'
             }
