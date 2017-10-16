@@ -84,9 +84,12 @@
                 </div>
                 <div class="form-group col-md-6">
                     <label>商品</label>
+                    <input type="text" class="form-control" v-model="handlesuggestion.category_id">
+                    <!--
                     <select class="form-control" v-model="handlesuggestion.category_id">
                         <option v-for="item in category" :value="item.id">{{item.name}}</option>
                     </select>
+                    -->
                 </div>
                 <div class="form-group col-md-6">
                     <label>类型</label>
@@ -96,6 +99,10 @@
                     </select>
                 </div>
                 <div class="form-group col-md-6">
+                    <!--
+                    <label>开仓价</label>
+                    <input type="number" class="form-control" v-model="haddlesuggestion.open_price" />
+                    -->
                     <label>开仓时间</label>
                     <input type="text" class="form-control" id="form_datetime"/>
                 </div>
@@ -160,8 +167,13 @@
                     </select>
                 </div>
                 <div class="form-group col-md-6">
+                    <!--
+                    <label>开仓价</label>
+                    <input type="text" class="form-control" v-model="modifyhandlesuggestion.open_price" />
+                    -->
                     <label>开仓时间</label>
                     <input type="text" class="form-control" id="modify_form_datetime" />
+
                 </div>
                 <div class="form-group col-md-6">
                     <label>仓位</label>
@@ -248,7 +260,8 @@ data (){
             win_price: '', // 止盈价
             loss_price: '', // 止损价
             result: '赢单', // 结果
-            wheat_type: '麦下单' // 麦单类型
+            wheat_type: '麦下单', // 麦单类型
+           // open_price:'',  //开仓价
         },
         category: [],
         open_time: '', // 开仓时间
@@ -261,6 +274,7 @@ data (){
             loss_price:'',
             result:'',
             wheat_type:'',
+            //open_price:'',
         },
         ModifyId:'',
 
