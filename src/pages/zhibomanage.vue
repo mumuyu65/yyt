@@ -16,22 +16,27 @@
                         <div class="zhibo-body text-center" border="1" width="100%">
                            <table class="table table-hover">
                                 <tr>
-                                    <th>聊天房间号</th>
+                                    <th>房间号</th>
+                                    <th>直播名称</th>
                                     <th>直播老师</th>
                                     <th>直播状态</th>
-                                    <th>直播间</th>
+                                    <th>直播地址</th>
+                                    <th>直播简介</th>
                                     <th>观看人数</th>
-                                    <th>更改状态</th>
                                     <th>操作建议</th>
                                     <th>操作</th>
                                 </tr>
                                 <tr v-for="item in liveList">
                                     <td>{{item.roomno}}</td>
+                                    <td>{{item.title}}</td>
                                     <td>{{item.name}}</td>
                                     <td>{{item.state | stateFilter}}</td>
-                                    <td>{{item.type | typeFilter}}</td>
-                                    <td>{{allOnline}}</td>
+                                    <td>{{item.liveurl}}</td>
+                                    <td>{{item.info}}</td>
+                                    <td>{{item.user_count.length}}</td>
+                                    <!--
                                     <td><div class="btn btn-warning" @click="changeState(item.state,item.id)">{{item.state | statesFilter}}</div></td>
+                                    -->
                                     <td><router-link :to="{ path: '/handlesuggestion' }" class="btn btn-info">查看</router-link></td>
                                     <td>
                                         <div class="btn btn-success" @click="showLiving(item)">进入</div>
@@ -47,27 +52,29 @@
             <!-- 添加 -->
             <div class="addlive" v-show="addlive">
                 <div class="form-group">
-                    <label>标题</label>
+                    <label><span class="required">*</span>标题</label>
                     <input type="text" class="form-control" placeholder="请输入标题" v-model="addTitle">
                 </div>
                 <div class="form-group">
-                    <label>直播老师</label>
+                    <label><span class="required">*</span>直播老师</label>
                     <select v-model="addTeacher"  class="form-control">
                         <option v-for="option in teacherList" v-bind:value="option.nick">{{ option.nick }}</option>
                     </select>
                 </div>
+                <!--
                 <div class="form-group">
-                    <label>直播分类</label>
+                    <label><span class="required">*</span>直播分类</label>
                     <select v-model="addSelected"  class="form-control">
                         <option v-for="option in options" v-bind:value="option.value">{{ option.text }}</option>
                     </select>
                 </div>
+                -->
                 <div class="form-group">
-                    <label>拉流地址</label>
+                    <label><span class="required">*</span>拉流地址</label>
                     <input type="text" class="form-control" placeholder="请输入拉流地址" v-model="addLiveurl">
                 </div>
                 <div class="form-group">
-                    <label>简介</label>
+                    <label><span class="required">*</span>简介</label>
                     <textarea class="form-control" placeholder="请输入简介" v-model="addInfo" rows="10"></textarea>
                 </div>
                 <div class="btn btn-primary" @click="addLive()">确认</div>
@@ -78,27 +85,27 @@
             <!-- 修改 -->
             <div class="modifylive" v-show="modifylive">
                 <div class="form-group">
-                    <label>标题</label>
+                    <label><span class="required">*</span>标题</label>
                     <input type="text" class="form-control" placeholder="请输入标题" v-model="modifyTitle">
                 </div>
                 <div class="form-group">
-                    <label>直播老师</label>
+                    <label><span class="required">*</span>直播老师</label>
                     <select v-model="modifyTeacher"  class="form-control">
                         <option v-for="option in teacherList" v-bind:value="option.nick">{{ option.nick }}</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>直播分类</label>
+                    <label><span class="required">*</span>直播分类</label>
                     <select v-model="modifySelected"  class="form-control">
                         <option v-for="option in options" v-bind:value="option.value">{{ option.text }}</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>拉流地址</label>
+                    <label><span class="required">*</span>拉流地址</label>
                     <input type="text" class="form-control" placeholder="请输入拉流地址" v-model="modifyLiveurl">
                 </div>
                 <div class="form-group">
-                    <label>简介</label>
+                    <label><span class="required">*</span>简介</label>
                     <textarea class="form-control" placeholder="请输入简介" v-model="modifyInfo" rows="10"></textarea>
                 </div>
                 <div class="btn btn-primary" @click="modifyLive()">确认</div>
@@ -257,6 +264,7 @@ methods: {
         console.log(err);
       });
     },
+
     initData(){
         let _this = this;
         let params = {
@@ -524,23 +532,28 @@ methods: {
     // 新增直播间
     addLive(){
         let _this = this;
-        let params = {
-            sid:this.sid,
-            title:this.addTitle,
-            name:this.addTeacher,
-            type:this.addSelected,
-            info:this.addInfo,
-            liveurl:this.addLiveurl
+
+        if(this.addTitle && this.addTeacher && this.addInfo && this.addLiveurl){
+            let params = {
+                sid:this.sid,
+                title:this.addTitle,
+                name:this.addTeacher,
+                type:'大厅直播',
+                info:this.addInfo,
+                liveurl:this.addLiveurl
+            }
+            api.addLive(params).then(function(res){
+                alert(res.data.Msg);
+                if(res.data.Code == 3){
+                    _this.isShowAdd();
+                    _this.queryLive();
+                };
+            }).catch(function(err){
+                console.log(err);
+            });
+        }else{
+            alert("存在空值!");
         }
-        api.addLive(params).then(function(res){
-            alert(res.data.Msg);
-            if(res.data.Code == 3){
-                _this.isShowAdd();
-                _this.queryLive();
-            };
-        }).catch(function(err){
-            console.log(err);
-        });
     },
 
     // 管理直播间状态
@@ -599,8 +612,6 @@ methods: {
         this.modifyLiveurl = item.liveurl;
         this.modifyId = item.id;
         this.modifyRoomid = item.roomno;
-
-        console.log(item);
     },
 
     modifyLive(){
@@ -649,9 +660,6 @@ methods: {
                 }
             }
         }
-        .zhibo-body {
-            padding: 3rem;
-        }
         .addlive,.modifylive,.zhibo-box{
             padding:3rem;
         }
@@ -691,5 +699,10 @@ methods: {
                 }
             }
         }
+    }
+
+    .required{
+        color:#e60000;
+        margin-right:5px;
     }
 </style>

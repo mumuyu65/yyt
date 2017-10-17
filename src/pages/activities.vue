@@ -189,7 +189,6 @@ export default {
 
 
     uploadImgs(){
-      if(this.ImgArr.length>1){
          var data = new FormData();
 
         data.append('imgs', this.ImgArr.length);
@@ -217,9 +216,6 @@ export default {
           .catch(function (error) {
             console.log(error);
           });
-        }else{
-          alert("尚未上传图片!");
-        }
     },
 
     delImgs(){
