@@ -357,7 +357,7 @@ export default {
 
       let that = this;
 
-      axios.post(env.baseUrl+'/cycj/courware/add', data, {
+      axios.post(env.baseUrl+'/yyt/courware/add', data, {
             headers: {
                   'Content-Type': 'application/x-www-form-urlencoded'
             }
@@ -409,7 +409,7 @@ export default {
 
       let that = this;
 
-      axios.post(env.baseUrl+'/cycj/courware/modify', data, {
+      axios.post(env.baseUrl+'/yyt/courware/modify', data, {
             headers: {
                   'Content-Type': 'application/x-www-form-urlencoded'
             }

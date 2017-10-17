@@ -23,27 +23,31 @@
                   <hr/>
                   <!-- 展示 -->
                   <div id="economic_pagnation"></div>
-                  <div style="background-color:transparent;padding:0;" class="row">
-                        <div class="col-md-6" v-for="(item,index) in newsLists">
-                            <div class="prize-item">
-                              <div class="col-md-12" style="border-bottom: 1px solid #c0c0c0;">
-                                  <div class="p-img col-md-6">
-                                      <img class="thumbnail-image" v-bind:src="item.imgurl"  alt="奖品图片" style="height:100px;" />
-                                  </div>
-                                  <div class="p-info col-md-6" style="height:100px;">
-                                      <h5>标题：{{item.title}}</h5>
-                                      <span class="pull-left">资讯类型:{{item.typename }}</span>
-                                      <p class="beans">{{item.unix | dateStamp }}</p>
-                                  </div>
-                              </div>
-                                <div class="p-intro" style="height:180px; overflow:auto;" v-html="item.content"></div>
-                                <div class="btn-group">
-                                    <div class="btn btn-primary" @click="modifyEconomics(item)">修改</div>
-                                    <div class="btn btn-danger" @click="delNew(item,index)">删除</div>
-                                </div>
-                            </div>
-                        </div>
-                  </div>
+                    <table class="text-center" border="1" width="100%" id="productsTable">
+                      <thead>
+                          <th class="text-center">编号</th>
+                          <th class="text-center" style="max-width:120px">标题</th>
+                          <th class="text-center">资讯类型</th>
+                          <th class="text-center">创建时间</th>
+                          <th class="text-center">附件文件</th>
+                          <th class="text-center">操作</th>
+                      </thead>
+                      <tbody>
+                          <tr v-for="(item,index) in newsLists">
+                            <td>{{index+1}}</td>
+                            <td>{{item.title}}</td>
+                            <td>{{item.typename }}</td>
+                            <td>{{item.unix | dateStamp }}</td>
+                            <td>
+                              <a v-bind:href="item.imgurl" target="_blank">{{item.imgurl}}</a>
+                            </td>
+                            <td>
+                              <button class="btn btn-primary" @click="modifyEconomics(item)">修改</button>
+                              <button class="btn btn-danger" @click="delNew(item,index)">删除</button>
+                            </td>
+                          </tr>
+                      </tbody>
+                    </table>
               </div>
           </div>
           <!-- 添加 -->
@@ -74,7 +78,7 @@
                   </div>
                   <div class="col-sm-9 col-md-9 col-xs-6">
                       <ul class="list-inline" style="min-height:400px;">
-                          <li><img v-bind:src="Img" class="profile"/></li>
+                           <li><span>{{File}}</span></li>
                           <li style="position:relative;">
                             <input type="file" @change="onFileChange" ref="uploadimg" value="上传图片" style="position:absolute; opacity:0;"/>
                             <button style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
@@ -126,33 +130,25 @@
               </div>
               <div class="row">
                   <div class="col-sm-3 col-md-3 col-xs-6">
-                      资讯图片:
+                      附件文件:
                   </div>
                   <div class="col-sm-9 col-md-9 col-xs-6">
                       <ul class="list-inline">
-                          <li><img v-bind:src="modifyImg"/></li>
+                          <li><span>{{modifyFile}}</span></li>
                           <li style="position:relative;">
                             <input type="file" @change="modifyFileChange" ref="uploadmodify" value="上传图片" style="position:absolute; opacity:0;"/>
                             <button style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
-                                上传图片
+                                上传文件
                             </button>
                           </li>
                       </ul>
-                  </div>
-              </div>
-              <div class="row">
-                  <div class="col-sm-3 col-md-3 col-xs-6">
-                      资讯内容:
-                  </div>
-                  <div class="col-sm-9 col-md-9 col-xs-6">
-                      <div id="modifyeditor" v-model='Content'>
-                      </div>
                       <div style="margin-top:20px;">
                               <button class="btn btn-danger" @click="modifyItem()">提交</button>
                               <button class="btn btn-default pull-right" @click="modifyCancel()">取消</button>
                       </div>
                   </div>
               </div>
+
           </div>
         </div>
     </div>
@@ -169,7 +165,7 @@ import env from '@/config/env'
 
 import '../../static/pagnation/bootstrap-paginator.js';
 
-import * as E from 'wangeditor'
+//import * as E from 'wangeditor'
 
 export default {
   name: 'economicNews',
@@ -181,11 +177,11 @@ export default {
       addNew:false,
       modifyNew:false,
       Type:'',
-      Img:'',
+      File:'',
       title:'',
       content:'',
 
-      modifyImg:'',
+      modifyFile:'',
       modifyType:'',
       Title:'',
       Content:'',
@@ -245,9 +241,10 @@ export default {
     initData(){
         this.queryAllNews();
         // 创建编辑器
-        let editor = new E('#editor');
+        //let editor = new E('#editor');
 
         // 自定义菜单配置
+        /*
         editor.customConfig.menus = [
             'head',  // 标题
             'bold',  // 粗体
@@ -267,6 +264,7 @@ export default {
         editor.create();
 
         this.editor = editor;
+        */
     },
 
     // 查询资讯
@@ -297,8 +295,8 @@ export default {
       data.append('sid',this.Sid);
       data.append('type',this.Type);
       data.append('title',this.title);
-      data.append('img',input.files[0]);
-      data.append('content',this.editor.txt.html());
+      data.append('file',input.files[0]);
+      //data.append('content',this.editor.txt.html());
 
       let that = this;
 
@@ -323,51 +321,15 @@ export default {
           var files = e.target.files || e.dataTransfer.files;
           if (!files.length)
            return;
-           this.createImage(files[0]);
-    },
-
-    createImage(file) {
-      var reader = new FileReader();
-      var that = this;
-
-      reader.onload = (e) => {
-        that.Img = e.target.result;
-      };
-      reader.readAsDataURL(file);
+           this.File=files[0].name;
     },
 
     modifyEconomics(item){
       this.modifyNew = ! this.modifyNew;
       this.modifyType = item.type;
       this.Title = item.title;
-      this.modifyImg = item.imgurl;
+      this.modifyFile = item.imgurl;
       this.modifyId = item.id;
-      // 创建编辑器
-      let modifyeditor = new E('#modifyeditor');
-
-      // 自定义菜单配置
-        modifyeditor.customConfig.menus = [
-            'head',  // 标题
-            'bold',  // 粗体
-            'italic',  // 斜体
-            'underline',  // 下划线
-            'strikeThrough',  // 删除线
-            'foreColor',  // 文字颜色
-            'backColor',  // 背景颜色
-            'link',  // 插入链接
-            'list',  // 列表
-            'justify',  // 对齐方式
-            'quote',  // 引用
-            'table',  // 表格
-            'undo',  // 撤销
-            'redo'  // 重复
-        ];
-
-      modifyeditor.create();
-
-      modifyeditor.txt.html(item.content);
-
-      this.modifyeditor = modifyeditor;
     },
 
     modifyItem(){
@@ -379,8 +341,8 @@ export default {
       data.append('nid',this.modifyId);
       data.append('type',this.modifyType);
       data.append('title',this.Title);
-      data.append('img',input.files[0]);
-      data.append('content',this.modifyeditor.txt.html());
+      data.append('file',input.files[0]);
+      //data.append('content',this.modifyeditor.txt.html());
 
       let that = this;
 
@@ -413,7 +375,7 @@ export default {
       var that = this;
 
       reader.onload = (e) => {
-        that.modifyImg = e.target.result;
+        that.modifyFile = e.target.result;
       };
       reader.readAsDataURL(file);
     },
@@ -432,6 +394,7 @@ export default {
               let TotalNum;  //总数据条数
               TotalNum=res.data.Data.Total;
               let templateObj = res.data.Data.Detail;
+              console.log(templateObj);
               //    分页
                if(TotalNum>4) {
                   for(let i=0;i<4;i++){
@@ -659,4 +622,17 @@ export default {
     hr{
       margin:10px 0;
     }
+
+    #productsTable th,#productsTable td{
+        padding:5px 0;
+        border:1px solid #ececec;
+   }
+
+    #productsTable tr:hover{
+        background-color:#f7f7f7;
+    }
+
+   #productsTable tr:nth-child(odd){
+        background-color:#f7f7f7;
+   }
 </style>

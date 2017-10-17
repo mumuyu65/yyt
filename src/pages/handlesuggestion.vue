@@ -45,6 +45,7 @@
                         <th  class="text-center">类型</th>
                         <th  class="text-center">仓位</th>
                         <th  class="text-center">产品</th>
+                        <th  class="text-center">开仓价</th>
                         <th  class="text-center">止损价</th>
                         <th  class="text-center">止盈价</th>
                         <th  class="text-center">结果</th>
@@ -53,10 +54,11 @@
                     </thead>
                     <tbody>
                         <tr v-for="(item, index) in templateInfos">
-                            <td>{{item.open_time | dateStamp}}</td>
+                            <td>{{item.unix | dateStamp}}</td>
                             <td>{{item.order_type}}</td>
                             <td>{{item.entry_price}}</td>
-                            <td>{{item.categoryname}}</td>
+                            <td>{{item.category}}</td>
+                            <td>{{item.open_price}}</td>
                             <td>{{item.loss_price}}</td>
                             <td>{{item.win_price}}</td>
                             <td>{{item.result}}</td>
@@ -99,12 +101,12 @@
                     </select>
                 </div>
                 <div class="form-group col-md-6">
-                    <!--
                     <label>开仓价</label>
-                    <input type="number" class="form-control" v-model="haddlesuggestion.open_price" />
-                    -->
+                    <input type="number" class="form-control" v-model="handlesuggestion.open_price" />
+                    <!--
                     <label>开仓时间</label>
                     <input type="text" class="form-control" id="form_datetime"/>
+                    -->
                 </div>
                 <div class="form-group col-md-6">
                     <label>仓位</label>
@@ -155,9 +157,12 @@
                 </div>
                 <div class="form-group col-md-6">
                     <label>商品</label>
+                    <input type="text" class="form-control" v-model="modifyhandlesuggestion.category_id" />
+                    <!--
                     <select class="form-control" v-model="modifyhandlesuggestion.category_id">
                         <option v-for="item in category" :value="item.id">{{item.name}}</option>
                     </select>
+                    -->
                 </div>
                 <div class="form-group col-md-6">
                     <label>类型</label>
@@ -167,12 +172,12 @@
                     </select>
                 </div>
                 <div class="form-group col-md-6">
-                    <!--
                     <label>开仓价</label>
                     <input type="text" class="form-control" v-model="modifyhandlesuggestion.open_price" />
-                    -->
+                    <!--
                     <label>开仓时间</label>
                     <input type="text" class="form-control" id="modify_form_datetime" />
+                    -->
 
                 </div>
                 <div class="form-group col-md-6">
@@ -261,7 +266,7 @@ data (){
             loss_price: '', // 止损价
             result: '赢单', // 结果
             wheat_type: '麦下单', // 麦单类型
-           // open_price:'',  //开仓价
+            open_price:'',  //开仓价
         },
         category: [],
         open_time: '', // 开仓时间
@@ -274,7 +279,7 @@ data (){
             loss_price:'',
             result:'',
             wheat_type:'',
-            //open_price:'',
+            open_price:'',
         },
         ModifyId:'',
 
@@ -405,6 +410,7 @@ methods:{
                     alert('暂无数据')
                 }else{
                     let templateObj = res.data.Data;
+                    //console.log(templateObj);
                     //清空初始化中的数据
                     that.ClanInfos=[];
                     that.RoomInfos=[];
@@ -472,15 +478,12 @@ methods:{
 
     HandleSuggestionAdd() {
         let hs = this.handlesuggestion;
-        let ot = $("#form_datetime").val();
-        let arr = ot.replace(/ |:/g, '-').split('-');
-        let date = new Date(arr[0], arr[1]-1, arr[2], arr[3], arr[4]).getTime()/1000;
         let param = {
             sid: this.Sid,
             place: hs.place,
-            category_id: hs.category_id,
+            category: hs.category_id,
             order_type: hs.order_type,
-            open_time: date,
+            open_price:hs.open_price,
             entry_price: hs.entry_price,
             win_price: hs.win_price,
             loss_price: hs.loss_price,
@@ -507,9 +510,9 @@ methods:{
     showModify(item){
         this.Modifyhandlesuggestion = !this.Modifyhandlesuggestion;
         this.modifyhandlesuggestion.place = item.place;
-        this.modifyhandlesuggestion.category_id= item.category_id;
+        this.modifyhandlesuggestion.category_id= item.category;
         this.modifyhandlesuggestion.order_type= item.order_type;
-        $("#modify_form_datetime").attr('value',this.dateStamp(item.unix));
+        this.modifyhandlesuggestion.open_price= item.open_price;
         this.modifyhandlesuggestion.entry_price= item.entry_price;
         this.modifyhandlesuggestion.win_price= item.win_price;
         this.modifyhandlesuggestion.loss_price= item.loss_price;

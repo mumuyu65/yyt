@@ -223,7 +223,7 @@ export default new Router({
         }, { //操作建议管理
             path: '/handlesuggestion',
             component: HandleSuggestion,
-            name: '操作建议管理',
+            name: '讲师观点',
             meta: {
                 role: ['teacher', 'checker', 'superman']
             },
@@ -389,7 +389,7 @@ export const asyncRouterMap = [{ //个人中心
 }, { //操作建议管理
     path: '/handlesuggestion',
     component: HandleSuggestion,
-    name: '操作建议管理',
+    name: '讲师观点',
     meta: {
         role: ['teacher', 'checker', 'superman']
     },
