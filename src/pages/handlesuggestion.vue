@@ -489,7 +489,7 @@ methods:{
         let that = this;
         api.addHandleSuggestion(param).then(function(res) {
             if (res.data.Code == 3) {
-               that.initData();
+               window.location.reload();
                that.addhandlesuggestion = !that.addhandlesuggestion;
             }
             alert(res.data.Msg);
@@ -539,7 +539,7 @@ methods:{
             alert(res.data.Msg);
             if(res.data.Code ==3){
                 that.Modifyhandlesuggestion = !that.Modifyhandlesuggestion;
-                that.initData();
+                window.location.reload();
             }
         }).catch(function(err){
             console.log(err);
