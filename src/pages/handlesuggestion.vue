@@ -4,7 +4,7 @@
         <div v-show="!addhandlesuggestion">
            <div v-show="!Modifyhandlesuggestion">
                 <ul class="list-inline">
-                    <li><h3>操作建议管理</h3></li>
+                    <li><h3>讲师观点</h3></li>
                     <li class="pull-right" style="margin-top:15px;">
                         <button @click="AddSuggestion()"
                             style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
@@ -12,7 +12,7 @@
                         </button>
                     </li>
                 </ul>
-                <!-- 搜索区域  -->
+                <!-- 搜索区域
                 <ol class="list-inline" v-show="!searchArea">
                     <li>开始时间：</li>
                     <li><input type="text" class="form-control form_datetime" id="start_time" /></li>
@@ -32,6 +32,7 @@
                     </li>
                     <li><button class="btn btn-danger" @click="getHandleSuggestion()">搜索</button></li>
                 </ol>
+                 -->
                 <hr/>
                 <ul class="nav nav-tabs">
                     <li v-bind:class="{'active':item.flag}" v-for="(item,index) in clanItems">
@@ -41,18 +42,19 @@
                 <!-- table展示区域  -->
                 <table class="text-center" border="1" width="100%" id="productsTable">
                     <thead>
-                        <th  class="text-center">开仓时间</th>
+                        <th  class="text-center">创建时间</th>
                         <th  class="text-center">类型</th>
                         <th  class="text-center">仓位</th>
-                        <th  class="text-center">产品</th>
+                        <th  class="text-center">商品</th>
                         <th  class="text-center">开仓价</th>
                         <th  class="text-center">止损价</th>
                         <th  class="text-center">止盈价</th>
+                        <th  class="text-center">创建人</th>
                         <th  class="text-center">结果</th>
                         <th  class="text-center">麦单类型</th>
                         <th  class="text-center">操作</th>
                     </thead>
-                    <tbody>
+                    <tbody v-show="!nodata">
                         <tr v-for="(item, index) in templateInfos">
                             <td>{{item.unix | dateStamp}}</td>
                             <td>{{item.order_type}}</td>
@@ -61,6 +63,7 @@
                             <td>{{item.open_price}}</td>
                             <td>{{item.loss_price}}</td>
                             <td>{{item.win_price}}</td>
+                            <td>{{item.owner}}</td>
                             <td>{{item.result}}</td>
                             <td>{{item.wheat_type}}</td>
                             <td>
@@ -69,6 +72,11 @@
                             </td>
                         </tr>
                     </tbody>
+                    <tfoot v-show="nodata">
+                        <tr>
+                            <td colspan="11">暂无数据</td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
@@ -80,18 +88,12 @@
                 <div class="form-group col-md-6">
                     <label>投放地</label>
                     <select class="form-control" v-model="handlesuggestion.place">
-                        <option value="大厅直播">大厅直播</option>
-                        <option value="战队直播">战队直播</option>
+                        <option v-for="item in clanItems" :value="item.platform">{{item.value}}</option>
                     </select>
                 </div>
                 <div class="form-group col-md-6">
                     <label>商品</label>
                     <input type="text" class="form-control" v-model="handlesuggestion.category_id">
-                    <!--
-                    <select class="form-control" v-model="handlesuggestion.category_id">
-                        <option v-for="item in category" :value="item.id">{{item.name}}</option>
-                    </select>
-                    -->
                 </div>
                 <div class="form-group col-md-6">
                     <label>类型</label>
@@ -151,8 +153,7 @@
                 <div class="form-group col-md-6">
                     <label>投放地</label>
                     <select class="form-control" v-model="modifyhandlesuggestion.place">
-                        <option value="大厅直播">大厅直播</option>
-                        <option value="战队直播">战队直播</option>
+                        <option v-for="item in clanItems" :value="item.platform">{{item.value}}</option>
                     </select>
                 </div>
                 <div class="form-group col-md-6">
@@ -174,11 +175,6 @@
                 <div class="form-group col-md-6">
                     <label>开仓价</label>
                     <input type="text" class="form-control" v-model="modifyhandlesuggestion.open_price" />
-                    <!--
-                    <label>开仓时间</label>
-                    <input type="text" class="form-control" id="modify_form_datetime" />
-                    -->
-
                 </div>
                 <div class="form-group col-md-6">
                     <label>仓位</label>
@@ -238,6 +234,8 @@ mounted(){
     this.Sid = JSON.parse(window.localStorage.getItem('user')).SessionId;
     this.initData();
     //this.checkLogin();
+
+    this.queryLive();    //查询直播间
 },
 data (){
     return {
@@ -248,10 +246,7 @@ data (){
         teacher: '',
         all_prizes: [],
         all_teachers: [],
-        clanItems:[
-          {value:'大厅直播',platform:'大厅直播',flag:true},
-          {value:'战队直播',platform:'战队直播',flag:false},
-        ],
+        clanItems:[],
         ClanInfos:[],
         RoomInfos:[],
         templateInfos:[],
@@ -284,6 +279,8 @@ data (){
         ModifyId:'',
 
         searchArea:false, //根据权限来看是否显示
+
+        nodata:false,
     }
 },
 filters:{
@@ -326,17 +323,9 @@ methods:{
         console.log(err);
       });
     },
-    initData() {
-        //时间
-        $(".form_datetime").datetimepicker({
-            format: "yyyy-mm-dd hh:ii",
-            autoclose: true,
-            todayBtn: true,
-            language:'zh-CN',
-            pickerPosition: "bottom",
-            initialDate:new Date()
-        });
 
+
+    initData() {
         //商品
         let that = this;
         api.queryCategory().then(function(res){
@@ -370,34 +359,53 @@ methods:{
             console.log(err);
         });
 
-        this.getHandleSuggestion();  //初始化
+        //this.getHandleSuggestion();  //初始化
+    },
 
-         //时间
-        $("#form_datetime").datetimepicker({
-            format: "yyyy-mm-dd hh:ii",
-            autoclose: true,
-            todayBtn: true,
-            language:'zh-CN',
-            pickerPosition: "bottom"
-        });
+     //查询直播间列表
+    queryLive(){
+        let _this = this;
+        let param = {
+            begidx:0,
+            counts:100
+        }
+        api.getLive(param).then(function(res){
+            //console.log(res.data.Data);
+            if(res.data.Code ==3){
+                if(res.data.Data.length == 0){
+                    console.log('没有直播房间!');
+                }else{
+                    //_this.liveList = res.data.Data;
 
-        $("#modify_form_datetime").datetimepicker({
-            format: "yyyy-mm-dd hh:ii",
-            autoclose: true,
-            todayBtn: true,
-            language:'zh-CN',
-            pickerPosition: "bottom"
+                    let templateObj = res.data.Data;
+
+                    let len = templateObj.length;
+
+                    for(let i=0; i<len; i++){
+                        _this.clanItems.push({type:templateObj[i].type,value:templateObj[i].title,platform:templateObj[i].title,flag:false});
+                    }
+
+                    _this.clanItems[0].flag = true;
+
+                    _this.getHandleSuggestion(_this.clanItems[0].value);
+                }
+            }else{
+                alert(res.data.Msg);
+            }
+        }).catch(function(err){
+            console.log(err);
         });
     },
 
     //搜索
-    getHandleSuggestion() {
+    getHandleSuggestion(Place) {
         let param = {
             sid:this.Sid,
-            bdt: this.dateToUnix($("#start_time").val()),
-            edt: this.dateToUnix($("#end_time").val()),
-            category_id: this.prize,
-            analysts: this.teacher,
+            bdt:'',
+            edt:'',
+            category: '',
+            analysts:'',
+            place:Place,
             begidx: 0,
             counts: 100,
         };
@@ -407,22 +415,15 @@ methods:{
         api.queryHandleSuggestion(param).then(function(res) {
             if (res.data.Code == 3) {
                 if (res.data.Data == null) {
-                    alert('暂无数据')
+                    that.nodata = true;
                 }else{
+                    that.nodata = false;
                     let templateObj = res.data.Data;
-                    //console.log(templateObj);
                     //清空初始化中的数据
-                    that.ClanInfos=[];
                     that.RoomInfos=[];
                     for(let i =0; i<templateObj.length;i++){
-                        if(templateObj[i].place == '战队直播'){
-                            that.ClanInfos.push(templateObj[i]);
-                        }
-                        else{
-                            that.RoomInfos.push(templateObj[i]);
-                        }
+                         that.RoomInfos.push(templateObj[i]);
                     }
-
                     that.templateInfos = that.transName(that.RoomInfos);
                 }
             }else{
@@ -442,17 +443,12 @@ methods:{
 
     //tab标签切换
     changeFlag(item){
-        for(let i=0; i<2;i++){
+        for(let i=0; i<this.clanItems.length;i++){
             this.clanItems[i].flag = false;
         }
-        item.flag= true;
+       item.flag= true;
 
-        if(item.platform =="战队直播"){
-            this.templateInfos = this.transName(this.ClanInfos);
-
-        }else{
-            this.templateInfos = this.transName(this.RoomInfos);
-        }
+       this.getHandleSuggestion(item.value);
     },
 
     transName(item){
@@ -508,6 +504,7 @@ methods:{
 
     //修改
     showModify(item){
+        console.log(item);
         this.Modifyhandlesuggestion = !this.Modifyhandlesuggestion;
         this.modifyhandlesuggestion.place = item.place;
         this.modifyhandlesuggestion.category_id= item.category;
