@@ -384,7 +384,7 @@ export default {
     queryNews(){
       let params={
           begidx:0,
-          counts:4,
+          counts:10,
           type:0,
         };
 
@@ -394,10 +394,10 @@ export default {
               let TotalNum;  //总数据条数
               TotalNum=res.data.Data.Total;
               let templateObj = res.data.Data.Detail;
-              console.log(templateObj);
+              //console.log(templateObj);
               //    分页
-               if(TotalNum>4) {
-                  for(let i=0;i<4;i++){
+               if(TotalNum>10) {
+                  for(let i=0;i<10;i++){
                     for(let j =0;j<that.newsType.length;j++){
                         if(templateObj[i].type == that.newsType[j].type){
                             templateObj[i].typename = that.newsType[j].text;
@@ -407,26 +407,26 @@ export default {
                    that.newsLists= templateObj;
                    var options = {
                        currentPage: 1,
-                       totalPages: parseInt(TotalNum /4) + 1,
+                       totalPages: parseInt(TotalNum /10) + 1,
                        onPageClicked: function (e, originalEvent, type, page) {
                            switch (type) {
                                case 'first':
                                    that.economicsListContent(0);
                                    break;
                                case 'page':
-                                   that.BegIdx = (page - 1) * 4;
+                                   that.BegIdx = (page - 1) * 10;
                                    that.economicsListContent(that.BegIdx,0);
                                    break;
                                case 'next':
-                                   that.BegIdx  += 4;
+                                   that.BegIdx  += 10;
                                    that.economicsListContent(that.BegIdx,0);
                                    break;
                                case 'last':
-                                   that.BegIdx = TotalNum - TotalNum % 4;
+                                   that.BegIdx = TotalNum - TotalNum % 10;
                                    that.economicsListContent(that.BegIdx,0);
                                    break;
                                case 'prev':
-                                   that.BegIdx -= 4;
+                                   that.BegIdx -= 10;
                                    that.economicsListContent(that.BegIdx,0);
                                    break;
                            }
@@ -452,7 +452,7 @@ export default {
     economicsListContent(BegIdx,type){
       let params={
           begidx:BegIdx,
-          counts:4,
+          counts:10,
           type:type,
       };
 
@@ -505,7 +505,7 @@ export default {
     Search(){
       let params={
         begidx:0,
-        counts:6,
+        counts:10,
         type:this.searchId,
       };
 
@@ -516,8 +516,8 @@ export default {
               let TotalNum;  //总数据条数
               TotalNum=res.data.Data.Total;
               //    分页
-               if(TotalNum>6) {
-                  for(let i=0;i<6;i++){
+               if(TotalNum>10) {
+                  for(let i=0;i<10;i++){
                       for(let j =0;j<that.newsType.length;j++){
                           if(templateObj[i].type == that.newsType[j].type){
                               templateObj[i].typename = that.newsType[j].text;
@@ -527,26 +527,26 @@ export default {
                   that.newsLists= templateObj;
                    var options = {
                        currentPage: 1,
-                       totalPages: parseInt(TotalNum /6) + 1,
+                       totalPages: parseInt(TotalNum /10) + 1,
                        onPageClicked: function (e, originalEvent, type, page) {
                            switch (type) {
                                case 'first':
                                    that.economicsListContent(0);
                                    break;
                                case 'page':
-                                   that.BegIdx = (page - 1) * 6;
+                                   that.BegIdx = (page - 1) * 10;
                                    that.economicsListContent(that.BegIdx,that.searchId);
                                    break;
                                case 'next':
-                                   that.BegIdx  += 6;
+                                   that.BegIdx  += 10;
                                    that.economicsListContent(that.BegIdx,that.searchId);
                                    break;
                                case 'last':
-                                   that.BegIdx = TotalNum - TotalNum % 6;
+                                   that.BegIdx = TotalNum - TotalNum % 10;
                                    that.economicsListContent(that.BegIdx,that.searchId);
                                    break;
                                case 'prev':
-                                   that.BegIdx -= 6;
+                                   that.BegIdx -= 10;
                                    that.economicsListContent(that.BegIdx,that.searchId);
                                    break;
                            }
