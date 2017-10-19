@@ -212,10 +212,9 @@ export default {
                          }
                      };
                      $('#user_pagnation').bootstrapPaginator(options);
-                }else{
-                    let templateObj = res.data.Data.Detail;
-                    that.userlists= templateObj;
                 }
+                let templateObj = res.data.Data.Detail;
+                that.userlists= templateObj;
             }else{
                 alert(res.data.Msg);
             }
