@@ -500,5 +500,33 @@ class API {
         config.data = param
         return axios.post('/yyt/visitor/query', {}, config)
     }
+
+    //推广链接管理
+    promoteLinksAdd(param) {
+        config.data = param
+        return axios.post('/yyt/promoter/add', {}, config)
+    }
+
+    promoteLinksModify(param) {
+        config.data = param
+        return axios.post('/yyt/promoter/modify', {}, config)
+    }
+
+    promoteLinksQuery(param) {
+        config.data = param
+        return axios.post('/yyt/promoter/query', {}, config)
+    }
+
+    promoteLinksDel(param) {
+        config.data = param
+        return axios.post('/yyt/promoter/del', {}, config)
+    }
+
+    //按月统计转化数和点击数
+    promoteLinkStatic(param) {
+        config.data = param
+        return axios.post('/yyt/promoter/statistics', {}, config)
+    }
+
 }
 export default API;

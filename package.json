@@ -19,6 +19,7 @@
     "babel-polyfill": "^6.23.0",
     "bootstrap-daterangepicker": "^2.1.25",
     "bootstrap-table": "^1.11.2",
+    "clipboard": "^1.7.1",
     "echarts": "^3.6.2",
     "eventsource-polyfill": "^0.9.6",
     "jsonp": "^0.2.1",

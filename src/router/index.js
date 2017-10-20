@@ -93,6 +93,12 @@ import userManage from '@/pages/userManage'
 // 权限分配
 import authorization from '@/pages/authorization'
 
+// 推广链接
+import promoteLinks from '@/pages/promote_links'
+
+
+import promoteLinksDetail from '@/pages/promote_links_detail'
+
 Vue.use(Router)
 
 //所有权限通用路由表
@@ -165,6 +171,18 @@ export default new Router({
             },
             icon: 'fa fa-handshake-o fa-2x',
             noDropdown: true,
+        }, { //游客信息管理
+            path: '/promotelinks',
+            component: promoteLinks,
+            name: '推广链接管理',
+            meta: {
+                role: ['superman', 'admin']
+            },
+            icon: 'fa fa-minus fa-2x',
+            noDropdown: true,
+        }, {
+            path: '/promotelinks/details',
+            component: promoteLinksDetail,
         }, { //权限分配
             path: '/authorization',
             component: authorization,
@@ -332,6 +350,18 @@ export const asyncRouterMap = [{ //个人中心
     },
     icon: 'fa fa-handshake-o fa-2x',
     noDropdown: true,
+}, { //游客信息管理
+    path: '/promotelinks',
+    component: promoteLinks,
+    name: '推广链接管理',
+    meta: {
+        role: ['superman', 'admin']
+    },
+    icon: 'fa fa-minus fa-2x',
+    noDropdown: true,
+}, {
+    path: '/promotelinks/details',
+    component: promoteLinksDetail,
 }, { //权限分配
     path: '/authorization',
     component: authorization,
