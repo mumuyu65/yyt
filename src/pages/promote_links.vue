@@ -42,8 +42,8 @@
                                 <button class="btn btn-primary" v-bind:class="'options_'+item.id"  data-clipboard-action="cut" @click="copylinks('options_'+item.id,item)" >复制链接</button>
                             </td>
                             <td>{{item.clicks}}</td>
-                            <td><router-link to="/promotelinks/details">{{item.month_clicks}}</router-link></td>
-                            <td><router-link to="/promotelinks/details">{{item.month_users}}</router-link></td>
+                            <td><router-link v-bind:to="'/promotelinks/details?account='+item.account">{{item.month_clicks}}</router-link></td>
+                            <td><router-link v-bind:to="'/promotelinks/details?account='+item.account">{{item.month_users}}</router-link></td>
                             <td>
                               <button class="btn btn-primary" @click="modifyPromoteLinks(item)">修改</button>
                               <button class="btn btn-danger" @click="delPromotelinks(item,index)">删除</button>

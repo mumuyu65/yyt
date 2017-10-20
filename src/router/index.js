@@ -359,9 +359,6 @@ export const asyncRouterMap = [{ //个人中心
     },
     icon: 'fa fa-minus fa-2x',
     noDropdown: true,
-}, {
-    path: '/promotelinks/details',
-    component: promoteLinksDetail,
 }, { //权限分配
     path: '/authorization',
     component: authorization,
