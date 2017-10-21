@@ -196,13 +196,13 @@ filters:{
     stateFilter:function(state){
         switch(state){
             case 1: return '未直播'; break;
-            case 0: return '直播中'; break;
+            case 2: return '直播中'; break;
         }
     },
     statesFilter:function(state){
         switch(state){
-            case 0: return '开启'; break;
-            case 1: return '停止'; break;
+            case 1: return '开启'; break;
+            case 2: return '停止'; break;
         }
     },
     unixTodate(tm) {
@@ -566,7 +566,7 @@ methods: {
         let params = {
             sid:this.sid,
             id:id,
-            state:2
+            state:state
         }
 
         api.changeLive(params).then(function(res){
