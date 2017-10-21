@@ -23,6 +23,7 @@
                                     <th>直播地址</th>
                                     <th>直播简介</th>
                                     <th>观看人数</th>
+                                    <th>聊天状态</th>
                                     <th>操作建议</th>
                                     <th>操作</th>
                                 </tr>
@@ -34,9 +35,7 @@
                                     <td>{{item.liveurl}}</td>
                                     <td>{{item.info}}</td>
                                     <td>{{item.user_count.length}}</td>
-                                    <!--
                                     <td><div class="btn btn-warning" @click="changeState(item.state,item.id)">{{item.state | statesFilter}}</div></td>
-                                    -->
                                     <td><router-link :to="{ path: '/handlesuggestion' }" class="btn btn-info">查看</router-link></td>
                                     <td>
                                         <div class="btn btn-success" @click="showLiving(item)">进入</div>
@@ -558,7 +557,7 @@ methods: {
 
     // 管理直播间状态
     changeState(state,id){
-        if(Number(state) == 1){
+        if(parseInt(state) == 1){
             var state = 2;
         }else{
             var state = 1;
@@ -567,7 +566,7 @@ methods: {
         let params = {
             sid:this.sid,
             id:id,
-            state:state
+            state:2
         }
 
         api.changeLive(params).then(function(res){

@@ -3,7 +3,19 @@
         <div id="page-inner">
             <ul class="list-inline">
                 <li><h3>用户管理</h3></li>
+                <li class="pull-right">{{DateShow}}</li>
             </ul>
+            <hr/>
+            <!-- 图表展示用户的最近行为   -->
+            <div id="main" style="height:300px"></div>
+
+            <ul class="list-unstyled" style="position:absolute; left:300px; top:230px; z-index:9999;">
+                <li v-for="item in dateSelects" style="margin-bottom:10px;" >
+                  <button  class="btn " @click="changeStatics(item)" v-bind:class="{'btn-danger':item.active}">{{item.value}}</button>
+                </li>
+            </ul>
+
+            <hr/>
             <ol class="list-inline" style="padding:15px 0;">
                 <li style="vertical-align:bottom;">注册时间：</li>
                 <li>
@@ -28,8 +40,6 @@
                          </div></li>
                 <li style="vertical-align:bottom; margin-bottom:-4px;"><button class="btn btn-primary" @click="searchLogin()">搜索</button></li>
             </ol>
-            <hr/>
-            <div id="user_pagnation"></div>
             <table id="userTable" class="text-center" width="100%" border="1" >
                 <thead>
                     <th class="text-center">序列号</th>
@@ -62,6 +72,7 @@
                     </tr>
                 </tbody>
             </table>
+             <div id="user_pagnation" style="margin-top:10px;"></div>
             <div v-if="is_show">
                 <div class="order-box">
                     <select v-model="selected" style="width:200px">
@@ -92,13 +103,18 @@ import moment from 'moment'
 
 import '../../static/bootstrap-daterangepicker/daterangepicker.js'
 
+import Echarts from '../../static/echarts/echarts.min.js';
+
 export default {
   name: 'userManage',
   mounted (){
     this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
     this.initData();
     //this.checkLogin();
+
     this.initTimer();
+
+    this.changeStatics(this.dateSelects[2]);
   },
   data (){
     return {
@@ -124,6 +140,11 @@ export default {
 
         loginStart:'',
         loginEnd:'',
+
+        dateSelects:[
+          {id:1,type:0,value:'年',active:false},{id:2,type:1,value:'月',active:false},{id:3,type:2,value:'日',active:false}],
+
+        DateShow:'',
     }
   },
   filters:{
@@ -171,41 +192,42 @@ export default {
         console.log(err);
       });
     },
+
     initData(){
         let that = this;
         let params={
             sid:that.Sid,
             begidx:0,
-            counts:10,
+            counts:5,
             flag:0,
         };
         api.queryUser(params).then(function(res){
             if(res.data.Code ==3){
                 let TotalNum = res.data.Data.Total;
                  //    分页
-                if(TotalNum>10) {
+                if(TotalNum>5) {
                      var options = {
                          currentPage: 1,
-                         totalPages: parseInt(TotalNum /10) + 1,
+                         totalPages: parseInt(TotalNum /5) + 1,
                          onPageClicked: function (e, originalEvent, type, page) {
                              switch (type) {
                                  case 'first':
                                      that.userListQuery(0);
                                      break;
                                  case 'page':
-                                     that.BegIdx = (page - 1) * 10;
+                                     that.BegIdx = (page - 1) * 5;
                                      that.userListQuery(that.BegIdx);
                                      break;
                                  case 'next':
-                                     that.BegIdx  += 10;
+                                     that.BegIdx  += 5;
                                      that.userListQuery(that.BegIdx);
                                      break;
                                  case 'last':
-                                     that.BegIdx = TotalNum - TotalNum % 10;
+                                     that.BegIdx = TotalNum - TotalNum % 5;
                                      that.userListQuery(that.BegIdx);
                                      break;
                                  case 'prev':
-                                     that.BegIdx -= 10;
+                                     that.BegIdx -= 5;
                                      that.userListQuery(that.BegIdx);
                                      break;
                              }
@@ -283,7 +305,7 @@ export default {
         let params={
             sid:that.Sid,
             begidx:idx,
-            counts:10,
+            counts:5,
             flag:0,
         };
         api.queryUser(params).then(function(res){
@@ -488,6 +510,158 @@ export default {
         }).catch(function(err){
             console.log(err);
         });
+    },
+
+    //游客和注册数统计
+    Statics(Period,Year,Month,Day){
+       let params={
+          sid:this.Sid,
+          period:Period,
+          year:Year,
+          month:Month,
+          day:Day
+       };
+
+       let that = this;
+
+       api.registerStatic(params).then(function(res){
+          if(res.data.Code ==3){
+            that.showEcharts(Period,res.data.Data);
+          }
+       }).catch(function(err){
+          console.log(err);
+       });
+    },
+
+
+    showEcharts(Period,arr){
+            let arr_len = arr.length;
+
+            let visitors=[],users=[],showDate=[],Subtext='';
+
+            let len = arr.length;
+
+            for(let i=0; i<len; i++){
+                visitors.push(arr[i].Visitors);
+
+                users.push(arr[i].RegUsers);
+
+                if(Period == 2){
+                  showDate.push(this.DayTrans(arr[i].DatePd));
+                }else if(Period == 1){
+                  showDate.push(this.monthTrans(arr[i].DatePd));
+                }else{
+                  showDate.push(this.yearTrans(arr[i].DatePd));
+                }
+              }
+
+            let  option = {
+                  title : {
+                      text: '游客和注册用户数量统计',
+                  },
+                  tooltip : {
+                      trigger: 'axis'
+                  },
+                  legend: {
+                      data:['游客','注册用户']
+                  },
+                  toolbox: {
+                      show : true,
+                      feature : {
+                          mark : {show: true},
+                          dataView : {show: true, readOnly: false},
+                          magicType : {show: true, type: ['line', 'bar']},
+                          restore : {show: true},
+                          saveAsImage : {show: true}
+                      }
+                  },
+                  calculable : true,
+                  xAxis : [
+                      {
+                          type : 'category',
+                          data : showDate,
+                      }
+                  ],
+                  yAxis : [
+                      {
+                          type : 'value'
+                      }
+                  ],
+                  series : [
+                      {
+                          name:'游客',
+                          type:'bar',
+                          data:visitors,
+                          markPoint : {
+                              data : [
+                                  {type : 'max', name: '最大值'},
+                                  {type : 'min', name: '最小值'}
+                              ]
+                          },
+                          markLine : {
+                              data : [
+                                  {type : 'average', name: '平均值'}
+                              ]
+                          }
+                      },
+                      {
+                          name:'注册用户',
+                          type:'bar',
+                          data:users,
+                      }
+                  ]
+              };
+
+            let myChart = Echarts.init(document.getElementById('main'));
+
+            // 为echarts对象加载数据
+            myChart.setOption(option);
+        },
+
+    DayTrans(tm){
+        let time = new Date(tm*1000);
+        let h = (time.getHours())<10?('0'+time.getHours()):time.getHours();
+        let min = (time.getMinutes())<10?('0'+time.getMinutes()):time.getMinutes();
+        return h+':'+min+':00时';
+    },
+
+    monthTrans(tm){
+        let time = new Date(tm*1000);
+        let m = (time.getMonth()+1)<10?('0'+(time.getMonth()+1)):(time.getMonth()+1);
+        let d = (time.getDate())<10?('0'+time.getDate()):time.getDate();
+        return d+'日';
+    },
+
+    yearTrans(tm){
+      let time = new Date(tm*1000);
+      let m = (time.getMonth()+1)<10?('0'+(time.getMonth()+1)):(time.getMonth()+1);
+      return m+'月';
+    },
+
+    changeStatics(item){
+      for(let i=0; i<3;i++){
+        this.dateSelects[i].active = false;
+      }
+      item.active = true;
+      if(item.type ==0){
+        let year = new Date().getFullYear();
+        this.Statics(item.type,year,'','');
+        this.DateShow = year+'年';
+      }
+      else if(item.type ==1){
+        let year = new Date().getFullYear();
+        let time = new Date();
+        let m = (time.getMonth()+1)<10?('0'+(time.getMonth()+1)):(time.getMonth()+1);
+        this.Statics(item.type,year,m,'');
+        this.DateShow = year+'年'+m+'月';
+      }else{
+        let year = new Date().getFullYear();
+        let time = new Date();
+        let m = (time.getMonth()+1)<10?('0'+(time.getMonth()+1)):(time.getMonth()+1);
+        let d = (time.getDate())<10?('0'+time.getDate()):time.getDate();
+        this.Statics(item.type,year,m,d);
+        this.DateShow = year+'年'+m+'月'+d+'日';
+      }
     },
   },
 }

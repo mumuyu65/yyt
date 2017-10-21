@@ -528,5 +528,20 @@ class API {
         return axios.post('/yyt/promoter/statistics', {}, config)
     }
 
+    //游客和注册数统计
+    //sid,period(0-年,1-月,2-日),year,month,day
+    registerStatic(param) {
+        config.data = param
+        return axios.post('/yyt/regrate/statistics', {}, config)
+    }
+
+
+    //网站模块访问统计
+    //sid,period(0-年,1-月,2-日),year,month,day
+    webModuleStatic(param) {
+        config.data = param
+        return axios.post('/yyt/features/statistics', {}, config)
+    }
+
 }
 export default API;
