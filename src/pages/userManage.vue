@@ -80,7 +80,7 @@
                     </tr>
                 </tbody>
             </table>
-             <div id="user_pagnation" style="margin-top:10px;"></div>
+            <div id="user_pagnation" style="margin-top:10px;"></div>
             <div v-if="is_show">
                 <div class="order-box">
                     <select v-model="selected" style="width:200px">

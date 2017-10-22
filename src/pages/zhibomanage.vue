@@ -367,7 +367,7 @@ methods: {
     //长连接
     ConnSvr(){
         let that = this;
-        let ws = new WebSocket("ws://61.147.124.130:10015/sub");
+        let ws = new WebSocket("ws://61.147.124.130:10025/sub");
         this.ws = ws;
         ws.onopen = function(){
             // 发送认证消息
@@ -413,6 +413,7 @@ methods: {
                         break;
                 case 46:
                         var data_46 = JSON.parse(JSON.stringify(data.body));
+                        console.log(data_46);
                         let templeData = data_46;
                         templeData.msginfo.message = that.analysis(templeData.msginfo.message);
                         that.comment_list.unshift(templeData);
