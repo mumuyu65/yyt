@@ -90,6 +90,12 @@ import chatImg from '@/pages/chatImg'
 // 用户管理
 import userManage from '@/pages/userManage'
 
+//用户其他行为分析统计
+
+import WatchStatic from '@/pages/watchStatic'
+
+import BehaviorStatic from '@/pages/behaviorStatic'
+
 // 权限分配
 import authorization from '@/pages/authorization'
 
@@ -162,6 +168,12 @@ export default new Router({
             },
             icon: 'fa fa-vcard fa-2x',
             noDropdown: true,
+        }, {
+            path: '/userManage/watchStatic',
+            component: WatchStatic,
+        }, {
+            path: '/userManage/behaviorStatic',
+            component: BehaviorStatic,
         }, { //游客信息管理
             path: '/visitorinfo',
             component: VisitorInfo,
@@ -171,7 +183,7 @@ export default new Router({
             },
             icon: 'fa fa-handshake-o fa-2x',
             noDropdown: true,
-        }, { //游客信息管理
+        }, { //推广链接管理
             path: '/promotelinks',
             component: promoteLinks,
             name: '推广链接管理',
@@ -341,6 +353,12 @@ export const asyncRouterMap = [{ //个人中心
     },
     icon: 'fa fa-vcard fa-2x',
     noDropdown: true,
+}, {
+    path: '/userManage/watchStatic',
+    component: WatchStatic,
+}, {
+    path: '/userManage/behaviorStatic',
+    component: BehaviorStatic,
 }, { //游客信息管理
     path: '/visitorinfo',
     component: VisitorInfo,
@@ -350,7 +368,7 @@ export const asyncRouterMap = [{ //个人中心
     },
     icon: 'fa fa-handshake-o fa-2x',
     noDropdown: true,
-}, { //游客信息管理
+}, { //推广链接管理
     path: '/promotelinks',
     component: promoteLinks,
     name: '推广链接管理',

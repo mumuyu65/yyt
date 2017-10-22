@@ -15,6 +15,13 @@
                 </li>
             </ul>
 
+            <!--  用户其他行为  -->
+            <ul class="list-unstyled" style="position:absolute; right:90px; top:200px; z-index:9999;">
+              <li><h4>其他分析</h4></li>
+              <li style="margin-bottom:10px;"><router-link class="btn btn-primary" to="/userManage/static">观看时间</router-link></li>
+              <li><router-link class="btn btn-danger" to="/userManage/static">用户行为</router-link></li>
+            </ul>
+
             <hr/>
             <ol class="list-inline" style="padding:15px 0;">
                 <li style="vertical-align:bottom;">注册时间：</li>

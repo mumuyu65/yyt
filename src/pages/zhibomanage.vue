@@ -367,7 +367,7 @@ methods: {
     //长连接
     ConnSvr(){
         let that = this;
-        let ws = new WebSocket("ws://61.147.124.143:10015/sub");
+        let ws = new WebSocket("ws://61.147.124.130:10015/sub");
         this.ws = ws;
         ws.onopen = function(){
             // 发送认证消息
