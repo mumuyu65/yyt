@@ -353,12 +353,6 @@ export const asyncRouterMap = [{ //个人中心
     },
     icon: 'fa fa-vcard fa-2x',
     noDropdown: true,
-}, {
-    path: '/userManage/watchStatic',
-    component: WatchStatic,
-}, {
-    path: '/userManage/behaviorStatic',
-    component: BehaviorStatic,
 }, { //游客信息管理
     path: '/visitorinfo',
     component: VisitorInfo,
