@@ -5,11 +5,20 @@
                 <li><h3>用户管理/用户行为</h3></li>
             </ul>
             <hr/>
+            <ul class="list-inline" style="margin-bottom:50px;">
+              <li>输入日期:</li>
+              <li><input type="number" class="form-control" v-model="Year"/></li>
+              <li>年</li>
+              <li><input type="number" class="form-control" v-model="Month"/></li>
+              <li>月</li>
+              <li><input type="number" class="form-control" v-model="uDate"/></li>
+              <li>日</li>
+            </ul>
             <div id="main" style="height:500px;"></div>
 
             <h2 class="text-center">{{DateShow}}</h2>
             <!--  用户其他行为  -->
-            <div class="list-unstyled" style="position:absolute; left:300px; top:230px; z-index:9999;">
+            <div class="list-unstyled" style="position:absolute; left:300px; top:330px; z-index:9999;">
                 <ul class="list-unstyled" style="display:inline-block;">
                     <li v-for="item in dateSelects" style="margin-bottom:10px;" >
                       <button  class="btn " @click="changeStatics(item)" v-bind:class="{'btn-danger':item.active}">{{item.value}}</button>
@@ -38,6 +47,11 @@ export default {
         Sid:'',
         dateSelects:[
           {id:1,type:0,value:'年',active:false},{id:2,type:1,value:'月',active:false},{id:3,type:2,value:'日',active:false}],
+        Year:'',
+        Month:'',
+        uDate:'',
+        DateShow:'',
+        Period:2,
     }
   },
   mounted (){
@@ -46,6 +60,11 @@ export default {
     //this.checkLogin();
 
     this.changeStatics(this.dateSelects[2]);
+  },
+  watch:{
+    'Year':searchDate,
+    'Month':searchDate,
+    'uDate':searchDate
   },
   methods:{
     checkLogin(){
@@ -79,7 +98,6 @@ export default {
        let that = this;
 
        api.webModuleStatic(params).then(function(res){
-          console.log(res.data);
           if(res.data.Code ==3){
             that.showEcharts(Period,res.data.Data);
           }else if(res.data.Code ==6){
@@ -226,6 +244,13 @@ export default {
         let year = new Date().getFullYear();
         this.Statics(item.type,year,'','');
         this.DateShow = year+'年';
+
+        this.Year = year;
+
+        this.Month = '';
+
+        this.uDate = '';
+
       }
       else if(item.type ==1){
         let year = new Date().getFullYear();
@@ -233,6 +258,13 @@ export default {
         let m = (time.getMonth()+1)<10?('0'+(time.getMonth()+1)):(time.getMonth()+1);
         this.Statics(item.type,year,m,'');
         this.DateShow = year+'年'+m+'月';
+
+        this.Year = year;
+
+        this.Month = m;
+
+        this.uDate = '';
+
       }else{
         let year = new Date().getFullYear();
         let time = new Date();
@@ -240,6 +272,12 @@ export default {
         let d = (time.getDate())<10?('0'+time.getDate()):time.getDate();
         this.Statics(item.type,year,m,d);
         this.DateShow = year+'年'+m+'月'+d+'日';
+
+        this.Year = year;
+
+        this.Month = m;
+
+        this.uDate = d;
       }
     },
   },
