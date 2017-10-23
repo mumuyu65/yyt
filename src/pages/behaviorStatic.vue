@@ -47,9 +47,9 @@ export default {
         Sid:'',
         dateSelects:[
           {id:1,type:0,value:'年',active:false},{id:2,type:1,value:'月',active:false},{id:3,type:2,value:'日',active:false}],
-        Year:'',
-        Month:'',
-        uDate:'',
+        Year:new Date().getFullYear(),
+        Month:(new Date().getMonth()+1)<10?('0'+(new Date().getMonth()+1)):(new Date().getMonth()+1),
+        uDate:(new Date().getDate())<10?('0'+new Date().getDate()):new Date().getDate(),
         DateShow:'',
         Period:2,
     }
@@ -62,9 +62,9 @@ export default {
     this.changeStatics(this.dateSelects[2]);
   },
   watch:{
-    'Year':searchDate,
-    'Month':searchDate,
-    'uDate':searchDate
+    Year:'searchYear',
+    Month:'searchMonth',
+    uDate:'searchDate'
   },
   methods:{
     checkLogin(){
@@ -86,20 +86,21 @@ export default {
 
 
     //网站模块访问统计
-    Statics(Period,Year,Month,Day){
+    Statics(){
        let params={
           sid:this.Sid,
-          period:Period,
-          year:Year,
-          month:Month,
-          day:Day
+          period:this.Period,
+          year:this.Year,
+          month:this.Month,
+          day:this.uDate
        };
 
        let that = this;
 
        api.webModuleStatic(params).then(function(res){
           if(res.data.Code ==3){
-            that.showEcharts(Period,res.data.Data);
+            //console.log(res.data.Data);
+            that.showEcharts(res.data.Data);
           }else if(res.data.Code ==6){
             alert(res.data.Msg);
           }
@@ -108,12 +109,12 @@ export default {
        });
     },
 
-
-
-    showEcharts(Period,arr){
+    showEcharts(arr){
       let Calendars=[],CourseWare=[],newsCore=[],newStock=[],schedules=[],Tideas=[],showDate=[];
 
       let len = arr.length;
+
+      //console.log(this.Period);
 
       for(let i=0; i<len; i++){
         Calendars.push(arr[i].Calendar);
@@ -128,9 +129,9 @@ export default {
 
         Tideas.push(arr[i].Tidea);
 
-        if(Period == 2){
+        if(this.Period == 2){
           showDate.push(this.DayTrans(arr[i].DatePd));
-        }else if(Period == 1){
+        }else if(this.Period == 1){
           showDate.push(this.monthTrans(arr[i].DatePd));
         }else{
           showDate.push(this.yearTrans(arr[i].DatePd));
@@ -240,45 +241,37 @@ export default {
         this.dateSelects[i].active = false;
       }
       item.active = true;
+
       if(item.type ==0){
-        let year = new Date().getFullYear();
-        this.Statics(item.type,year,'','');
-        this.DateShow = year+'年';
+         this.Period = item.type;
 
-        this.Year = year;
-
-        this.Month = '';
-
-        this.uDate = '';
-
+         this.Statics();
       }
       else if(item.type ==1){
-        let year = new Date().getFullYear();
-        let time = new Date();
-        let m = (time.getMonth()+1)<10?('0'+(time.getMonth()+1)):(time.getMonth()+1);
-        this.Statics(item.type,year,m,'');
-        this.DateShow = year+'年'+m+'月';
+         this.Period = item.type;
 
-        this.Year = year;
-
-        this.Month = m;
-
-        this.uDate = '';
-
+         this.Statics();
       }else{
-        let year = new Date().getFullYear();
-        let time = new Date();
-        let m = (time.getMonth()+1)<10?('0'+(time.getMonth()+1)):(time.getMonth()+1);
-        let d = (time.getDate())<10?('0'+time.getDate()):time.getDate();
-        this.Statics(item.type,year,m,d);
-        this.DateShow = year+'年'+m+'月'+d+'日';
+        this.Period = item.type;
 
-        this.Year = year;
-
-        this.Month = m;
-
-        this.uDate = d;
+        this.Statics();
       }
+    },
+
+    searchYear(curVal,oldVal){
+        this.Period = 0;
+
+        this.changeStatics(this.dateSelects[0]);
+    },
+
+    searchMonth(curVal,oldVal){
+        this.Period = 1;
+        this.changeStatics(this.dateSelects[1]);
+    },
+
+    searchDate(curVal,oldVal){
+        this.Period = 2;
+        this.changeStatics(this.dateSelects[2]);
     },
   },
 }
