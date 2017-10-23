@@ -2,26 +2,19 @@
     <div id="page-wrapper" >
         <div id="page-inner">
           <ul class="list-inline">
-              <li><h3>战队介绍</h3></li>
-          </ul>
-          <hr/>
-          <div style="margin:0 auto; padding:20px;">
-             <div class="row">
-                    <div class="col-sm-3 col-md-3 col-xs-6">
-                       <span class="required">*</span>战队介绍:
-                    </div>
-                    <div class="col-sm-9 col-md-9 col-xs-6">
-                         <ul class="list-inline">
-                          <li><img v-bind:src="clan.img_url" id="file" class="profile"/></li>
-                          <li style="position:relative;">
-                            <input type="file" @change="onFileChange" ref="upload" value="上传图片" style="position:absolute; opacity:0;"/>
-                            <button style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
-                                上传图片
-                            </button>
-                          </li>
-                      </ul>
-                    </div>
-                </div>
+                <li><h3>用户管理/用户行为</h3></li>
+            </ul>
+            <hr/>
+            <div id="main" style="height:500px;"></div>
+
+            <h2 class="text-center">{{DateShow}}</h2>
+            <!--  用户其他行为  -->
+            <div class="list-unstyled" style="position:absolute; left:300px; top:230px; z-index:9999;">
+                <ul class="list-unstyled" style="display:inline-block;">
+                    <li v-for="item in dateSelects" style="margin-bottom:10px;" >
+                      <button  class="btn " @click="changeStatics(item)" v-bind:class="{'btn-danger':item.active}">{{item.value}}</button>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
@@ -36,18 +29,23 @@ import axios from 'axios'
 
 import env from '@/config/env'
 
+import Echarts from '../../static/echarts/echarts.min.js';
+
 export default {
-  name: 'Clan',
+  name: 'behaviorStatic',
   data (){
     return {
         Sid:'',
-        clan:{},
+        dateSelects:[
+          {id:1,type:0,value:'年',active:false},{id:2,type:1,value:'月',active:false},{id:3,type:2,value:'日',active:false}],
     }
   },
   mounted (){
     this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
-    this.initData();
+
     //this.checkLogin();
+
+    this.changeStatics(this.dateSelects[2]);
   },
   methods:{
     checkLogin(){
@@ -66,68 +64,188 @@ export default {
         console.log(err);
       });
     },
-    initData(){
-      let that = this;
-      api.ClanQuery().then(function(res){
-        if(res.data.Code ==3){
-             let templateObj= res.data.Data;
-             that.clan= templateObj[0];
-        }
-      }).catch(function(err){
+
+
+    //网站模块访问统计
+    Statics(Period,Year,Month,Day){
+       let params={
+          sid:this.Sid,
+          period:Period,
+          year:Year,
+          month:Month,
+          day:Day
+       };
+
+       let that = this;
+
+       api.webModuleStatic(params).then(function(res){
+          console.log(res.data);
+          if(res.data.Code ==3){
+            that.showEcharts(Period,res.data.Data);
+          }else if(res.data.Code ==6){
+            alert(res.data.Msg);
+          }
+       }).catch(function(err){
           console.log(err);
-      });
+       });
     },
 
-    onFileChange(e) {
-          var files = e.target.files || e.dataTransfer.files;
-          if (!files.length)
-           return;
-           this.createImage(files[0]);
-     },
 
-     createImage(file) {
-          var image = new Image();
-          var reader = new FileReader();
-          var that = this;
 
-          reader.onload = (e) => {
-            that.clan.img_url = e.target.result;
-            //预览
-            $("#file").attr("src",that.clan.img_url);
+    showEcharts(Period,arr){
+      let Calendars=[],CourseWare=[],newsCore=[],newStock=[],schedules=[],Tideas=[],showDate=[];
 
-            let input = that.$refs.upload;
-            let data = new FormData();
-            data.append('img', input.files[0]);
-            data.append('sid',that.Sid);
+      let len = arr.length;
 
-            axios.post(env.baseUrl+'/cycj/clan/update', data, {
-                headers: {
-                      'Content-Type': 'application/x-www-form-urlencoded'
+      for(let i=0; i<len; i++){
+        Calendars.push(arr[i].Calendar);
+
+        CourseWare.push(arr[i].Courware);
+
+        newsCore.push(arr[i].News_Core);
+
+        newStock.push(arr[i].News_Stock);
+
+        schedules.push(arr[i].Schedule);
+
+        Tideas.push(arr[i].Tidea);
+
+        if(Period == 2){
+          showDate.push(this.DayTrans(arr[i].DatePd));
+        }else if(Period == 1){
+          showDate.push(this.monthTrans(arr[i].DatePd));
+        }else{
+          showDate.push(this.yearTrans(arr[i].DatePd));
+        }
+      }
+
+
+      let option = {
+            tooltip : {
+                trigger: 'axis'
+            },
+            legend: {
+                data:['课程安排','讲师观点','核心内参','财经日历','学习课件','股市收评']
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                    restore : {show: true},
+                    saveAsImage : {show: true}
                 }
-            })
-            .then(function (res) {
-              alert(res.data.Msg);
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
-          };
-          reader.readAsDataURL(file);
+            },
+            calculable : true,
+            xAxis : [
+                {
+                    type : 'category',
+                    boundaryGap : false,
+                    data : showDate
+                }
+            ],
+            yAxis : [
+                {
+                    type : 'value'
+                }
+            ],
+            series : [
+                {
+                    name:'课程安排',
+                    type:'line',
+                    stack: '总量',
+                    data:CourseWare
+                },
+                {
+                    name:'讲师观点',
+                    type:'line',
+                    stack: '总量',
+                    data:Tideas
+                },
+                {
+                    name:'核心内参',
+                    type:'line',
+                    stack: '总量',
+                    data:newsCore
+                },
+                {
+                    name:'财经日历',
+                    type:'line',
+                    stack: '总量',
+                    data:Calendars
+                },
+                {
+                    name:'学习课件',
+                    type:'line',
+                    stack: '总量',
+                    data:CourseWare
+                },
+                {
+                    name:'股市收评',
+                    type:'line',
+                    stack: '总量',
+                    data:newStock
+                }
+            ]
+        };
+
+      let myChart = Echarts.init(document.getElementById('main'));
+
+      // 为echarts对象加载数据
+      myChart.setOption(option);
+    },
+
+
+    DayTrans(tm){
+        let time = new Date(tm*1000);
+        let h = (time.getHours())<10?('0'+time.getHours()):time.getHours();
+        let min = (time.getMinutes())<10?('0'+time.getMinutes()):time.getMinutes();
+        return h+':'+min+':00时';
+    },
+
+    monthTrans(tm){
+        let time = new Date(tm*1000);
+        let m = (time.getMonth()+1)<10?('0'+(time.getMonth()+1)):(time.getMonth()+1);
+        let d = (time.getDate())<10?('0'+time.getDate()):time.getDate();
+        return d+'日';
+    },
+
+    yearTrans(tm){
+      let time = new Date(tm*1000);
+      let m = (time.getMonth()+1)<10?('0'+(time.getMonth()+1)):(time.getMonth()+1);
+      return m+'月';
+    },
+
+    changeStatics(item){
+      for(let i=0; i<3;i++){
+        this.dateSelects[i].active = false;
+      }
+      item.active = true;
+      if(item.type ==0){
+        let year = new Date().getFullYear();
+        this.Statics(item.type,year,'','');
+        this.DateShow = year+'年';
+      }
+      else if(item.type ==1){
+        let year = new Date().getFullYear();
+        let time = new Date();
+        let m = (time.getMonth()+1)<10?('0'+(time.getMonth()+1)):(time.getMonth()+1);
+        this.Statics(item.type,year,m,'');
+        this.DateShow = year+'年'+m+'月';
+      }else{
+        let year = new Date().getFullYear();
+        let time = new Date();
+        let m = (time.getMonth()+1)<10?('0'+(time.getMonth()+1)):(time.getMonth()+1);
+        let d = (time.getDate())<10?('0'+time.getDate()):time.getDate();
+        this.Statics(item.type,year,m,d);
+        this.DateShow = year+'年'+m+'月'+d+'日';
+      }
     },
   },
 }
 </script>
 
 <style scoped>
-   #page-inner .row{
-        padding:20px;
-        background-color:#F3F3F3;
-        margin-bottom:10px;
-    }
-
-    .required{
-        color:#e60000;
-        margin-right:5px;
-    }
 
 </style>
