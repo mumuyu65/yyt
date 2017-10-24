@@ -17,10 +17,10 @@
                   </thead>
                   <tbody>
                     <tr v-for="(item, index) in activities">
-                        <td>{{item.id}}</td>
+                        <td>{{index +1}}</td>
                         <td><img v-bind:src="item.imgurl"  /></td>
                         <td><button class="btn btn-primary" @click="ImgModify(item)">修改</button>
-                      <button class="btn btn-danger"  @click="ImgDel(item)">删除</button></td>
+                      <button class="btn btn-danger"  @click="ImgDel(item,index)">删除</button></td>
                     </tr>
                 </tbody>
                 </table>
@@ -33,16 +33,45 @@
                        <span class="required">*</span>图片:
                     </div>
                     <div class="col-sm-9 col-md-9 col-xs-6">
-                          <div class="img-inner">
-                              <img v-bind:src="ImgArr" />
-                               <a class="a-upload">
-                                  <input type="file" name="myFile" ref="upload" id="myFile" @change="onFileChange"  />
-                                  <img src="../../static/images/authen.png" alt="">
-                              </a>
+                          <ul class="list-inline">
+                              <li><img v-bind:src="ImgArr" id="file" class="profile"/></li>
+                              <li style="position:relative;">
+                                <input type="file" @change="onFileChange" ref="upload" value="上传图片" style="position:absolute; opacity:0;"/>
+                                <button style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
+                                    上传图片
+                                </button>
+                              </li>
+                          </ul>
+                          <div style="margin-top:30px;">
+                            <button class="btn btn-primary" @click="uploadImgs()">确认</button>
+                            <button class="btn btn-danger" @click="CancelAdd()">取消</button>
                           </div>
-                         <button style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" @click="uploadImgs" >
-                                上传图片
-                         </button>
+                    </div>
+                </div>
+          </div>
+
+           <!-- 修改上传的图片 -->
+          <div style="margin:0 auto; padding:20px;" v-show="modifyImg">
+             <div class="row">
+                    <div class="col-sm-3 col-md-3 col-xs-6">
+                       <span class="required">*</span>图片:
+                    </div>
+                    <div class="col-sm-9 col-md-9 col-xs-6">
+                          <img v-bind:src="ImgModifyArr" />
+                          <ul class="list-inline">
+                              <li style="position:relative;">
+                                <input type="file" @change="onModifyFileChange" ref="upModifyload" value="修改图片" style="position:absolute; opacity:0;"/>
+                                <button style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
+                                    修改图片
+                                </button>
+                              </li>
+                          </ul>
+                          <div style="margin-top:30px;">
+                               <button class="btn btn-primary" @click="modifyUpload()" >
+                                修改
+                              </button>
+                              <button class="btn btn-danger" @click="CancelModify()">取消</button>
+                          </div>
                     </div>
                 </div>
           </div>
@@ -65,13 +94,17 @@ export default {
     return {
         Sid:'',
         activities:[],
-        ImgArr:'',  //上传图片的数组
+        ImgArr:'',  //上传图片
 
         addImg:false,
 
         modifyImg:false,
 
         Idx:0,
+
+        ImgModifyArr:'',
+
+        modifyId:0,
     }
   },
   mounted (){
@@ -107,9 +140,9 @@ export default {
 
               that.activities = templateObj;
 
-              that.Idx = that.activities.length;
-
               console.log(templateObj);
+
+              that.Idx = that.activities.length;
             }
         }
       }).catch(function(err){
@@ -119,6 +152,10 @@ export default {
 
     addNewImg(){
         this.addImg = !this.addImg;
+    },
+
+    CancelAdd(){
+       this.addImg = !this.addImg;
     },
 
     onFileChange(e) {
@@ -135,13 +172,97 @@ export default {
 
         reader.onload = (e) => {
            that.ImgArr= e.target.result;
-           console.log(that.ImgArr);
           //预览
           $("#file").attr("src",that.ImgArr);
 
-          this.Idx +=1;
+          that.Idx +=1;
         };
       reader.readAsDataURL(file);
+    },
+
+    //添加图片
+    uploadImgs(){
+        var data = new FormData();
+
+        let Img = this.$refs.upload;
+
+        data.append('img', Img.files[0]);
+
+        data.append('sid',this.Sid);
+
+        data.append('idx',this.Idx);
+
+        axios.post(env.baseUrl+'/yyt/activity/add', data, {
+              headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+              }
+          })
+          .then(function (res) {
+            if(res.data.Code ==3){
+              window.location.reload();
+            }
+            alert(res.data.Msg);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+    },
+
+    //修改轮播图
+    ImgModify(item){
+       this.modifyImg = !this.modifyImg;
+       this.ImgModifyArr = item.imgurl;
+
+       this.modifyId = item.id;
+    },
+
+    CancelModify(){
+      this.modifyImg = !this.modifyImg;
+    },
+
+    onModifyFileChange(e){
+        let files = e.target.files || e.dataTransfer.files;
+          if (!files.length)
+           return;
+          this.createModifyImage(files[0]);
+    },
+
+    createModifyImage(file){
+        var image = new Image();
+        var reader = new FileReader();
+        var that = this;
+
+        reader.onload = (e) => {
+           that.ImgModifyArr= e.target.result;
+        };
+      reader.readAsDataURL(file);
+    },
+
+    modifyUpload(){
+        var data = new FormData();
+
+        let Img = this.$refs.upModifyload;
+
+        data.append('img', Img.files[0]);
+
+        data.append('sid',this.Sid);
+
+        data.append('id',this.modifyId);
+
+        axios.post(env.baseUrl+'/yyt/activity/modify', data, {
+              headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+              }
+          })
+          .then(function (res) {
+            if(res.data.Code ==3){
+              window.location.reload();
+            }
+            alert(res.data.Msg);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
     },
 
     changeactivity(){
@@ -200,37 +321,6 @@ export default {
         return true;
     },
 
-    //添加图片
-    uploadImgs(){
-        var data = new FormData();
-
-        let Img = this.$refs.upload;
-
-        data.append('img', Img);
-
-        data.append('sid',this.Sid);
-
-        data.append('idx',this.Idx);
-
-        console.log(data);
-
-        axios.post(env.baseUrl+'/yyt/activity/add', data, {
-              headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-              }
-          })
-          .then(function (res) {
-            if(res.data.Code ==3){
-             // window.location.reload();
-
-            }
-            alert(res.data.Msg);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-    },
-
       /*
      描述：鉴定每个浏览器上传图片url 目前没有合并到Ie
      * */
@@ -245,15 +335,24 @@ export default {
       }
       return url;
     },
-  },
 
+    ImgDel(item,idx){
+       let params={
+        sid:this.Sid,
+        id:item.id
+       };
 
-  ImgModify(item){
-      console.log('ImgModify',item);
-  },
+      let that = this;
 
-  ImgDel(item){
-    console.log('ImgDel',item);
+       api.activityDel(params).then(function(res){
+          alert(res.data.Msg);
+          if(res.data.Code ==3){
+             that.activities.splice(idx,1);
+          }
+       }).catch(function(err){
+          console.log(err);
+       });
+    },
   },
 }
 </script>
