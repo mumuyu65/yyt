@@ -5,6 +5,11 @@
                 <ul class="list-inline">
                     <li><h3>课程安排管理</h3></li>
                     <li class="pull-right" style="margin-top:15px;">
+                        <li>
+                            <select v-model="liveSelected">
+                                <option v-bind:value="item.id" v-for="item in liveLists" >{{item.title}}</option>
+                            </select>
+                        </li>
                         <button @click="addSchedule()"
                             style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
                             <i class="fa fa-plus fa-1x"></i>添加课程
@@ -141,62 +146,72 @@
             <div v-show="addSchedules" style="margin:50px 20px;">
                 <div v-show="!TimeDistance">
                     <div class="row">
-                    <div class="col-sm-3 col-md-3 col-xs-6">
-                        <span class="required">*</span> 年/月/日:
-                    </div>
-                    <div class="col-sm-9 col-md-9 col-xs-6">
-                        <input type="text" id="month_date" style="height:30px;border-radius:0;width:220px;" />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-3 col-md-3 col-xs-6">
-                        <span class="required">*</span> 时间段:
-                    </div>
-                    <div class="col-sm-9 col-md-9 col-xs-6">
-                        <ul class="list-inline">
-                            <li style="vertical-align:top;">
-                                <div class="dropdown" v-bind:class="{open:isActive}" >
-                                    <input type="text" @focus="dropdown" v-model="Period" style="height:30px; width:220px; cursor:pointer;"/><span class="caret" style="position:absolute; right:10px;top:6px;"></span>
-                                    <ul class="dropdown-menu text-center" style="top:70%; width:220px;">
-                                        <li v-for="option in PeriodOptions" >
-                                            <span style="cursor:pointer;"  @click="selectTimeDistance(option)">{{ option.text }}</span>
-                                            <b style="font-size:18px; margin-left:30px; cursor:pointer;" @click="delTimeDistance(option)">&times;</b>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <li><button class="btn btn-danger" @click="addTimeDistance()">添加时间段</button></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-3 col-md-3 col-xs-6">
-                         <span class="required">*</span>  星期：
-                    </div>
-                    <div class="col-sm-9 col-md-9 col-xs-6">
-                        <select v-model="selected" >
-                            <option v-for="option in options" v-bind:value="option.value">
-                                    {{ option.text }}
-                            </option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-3 col-md-3 col-xs-6">
-                       <span class="required">*</span> 老师:
-                    </div>
-                    <div class="col-sm-9 col-md-9 col-xs-6">
-                        <input type='text' value="" style="height:30px;border-radius:0;width:220px;" v-model="teacher" />
-                        <div style="margin-top:20px;">
-                                <button class="btn btn-danger" @click="add()">提交</button>
-                                <button style="margin-left:50px;" class="btn btn-default" @click="Cancel()">取消</button>
+                        <div class="col-sm-3 col-md-3 col-xs-6">
+                            <span class="required">*</span> 直播间选择:
+                        </div>
+                        <div class="col-sm-9 col-md-9 col-xs-6">
+                            <select v-model="liveSelectedAdd">
+                                <option v-bind:value="item.id" v-for="item in liveLists" >{{item.title}}</option>
+                            </select>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-sm-3 col-md-3 col-xs-6">
+                            <span class="required">*</span> 年/月/日:
+                        </div>
+                        <div class="col-sm-9 col-md-9 col-xs-6">
+                            <input type="text" id="month_date" style="height:30px;border-radius:0;width:220px;" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3 col-md-3 col-xs-6">
+                            <span class="required">*</span> 时间段:
+                        </div>
+                        <div class="col-sm-9 col-md-9 col-xs-6">
+                            <ul class="list-inline">
+                                <li style="vertical-align:top;">
+                                    <div class="dropdown" v-bind:class="{open:isActive}" >
+                                        <input type="text" @focus="dropdown" v-model="Period" style="height:30px; width:220px; cursor:pointer;"/><span class="caret" style="position:absolute; right:10px;top:6px;"></span>
+                                        <ul class="dropdown-menu text-center" style="top:70%; width:220px;">
+                                            <li v-for="option in PeriodOptions" >
+                                                <span style="cursor:pointer;"  @click="selectTimeDistance(option)">{{ option.text }}</span>
+                                                <b style="font-size:18px; margin-left:30px; cursor:pointer;" @click="delTimeDistance(option)">&times;</b>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li><button class="btn btn-danger" @click="addTimeDistance()">添加时间段</button></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3 col-md-3 col-xs-6">
+                             <span class="required">*</span>  星期：
+                        </div>
+                        <div class="col-sm-9 col-md-9 col-xs-6">
+                            <select v-model="selected" >
+                                <option v-for="option in options" v-bind:value="option.value">
+                                        {{ option.text }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3 col-md-3 col-xs-6">
+                           <span class="required">*</span> 老师:
+                        </div>
+                        <div class="col-sm-9 col-md-9 col-xs-6">
+                            <input type='text' value="" style="height:30px;border-radius:0;width:220px;" v-model="teacher" />
+                            <div style="margin-top:20px;">
+                                    <button class="btn btn-danger" @click="add()">提交</button>
+                                    <button style="margin-left:50px;" class="btn btn-default" @click="Cancel()">取消</button>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
                 </div>
-                </div>
-            </div>
 
-            <div class="row" v-show="TimeDistance" style="margin:50px 20px;">
+                <div class="row" v-show="TimeDistance" style="margin:50px 20px;">
                 <div class="col-sm-3 col-md-3 col-xs-6">
                      <span class="required">*</span>时间选择:
                 </div>
@@ -250,6 +265,12 @@ export default {
         tempPeriod:[],
 
         isActive:false,  //下拉框
+
+        liveSelected:'',
+
+        liveLists:[],
+
+        liveSelectedAdd:'',
     }
   },
   mounted (){
@@ -260,6 +281,8 @@ export default {
     this.queryPeriod();  //查询时间段
 
     //this.checkLogin();
+
+    this.queryLive();
   },
   methods:{
     checkLogin(){
@@ -278,6 +301,8 @@ export default {
         console.log(err);
       });
     },
+
+
     initData(){
          //时间
         $(".form_datetime").datetimepicker({
@@ -303,6 +328,31 @@ export default {
             minuteStep:10
         });
     },
+
+    queryLive(){
+        let _this = this;
+        let param = {
+            begidx:0,
+            counts:100
+        }
+        api.getLive(param).then(function(res){
+            if(res.data.Code ==3){
+                if(res.data.Data.length == 0){
+                    console.log('没有直播房间!');
+                }else{
+                    _this.liveLists = res.data.Data;
+                    _this.liveSelected = _this.liveLists[0].id;
+
+                    _this.initSchedule(); //查询课程表
+                }
+            }else{
+                alert(res.data.Msg);
+            }
+        }).catch(function(err){
+            console.log(err);
+        });
+    },
+
     //dropdown
     dropdown(){
         this.isActive = !this.isActive;
@@ -344,7 +394,6 @@ export default {
 
                 that.tempPeriod=that.sortPeriod(tempPeriod);
 
-                that.initSchedule(); //查询课程表
             }
         }).catch(function(err){
             console.log(err);
@@ -388,13 +437,14 @@ export default {
             date:$("#month_date").val(),
             dayofweek:this.selected,
             period:this.Period,
-            lecturer:this.teacher
+            lecturer:this.teacher,
+            lmid:this.liveSelectedAdd
         };
         api.scheduleAdd(params).then(function(res){
             alert(res.data.Msg);
             if(res.data.Code ==3){
                 that.addSchedules = !that.addSchedules;
-                window.location.reload();
+                that.initData();
             }
         }).catch(function(err){
             console.log(err);
@@ -409,8 +459,13 @@ export default {
     //查询课程表
     initSchedule(){
         let that = this;
-        api.scheduleQuery().then(function(res){
+        let params={
+            date:$("#month_date").val(),
+            lmid:this.liveSelected,
+        };
+        api.scheduleQuery(params).then(function(res){
             if(res.data.Code ==3){
+                console.log('课程表安排',res.data);
                 that.month_date = res.data.Data[0].date;
                 that.resetSchedule(res.data.Data);
             }else{
@@ -503,7 +558,7 @@ export default {
                     else {
                          pointName = 10;
                     }
-                    console.log(pointName);
+                    //console.log(pointName);
                     DataSource[1].course.push({teacherName:items[i].lecturer,pointName:pointName,pointTime:items[i].period,id:items[i].id}); break;
                 case '周三':
                     var pointName;
