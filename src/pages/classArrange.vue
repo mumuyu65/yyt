@@ -273,6 +273,9 @@ export default {
         liveSelectedAdd:'',
     }
   },
+  watch:{
+    liveSelected:'initSchedule'
+  },
   mounted (){
     this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
 
