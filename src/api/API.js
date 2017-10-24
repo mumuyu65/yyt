@@ -228,15 +228,25 @@ class API {
         return axios.post('/yyt/wxcode/update', {}, config);
     }
 
-    //活動專區管理
+    //活动专区管理
     activityQuery(param) {
         config.data = param;
         return axios.post('/yyt/activity/query', {}, config);
     }
 
-    activityUpdate(param) {
+    activityAdd(param) {
         config.data = param;
-        return axios.post('/yyt/activity/update', {}, config);
+        return axios.post('/yyt/activity/add', {}, config);
+    }
+
+    activityModify(param) {
+        config.data = param;
+        return axios.post('/yyt/activity/modify', {}, config);
+    }
+
+    activityDel(param) {
+        config.data = param;
+        return axios.post('/yyt/activity/del', {}, config);
     }
 
     //产品介绍管理

@@ -1,48 +1,51 @@
 <template>
     <div id="page-wrapper" >
         <div id="page-inner">
-          <ul class="list-inline">
-              <li><h3>活动专区管理</h3></li>
-              <li class="pull-right"><button class="btn btn-danger" @click="delImgs()">删除全部图片</button></li>
-          </ul>
-          <hr/>
-          <div style="margin:0 auto; padding:20px;">
+          <div v-show="!addImg">
+            <div v-show="!modifyImg">
+                <ul class="list-inline">
+                    <li><h3>活动专区管理</h3></li>
+                    <li class="pull-right"><button class="btn btn-danger" @click="addNewImg()">添加轮播图</button></li>
+                </ul>
+                <hr/>
+                <!-- 展示轮播图  -->
+                <table class="text-center" width="100%" border="1" id="userTable">
+                    <thead>
+                      <th class="text-center">序列号</th>
+                      <th class="text-center">图片</th>
+                      <th class="text-center">操作</th>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(item, index) in activities">
+                        <td>{{item.id}}</td>
+                        <td><img v-bind:src="item.imgurl"  /></td>
+                        <td><button class="btn btn-primary" @click="ImgModify(item)">修改</button>
+                      <button class="btn btn-danger"  @click="ImgDel(item)">删除</button></td>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
+          </div>
+          <!-- 添加图片 -->
+          <div style="margin:0 auto; padding:20px;" v-show="addImg">
              <div class="row">
                     <div class="col-sm-3 col-md-3 col-xs-6">
                        <span class="required">*</span>图片:
                     </div>
                     <div class="col-sm-9 col-md-9 col-xs-6">
-                          <ul class="list-inline">
-                            <li v-for="item in activities"><img v-bind:src="item"  /></li>
-                          </ul>
                           <div class="img-inner">
-                              <div class="img_div" id="img_inner" style="display: inline-block; vertical-align: top;">
-
-                               </div>
-                              <a class="a-upload">
-                                  <input type="file" name="myFile" id="myFile" @change="profileReview" multiple="multiple" />
+                              <img v-bind:src="ImgArr" />
+                               <a class="a-upload">
+                                  <input type="file" name="myFile" ref="upload" id="myFile" @change="onFileChange"  />
                                   <img src="../../static/images/authen.png" alt="">
                               </a>
-                              <div class="shade" @click="closeShade()">
-                                  <div class="">
-                                      <span class="text_span">
-
-                                      </span>
-                                  </div>
-                              </div>
-
-                              <div class="shadeImg" @click="closeShadeImg()">
-                                  <div class="">
-                                      <img class="showImg" src="">
-                                  </div>
-                              </div>
                           </div>
                          <button style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" @click="uploadImgs" >
                                 上传图片
                          </button>
                     </div>
                 </div>
-            </div>
+          </div>
         </div>
     </div>
 </template>
@@ -62,7 +65,13 @@ export default {
     return {
         Sid:'',
         activities:[],
-        ImgArr:[],  //上传图片的数组
+        ImgArr:'',  //上传图片的数组
+
+        addImg:false,
+
+        modifyImg:false,
+
+        Idx:0,
     }
   },
   mounted (){
@@ -93,19 +102,23 @@ export default {
       let that = this;
       api.activityQuery().then(function(res){
         if(res.data.Code ==3){
-             let templateObj= res.data.Data;
+            if(res.data.Data){
+              let templateObj= res.data.Data;
 
-             let Imgs = templateObj[0].imgurl.split(";");
+              that.activities = templateObj;
 
-             console.log(Imgs);
+              that.Idx = that.activities.length;
 
-             for(let i = 0; i<Imgs.length-1;i++){
-                that.activities.push(Imgs[i]);
-             }
+              console.log(templateObj);
+            }
         }
       }).catch(function(err){
           console.log(err);
       });
+    },
+
+    addNewImg(){
+        this.addImg = !this.addImg;
     },
 
     onFileChange(e) {
@@ -121,12 +134,12 @@ export default {
         var that = this;
 
         reader.onload = (e) => {
-          that.activities.img_url = e.target.result;
+           that.ImgArr= e.target.result;
+           console.log(that.ImgArr);
           //预览
-          $("#file").attr("src",that.activities.img_url);
+          $("#file").attr("src",that.ImgArr);
 
-          that.changeactivity();
-
+          this.Idx +=1;
         };
       reader.readAsDataURL(file);
     },
@@ -187,58 +200,35 @@ export default {
         return true;
     },
 
-
+    //添加图片
     uploadImgs(){
-         var data = new FormData();
+        var data = new FormData();
 
-        data.append('imgs', this.ImgArr.length);
+        let Img = this.$refs.upload;
+
+        data.append('img', Img);
 
         data.append('sid',this.Sid);
 
-        for(let i=0; i<this.ImgArr.length;i++){
-            let idx = i+1;
-            let Img = 'img'+idx;
+        data.append('idx',this.Idx);
 
-            data.append(Img,this.ImgArr[i]);
-        }
+        console.log(data);
 
-        axios.post(env.baseUrl+'/yyt/activity/update', data, {
+        axios.post(env.baseUrl+'/yyt/activity/add', data, {
               headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
               }
           })
           .then(function (res) {
             if(res.data.Code ==3){
-              window.location.reload();
+             // window.location.reload();
+
             }
             alert(res.data.Msg);
           })
           .catch(function (error) {
             console.log(error);
           });
-    },
-
-    delImgs(){
-        var data = new FormData();
-
-        data.append('imgs', 0);
-
-        data.append('sid',this.Sid);
-
-        axios.post(env.baseUrl+'/yyt/activity/update', data, {
-              headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-              }
-        })
-        .then(function (res) {
-          if(res.data.Code ==3){
-              window.location.reload();
-            }
-          alert(res.data.Msg);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
     },
 
       /*
@@ -255,6 +245,15 @@ export default {
       }
       return url;
     },
+  },
+
+
+  ImgModify(item){
+      console.log('ImgModify',item);
+  },
+
+  ImgDel(item){
+    console.log('ImgDel',item);
   },
 }
 </script>
@@ -301,4 +300,17 @@ export default {
       top:50%;
       opacity:0;
     }
+
+    #userTable th,#userTable td{
+        padding:5px 0;
+        border:1px solid #ececec;
+    }
+
+    #userTable tr:hover{
+        background-color:#f7f7f7;
+    }
+
+   #userTable tr:nth-child(odd){
+        background-color:#f7f7f7;
+   }
 </style>
