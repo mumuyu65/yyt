@@ -26,6 +26,7 @@
                     <table class="text-center" border="1" width="100%" id="productsTable">
                       <thead>
                           <th class="text-center">编号</th>
+                          <th class="text-center">所属直播间</th>
                           <th class="text-center" style="max-width:120px">标题</th>
                           <th class="text-center">资讯类型</th>
                           <th class="text-center">创建时间</th>
@@ -35,6 +36,7 @@
                       <tbody>
                           <tr v-for="(item,index) in newsLists">
                             <td>{{index+1}}</td>
+                            <td>{{item.roomName}}</td>
                             <td>{{item.title}}</td>
                             <td>{{item.typename }}</td>
                             <td>{{item.unix | dateStamp }}</td>
@@ -54,7 +56,7 @@
           <div style="width:95%; margin:0 auto; margin-top:50px;" v-show="addNew">
               <div class="row">
                   <div class="col-sm-3 col-md-3 col-xs-6">
-                      资讯类型：
+                    <span class="required">*</span>资讯类型：
                   </div>
                   <div class="col-sm-9 col-md-9 col-xs-6">
                       <select v-model="Type" class="form-control">
@@ -66,7 +68,17 @@
               </div>
               <div class="row">
                   <div class="col-sm-3 col-md-3 col-xs-6">
-                      资讯标题：
+                      <span class="required">*</span>直播间选择：
+                  </div>
+                  <div class="col-sm-9 col-md-9 col-xs-6">
+                    <select v-model="liveSelected">
+                        <option v-bind:value="item.id" v-for="item in liveLists" >{{item.title}}</option>
+                    </select>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-3 col-md-3 col-xs-6">
+                      <span class="required">*</span>资讯标题：
                   </div>
                   <div class="col-sm-9 col-md-9 col-xs-6">
                       <input type="text" class="form-control" v-model="title"/>
@@ -74,7 +86,7 @@
               </div>
               <div class="row">
                   <div class="col-sm-3 col-md-3 col-xs-6">
-                      上传文件:
+                      <span class="required">*</span>上传文件:
                   </div>
                   <div class="col-sm-9 col-md-9 col-xs-6">
                       <ul class="list-inline" style="min-height:400px;">
@@ -92,19 +104,6 @@
                       </div>
                   </div>
               </div>
-              <!--
-              <div class="row">
-                  <div class="col-sm-3 col-md-3 col-xs-6">
-                      资讯内容:
-                  </div>
-                  <div class="col-sm-9 col-md-9 col-xs-6">
-                      <div id="editor" v-model='content'>
-
-                      </div>
-
-                  </div>
-              </div>
-              -->
           </div>
           <!-- 修改 -->
           <div style="width:95%;margin:0 auto; margin-top:50px;" v-show="modifyNew">
@@ -116,6 +115,18 @@
                       <select v-model="modifyType" class="form-control">
                           <option v-for="option in newsType" v-bind:value="option.type">
                                   {{ option.text }}
+                          </option>
+                      </select>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-3 col-md-3 col-xs-6">
+                      修改直播间：
+                  </div>
+                  <div class="col-sm-9 col-md-9 col-xs-6">
+                      <select v-model="modifyLive" class="form-control">
+                          <option v-for="option in liveLists" v-bind:value="option.id">
+                                  {{ option.title }}
                           </option>
                       </select>
                   </div>
@@ -148,7 +159,6 @@
                       </div>
                   </div>
               </div>
-
           </div>
         </div>
     </div>
@@ -192,6 +202,12 @@ export default {
 
       modifyeditor:'',
       editor:'',
+
+      liveLists:[],
+
+      liveSelected:'',
+
+      modifyLive:'',
     }
   },
   watch:{
@@ -239,7 +255,6 @@ export default {
       });
     },
     initData(){
-        this.queryAllNews();
         // 创建编辑器
         //let editor = new E('#editor');
 
@@ -265,6 +280,28 @@ export default {
 
         this.editor = editor;
         */
+
+        //查询直播间
+        let _this = this;
+        let param = {
+            begidx:0,
+            counts:100
+        }
+        api.getLive(param).then(function(res){
+            if(res.data.Code ==3){
+                if(res.data.Data.length == 0){
+                    console.log('没有直播房间!');
+                }else{
+                    _this.liveLists = res.data.Data;
+
+                    _this.queryAllNews();
+                }
+            }else{
+                alert(res.data.Msg);
+            }
+        }).catch(function(err){
+            console.log(err);
+        });
     },
 
     // 查询资讯
@@ -296,7 +333,7 @@ export default {
       data.append('type',this.Type);
       data.append('title',this.title);
       data.append('file',input.files[0]);
-      //data.append('content',this.editor.txt.html());
+      data.append('lmid',this.liveSelected);
 
       let that = this;
 
@@ -330,6 +367,9 @@ export default {
       this.Title = item.title;
       this.modifyFile = item.imgurl;
       this.modifyId = item.id;
+
+      this.modifyLive =  item.lmid;
+      console.log(item);
     },
 
     modifyItem(){
@@ -342,7 +382,7 @@ export default {
       data.append('type',this.modifyType);
       data.append('title',this.Title);
       data.append('file',input.files[0]);
-      //data.append('content',this.modifyeditor.txt.html());
+      data.append('lmid',this.modifyLive);
 
       let that = this;
 
@@ -394,17 +434,8 @@ export default {
               let TotalNum;  //总数据条数
               TotalNum=res.data.Data.Total;
               let templateObj = res.data.Data.Detail;
-              //console.log(templateObj);
               //    分页
                if(TotalNum>10) {
-                  for(let i=0;i<10;i++){
-                    for(let j =0;j<that.newsType.length;j++){
-                        if(templateObj[i].type == that.newsType[j].type){
-                            templateObj[i].typename = that.newsType[j].text;
-                        }
-                    }
-                  }
-                   that.newsLists= templateObj;
                    var options = {
                        currentPage: 1,
                        totalPages: parseInt(TotalNum /10) + 1,
@@ -433,16 +464,22 @@ export default {
                        }
                    };
                    $('#economic_pagnation').bootstrapPaginator(options);
-               }else{
+               }
+
                 for(let i=0;i<TotalNum;i++){
+                    for(let k =0;k<that.liveLists.length;k++){
+                        if(templateObj[i].lmid == that.liveLists[k].id){
+                            templateObj[i].roomName = that.liveLists[k].title;
+                        }
+                    }
+
                     for(let j =0;j<that.newsType.length;j++){
                         if(templateObj[i].type == that.newsType[j].type){
                             templateObj[i].typename = that.newsType[j].text;
                         }
                     }
-                  }
-                that.newsLists= templateObj;
-               }
+                }
+              that.newsLists= templateObj;
           }else{
             alert(res.data.Msg);
           }
@@ -461,11 +498,17 @@ export default {
           if(res.data.Code ==3){
               let templateObj = res.data.Data.Detail;
               for(let i=0;i<templateObj.length;i++){
-                  for(let j =0;j<that.newsType.length;j++){
-                      if(templateObj[i].type == that.newsType[j].type){
-                          templateObj[i].typename = that.newsType[j].text;
-                      }
-                  }
+                   for(let k =0;k<that.liveLists.length;k++){
+                        if(templateObj[i].lmid == that.liveLists[k].id){
+                            templateObj[i].roomName = that.liveLists[k].title;
+                        }
+                    }
+
+                    for(let j =0;j<that.newsType.length;j++){
+                        if(templateObj[i].type == that.newsType[j].type){
+                            templateObj[i].typename = that.newsType[j].text;
+                        }
+                    }
                 }
               that.newsLists= templateObj;
               }
@@ -634,5 +677,9 @@ export default {
 
    #productsTable tr:nth-child(odd){
         background-color:#f7f7f7;
+   }
+
+   .required{
+      color:#f00;
    }
 </style>
