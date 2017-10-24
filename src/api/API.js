@@ -553,5 +553,20 @@ class API {
         return axios.post('/yyt/features/statistics', {}, config)
     }
 
+    //功能开通
+    featuresQuery(param) {
+        config.data = param
+        return axios.post('/yyt/user/features/query', {}, config)
+    }
+
+    featuresModify(param) {
+        config.data = param
+        return axios.post('/yyt/user/features/opened', {}, config)
+    }
+
+    featuresDelay(param) {
+        config.data = param
+        return axios.post('/yyt/user/features/modify', {}, config)
+    }
 }
 export default API;
