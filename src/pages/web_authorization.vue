@@ -4,9 +4,9 @@
           <ul class="list-inline">
               <li><h3>功能开通</h3></li>
               <li style=" vertical-align:middle">
-                    <input type="number" class="form-control" placeholder="请输入用户手机号" @keyup.enter="initData()" v-model="account">
+                    <input type="number" class="form-control" placeholder="请输入用户手机号" @keyup.enter="searchData()" v-model="account">
               </li>
-              <li><button class="btn btn-primary" @click="initData()" style="margin-bottom:10px;">搜索</button></li>
+              <li><button class="btn btn-primary" @click="searchData()" style="margin-bottom:10px;">搜索</button></li>
           </ul>
           <hr/>
           <div style="margin:0 auto; padding:20px;">
@@ -14,28 +14,51 @@
                 <thead>
                     <th class="text-center">名称</th>
                     <th class="text-center">直播间</th>
-                    <th class="text-center">开通时间设置</th>
+                    <th class="text-center">开通截止时间设置</th>
+                    <th class="text-center">操作</th>
                 </thead>
                 <tbody>
                     <tr>
                       <td>核心内参</td>
-                      <td></td>
-                      <td></td>
+                      <td>
+                        <select v-model="core_liveSelected">
+                            <option v-bind:value="item.id" v-for="item in liveLists" >{{item.title}}</option>
+                        </select>
+                      </td>
+                      <td>
+                          <input type="text" id="core_date" style="height:30px;border-radius:0;width:220px;" />
+                      </td>
+                      <td>
+                        <button class="btn btn-primary" @click="modifyAuth(1)">修改</button>
+                      </td>
                     </tr>
                     <tr>
                       <td>讲师观点</td>
-                      <td></td>
-                      <td></td>
+                      <td><select v-model="tidea_liveSelected">
+                            <option v-bind:value="item.id" v-for="item in liveLists" >{{item.title}}</option>
+                        </select></td>
+                      <td><input type="text" id="tidea_date" style="height:30px;border-radius:0;width:220px;" /></td>
+                       <td>
+                        <button class="btn btn-primary"  @click="modifyAuth(2)">修改</button>
+                      </td>
                     </tr>
                     <tr>
                       <td>学习课件</td>
                       <td></td>
                       <td></td>
+                       <td>
+
+                      </td>
                     </tr>
                     <tr>
                       <td>股市收评</td>
-                      <td></td>
-                      <td></td>
+                      <td><select v-model="socket_liveSelected">
+                            <option v-bind:value="item.id" v-for="item in liveLists" >{{item.title}}</option>
+                        </select></td>
+                      <td><input type="text" id="socket_date" style="height:30px;border-radius:0;width:220px;" /></td>
+                       <td>
+                        <button class="btn btn-primary"  @click="modifyAuth(3)">修改</button>
+                      </td>
                     </tr>
                 </tbody>
             </table>
@@ -58,13 +81,23 @@ export default {
   data (){
     return {
         Sid:'',
-        clan:{},
+        account:'',
+
+        liveLists:[],   //直播间列表
+
+        core_liveSelected:'',
+
+        tidea_liveSelected:'',
+
+        socket_liveSelected:'',
     }
   },
   mounted (){
     this.Sid=JSON.parse(window.localStorage.getItem('user')).SessionId;
-    this.initData();
+
     //this.checkLogin();
+
+    this.initData();
   },
   methods:{
     checkLogin(){
@@ -83,19 +116,179 @@ export default {
         console.log(err);
       });
     },
+
     initData(){
-      let that = this;
-      api.ClanQuery().then(function(res){
-        if(res.data.Code ==3){
-             let templateObj= res.data.Data;
-             that.clan= templateObj[0];
+        let that = this;
+
+        let param = {
+            begidx:0,
+            counts:100
         }
+        api.getLive(param).then(function(res){
+            //console.log(res.data.Data);
+            if(res.data.Code ==3){
+                if(res.data.Data.length == 0){
+                    console.log('没有直播房间!');
+                }else{
+                    that.liveLists = res.data.Data;
+                }
+            }else{
+                alert(res.data.Msg);
+            }
+        }).catch(function(err){
+            console.log(err);
+        });
+
+        $("#core_date").datetimepicker({
+            format: "yyyy-mm-dd",
+            autoclose: true,
+            todayBtn: true,
+            language:'zh-CN',
+            pickerPosition: "bottom",
+            minView: 2,
+            startView:3,
+            minuteStep:10
+        });
+
+
+        $("#tidea_date").datetimepicker({
+            format: "yyyy-mm-dd",
+            autoclose: true,
+            todayBtn: true,
+            language:'zh-CN',
+            pickerPosition: "bottom",
+            minView: 2,
+            startView:3,
+            minuteStep:10
+        });
+
+        $("#socket_date").datetimepicker({
+            format: "yyyy-mm-dd",
+            autoclose: true,
+            todayBtn: true,
+            language:'zh-CN',
+            pickerPosition: "bottom",
+            minView: 2,
+            startView:3,
+            minuteStep:10
+        });
+    },
+
+    //查询用户的直播间属性
+    searchData(){
+      if(this.account){
+        let params={
+          sid:this.Sid,
+          account:this.account,
+        };
+        let that = this;
+        api.featuresQuery(params).then(function(res){
+          if(res.data.Code ==3){
+               if(res.data.Data){
+                   let templateObj=res.data.Data;
+
+                   let len = templateObj.length;
+
+                   //console.log(res.data);
+
+                   for(let i=0; i<len;i++){
+                      if(templateObj[i].features ==1){
+                         that.core_liveSelected = templateObj[i].lmid; $("#core_date").val(that.dateStamp(templateObj[i].deadline));
+                      }else if(templateObj[i].features ==2){
+                         that.tidea_liveSelected = templateObj[i].lmid; $("#tidea_date").val(that.dateStamp(templateObj[i].deadline));
+                      }else if(templateObj[i].features ==4){
+                         that.socket_liveSelected = templateObj[i].lmid; $("#socket_date").val(that.dateStamp(templateObj[i].deadline));
+                      }
+                   }
+               }
+          }
+        }).catch(function(err){
+            console.log(err);
+        });
+      }else{
+        alert("未输入用户手机号");
+      }
+    },
+
+
+    //修改用户权限  sid,account,features(1-核心内参,2-讲师观点,3-学习课件,4-股市收评),lmid,deadline
+    modifyAuth(type){
+       let params={
+          sid:this.Sid,
+          account:this.account,
+          features:'',
+          lmid:'',
+          deadline:'',
+       };
+
+      if(type == 1){
+          params.features = 1;
+
+          params.lmid = this.core_liveSelected;
+
+          if($("#core_date").val()){
+             params.deadline = this.dateToUnix($("#core_date").val());
+          }
+      }else if(type ==2){
+          params.features = 2;
+
+          params.lmid = this.tidea_liveSelected;
+
+          if($("#tidea_date").val()){
+             params.deadline = this.dateToUnix($("#tidea_date").val());
+          }
+      }else{
+          params.features = 4;
+
+          params.lmid = this.socket_liveSelected;
+
+          if($("#socket_date").val()){
+             params.deadline = this.dateToUnix($("#socket_date").val());
+          }
+      }
+
+      let that = this;
+
+      api.featuresModify(params).then(function(res){
+          //console.log(res.data);
+          alert(res.data.Msg);
+          if(res.data.Code ==3){
+            that.searchData();
+          }
       }).catch(function(err){
           console.log(err);
       });
     },
 
+     //时间转换
+    dateToUnix(time) {
+        var stringTime = time + ' 00:00:00';
+        var timestamp2 = Date.parse(new Date(stringTime));
+        timestamp2 = timestamp2 / 1000;
+        return timestamp2;
+    },
 
+    dateStamp(value){
+        let tm = parseInt(value)*1000;
+        var time = new Date(tm);
+         //获取年份信息
+         var y = time.getFullYear();
+         //获取月份信息，月份是从0开始的
+         var m = time.getMonth()+1;
+         //获取天数信息
+         //获取天数信息
+         var d = time.getDate();
+
+         var H=time.getHours();
+
+         var M=time.getMinutes();
+         //返回拼接信息
+         return y+'-'+this.add(m) + '-' + this.add(d);
+    },
+
+    add(m){
+        return m<10?'0'+m:m
+     }
   },
 }
 </script>
@@ -124,5 +317,4 @@ export default {
    #userTable tr:nth-child(odd){
         background-color:#f7f7f7;
    }
-
 </style>
