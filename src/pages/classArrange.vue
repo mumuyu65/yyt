@@ -30,7 +30,7 @@
                         <li class="border-r">星期日</li>
                     </ul>
                     <div style="clear:both; float:none;"></div>
-                    <ul name="point1">
+                    <ul name="point1" class="arrage-class">
                         <li></li>
                         <li></li>
                         <li></li>
@@ -41,7 +41,7 @@
                         <li class="border-r"></li>
                     </ul>
                      <div style="clear:both; float:none;"></div>
-                    <ul name="point2">
+                    <ul name="point2" class="arrage-class">
                         <li></li>
                         <li></li>
                         <li></li>
@@ -52,7 +52,7 @@
                         <li class="border-r"></li>
                     </ul>
                     <div style="clear:both; float:none;"></div>
-                    <ul name="point3">
+                    <ul name="point3" class="arrage-class">
                         <li></li>
                         <li></li>
                         <li></li>
@@ -63,7 +63,7 @@
                         <li class="border-r"></li>
                     </ul>
                     <div style="clear:both; float:none;"></div>
-                    <ul name="point4">
+                    <ul name="point4" class="arrage-class">
                         <li></li>
                         <li></li>
                         <li></li>
@@ -74,7 +74,7 @@
                         <li class="border-r"></li>
                     </ul>
                     <div style="clear:both; float:none;"></div>
-                    <ul name="point5">
+                    <ul name="point5" class="arrage-class">
                         <li></li>
                         <li></li>
                         <li></li>
@@ -85,7 +85,7 @@
                         <li class="border-r"></li>
                     </ul>
                      <div style="clear:both; float:none;"></div>
-                    <ul name="point6">
+                    <ul name="point6" class="arrage-class">
                         <li></li>
                         <li></li>
                         <li></li>
@@ -96,7 +96,7 @@
                         <li class="border-r"></li>
                     </ul>
                      <div style="clear:both; float:none;"></div>
-                    <ul name="point7">
+                    <ul name="point7" class="arrage-class">
                         <li></li>
                         <li></li>
                         <li></li>
@@ -107,7 +107,7 @@
                         <li class="border-r"></li>
                     </ul>
                      <div style="clear:both; float:none;"></div>
-                    <ul name="point8">
+                    <ul name="point8" class="arrage-class">
                         <li></li>
                         <li></li>
                         <li></li>
@@ -118,7 +118,7 @@
                         <li class="border-r"></li>
                     </ul>
                     <div style="clear:both; float:none;"></div>
-                    <ul name="point9">
+                    <ul name="point9" class="arrage-class">
                         <li></li>
                         <li></li>
                         <li></li>
@@ -129,7 +129,7 @@
                         <li class="border-r"></li>
                     </ul>
                     <div style="clear:both; float:none;"></div>
-                    <ul name="point10">
+                    <ul name="point10" class="arrage-class">
                         <li class="border-b"></li>
                         <li class="border-b"></li>
                         <li class="border-b"></li>
@@ -346,7 +346,7 @@ export default {
                     _this.liveLists = res.data.Data;
                     _this.liveSelected = _this.liveLists[0].id;
 
-                    _this.initSchedule(); //查询课程表
+                    //_this.initSchedule(); //查询课程表
                 }
             }else{
                 alert(res.data.Msg);
@@ -460,11 +460,12 @@ export default {
     },
 
     //查询课程表
-    initSchedule(){
+    initSchedule(item){
+        //console.log(item);
         let that = this;
         let params={
             date:$("#month_date").val(),
-            lmid:this.liveSelected,
+            lmid:item,
         };
         api.scheduleQuery(params).then(function(res){
             if(res.data.Code ==3){
@@ -481,6 +482,7 @@ export default {
 
     //排序
     resetSchedule(items){
+        $(".schedule ul.arrage-class li").text("");
          let DataSource = [
             {weekday:1,course:[]},
             {weekday:2,course:[]},
@@ -730,6 +732,7 @@ export default {
                     DataSource[6].course.push({teacherName:items[i].lecturer,pointName:pointName,pointTime:items[i].period,id:items[i].id}); break;
             }
         }
+
         $.each(DataSource,function(i,n){//遍历数据源 填充课程表信息
                 $.each(n.course,function(j,k){
                     $(".schedule ul[name='point"+k.pointName+"'] li").eq(0).html("<span>"+k.pointTime+"</span>");
@@ -876,5 +879,4 @@ export default {
         .dropdown-menu>li:hover>span{
             background-color:#f5f5f5;
         }
-
 </style>
