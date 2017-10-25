@@ -4,12 +4,10 @@
             <div v-show="!addSchedules">
                 <ul class="list-inline">
                     <li><h3>课程安排管理</h3></li>
+                    <li><select v-model="liveSelected">
+                            <option v-bind:value="item.id" v-for="item in liveLists" >{{item.title}}</option>
+                        </select></li>
                     <li class="pull-right" style="margin-top:15px;">
-                        <li>
-                            <select v-model="liveSelected">
-                                <option v-bind:value="item.id" v-for="item in liveLists" >{{item.title}}</option>
-                            </select>
-                        </li>
                         <button @click="addSchedule()"
                             style="background-color:#84B4DC; color:#fff; border:1px solid transparent; padding:5px 10px;" >
                             <i class="fa fa-plus fa-1x"></i>添加课程
@@ -271,6 +269,8 @@ export default {
         liveLists:[],
 
         liveSelectedAdd:'',
+
+        liveId:0,  //直播间ID
     }
   },
   watch:{
@@ -447,7 +447,7 @@ export default {
             alert(res.data.Msg);
             if(res.data.Code ==3){
                 that.addSchedules = !that.addSchedules;
-                that.initData();
+                window.location.reload();  //刷新
             }
         }).catch(function(err){
             console.log(err);
@@ -461,7 +461,7 @@ export default {
 
     //查询课程表
     initSchedule(item){
-        //console.log(item);
+        this.liveId = item;
         let that = this;
         let params={
             date:$("#month_date").val(),
@@ -771,18 +771,20 @@ export default {
         let params={
             sid:this.Sid,
             id:Id,
-            lecturer:Lecturer
+            lecturer:Lecturer,
+            lmid:this.liveId,
         };
+
+        let that = this;
 
         api.scheduleModify(params).then(function(res){
             alert(res.data.Msg);
             if(res.data.Code ==3){
-                window.location.reload();
+                that.initSchedule(that.liveId);
             }
         }).catch(function(err){
             console.log(err);
         });
-
     },
 
     //删除
@@ -793,10 +795,12 @@ export default {
             id:Id
         };
 
+        let that = this;
+
         api.scheduleDel(params).then(function(res){
             alert(res.data.Msg);
             if(res.data.Code ==3){
-                window.location.reload();
+               that.initSchedule(that.liveId);
             }
         }).catch(function(err){
             console.log(err);
