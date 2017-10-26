@@ -543,8 +543,6 @@ export default {
 
 
     showEcharts(Period,arr){
-            let arr_len = arr.length;
-
             let visitors=[],users=[],showDate=[],Subtext='';
 
             let len = arr.length;
@@ -694,7 +692,7 @@ export default {
     #userTable th,#userTable td{
         padding:5px 0;
         border:1px solid #ececec;
-   }
+    }
 
     #userTable tr:hover{
         background-color:#f7f7f7;

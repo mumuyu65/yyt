@@ -10,6 +10,7 @@
           </ul>
           <hr/>
           <div style="margin:0 auto; padding:20px;">
+            <h2>学习课件    到期时间:</h2>
             <table id="userTable" class="text-center" width="100%" border="1" >
                 <thead>
                     <th class="text-center">名称</th>
