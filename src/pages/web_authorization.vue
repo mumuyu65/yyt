@@ -41,7 +41,7 @@
                       <td>学习课件</td>
                       <td>
                           <input type="text" id="classes_date" style="height:30px;border-radius:0;width:220px;" />
-                          <div style="color:#f00;">备注: 学习课件在任何直播间中的开通截止时间要求一致。</div>
+                          <div style="color:#f00;">备注: 学习课件在各直播间中的开通截止时间必须一致。</div>
                       </td>
                       <td>
                         <button class="btn btn-primary" @click="modifyAuth(3)">修改</button>
@@ -205,7 +205,9 @@ export default {
         let that = this;
         api.featuresQuery(params).then(function(res){
           if(res.data.Code ==3){
+                alert("搜索成功，请选择直播间进行详情查看!");
                if(res.data.Data){
+
                    let templateObj=res.data.Data;
 
                    that.totalObj = templateObj;
@@ -269,6 +271,30 @@ export default {
       },
 
 
+    queryData(){
+      let params={
+          sid:this.Sid,
+          account:this.account,
+        };
+        let that = this;
+        api.featuresQuery(params).then(function(res){
+          if(res.data.Code ==3){
+               if(res.data.Data){
+
+                   let templateObj=res.data.Data;
+
+                   that.totalObj = templateObj;
+
+               }else{
+                  that.templateLists = that.liveLists;
+               }
+          }
+        }).catch(function(err){
+            console.log(err);
+        });
+    },
+
+
     //修改用户权限  sid,account,features(1-核心内参,2-讲师观点,3-学习课件,4-股市收评),lmid,deadline
     modifyAuth(type){
        let params={
@@ -311,7 +337,7 @@ export default {
           //console.log(res.data);
           alert(res.data.Msg);
           if(res.data.Code ==3){
-            that.searchData();
+            that.queryData();
           }
       }).catch(function(err){
           console.log(err);
