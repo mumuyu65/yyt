@@ -9,23 +9,20 @@
               <li><button class="btn btn-primary" @click="searchData()" style="margin-bottom:10px;">搜索</button></li>
           </ul>
           <hr/>
+          <h2>搜索结果：</h2>
           <div style="margin:0 auto; padding:20px;">
-            <h2>学习课件    到期时间:</h2>
-            <table id="userTable" class="text-center" width="100%" border="1" >
+            <div><h4>直播间:<select v-model="temp_liveSelected" style="margin-left:30px; font-size:16px;">
+                            <option v-bind:value="item.id" v-for="item in liveLists" >{{item.title}}</option>
+                        </select></h4></div>
+            <table id="userTable" class="text-center" width="100%" border="1" style="margin-top:20px;" >
                 <thead>
                     <th class="text-center">名称</th>
-                    <th class="text-center">直播间</th>
                     <th class="text-center">开通截止时间设置</th>
                     <th class="text-center">操作</th>
                 </thead>
                 <tbody>
                     <tr>
                       <td>核心内参</td>
-                      <td>
-                        <select v-model="core_liveSelected">
-                            <option v-bind:value="item.id" v-for="item in liveLists" >{{item.title}}</option>
-                        </select>
-                      </td>
                       <td>
                           <input type="text" id="core_date" style="height:30px;border-radius:0;width:220px;" />
                       </td>
@@ -35,9 +32,6 @@
                     </tr>
                     <tr>
                       <td>讲师观点</td>
-                      <td><select v-model="tidea_liveSelected">
-                            <option v-bind:value="item.id" v-for="item in liveLists" >{{item.title}}</option>
-                        </select></td>
                       <td><input type="text" id="tidea_date" style="height:30px;border-radius:0;width:220px;" /></td>
                        <td>
                         <button class="btn btn-primary"  @click="modifyAuth(2)">修改</button>
@@ -45,20 +39,19 @@
                     </tr>
                     <tr>
                       <td>学习课件</td>
-                      <td></td>
-                      <td></td>
-                       <td>
-
+                      <td>
+                          <input type="text" id="classes_date" style="height:30px;border-radius:0;width:220px;" />
+                          <div style="color:#f00;">备注: 学习课件在任何直播间中的开通截止时间要求一致。</div>
+                      </td>
+                      <td>
+                        <button class="btn btn-primary" @click="modifyAuth(3)">修改</button>
                       </td>
                     </tr>
                     <tr>
                       <td>股市收评</td>
-                      <td><select v-model="socket_liveSelected">
-                            <option v-bind:value="item.id" v-for="item in liveLists" >{{item.title}}</option>
-                        </select></td>
                       <td><input type="text" id="socket_date" style="height:30px;border-radius:0;width:220px;" /></td>
                        <td>
-                        <button class="btn btn-primary"  @click="modifyAuth(3)">修改</button>
+                        <button class="btn btn-primary"  @click="modifyAuth(4)">修改</button>
                       </td>
                     </tr>
                 </tbody>
@@ -91,6 +84,14 @@ export default {
         tidea_liveSelected:'',
 
         socket_liveSelected:'',
+
+        templateLists:[],    //暂存直播间选择的列表
+
+        temp_liveSelected:'',
+
+        totalObj:[],
+
+        class_liveSelected:'',
     }
   },
   mounted (){
@@ -99,6 +100,9 @@ export default {
     //this.checkLogin();
 
     this.initData();
+  },
+  watch:{
+    temp_liveSelected:'changeLiveRoom',
   },
   methods:{
     checkLogin(){
@@ -132,6 +136,8 @@ export default {
                     console.log('没有直播房间!');
                 }else{
                     that.liveLists = res.data.Data;
+
+                    //that.temp_liveSelected = that.liveLists[0].id;
                 }
             }else{
                 alert(res.data.Msg);
@@ -173,6 +179,20 @@ export default {
             startView:3,
             minuteStep:10
         });
+
+
+        //classes_date
+
+        $("#classes_date").datetimepicker({
+            format: "yyyy-mm-dd",
+            autoclose: true,
+            todayBtn: true,
+            language:'zh-CN',
+            pickerPosition: "bottom",
+            minView: 2,
+            startView:3,
+            minuteStep:10
+        });
     },
 
     //查询用户的直播间属性
@@ -188,10 +208,27 @@ export default {
                if(res.data.Data){
                    let templateObj=res.data.Data;
 
+                   that.totalObj = templateObj;
+
+                   /*
+
                    let len = templateObj.length;
 
-                   //console.log(res.data);
+                   console.log(res.data);
 
+                   for(let i=0; i<len;i++){
+                      for(let k=0; k<that.liveLists.length;k++){
+                          if(templateObj[i].lmid == that.liveLists[k].id){
+                              that.templateLists.push(that.liveLists[k])
+                          }
+                      }
+                   }
+
+                   that.templateLists = that.unique(that.templateLists);
+                   */
+
+                   //console.log(that.templateLists);
+                   /*
                    for(let i=0; i<len;i++){
                       if(templateObj[i].features ==1){
                          that.core_liveSelected = templateObj[i].lmid; $("#core_date").val(that.dateStamp(templateObj[i].deadline));
@@ -201,6 +238,9 @@ export default {
                          that.socket_liveSelected = templateObj[i].lmid; $("#socket_date").val(that.dateStamp(templateObj[i].deadline));
                       }
                    }
+                   */
+               }else{
+                  that.templateLists = that.liveLists;
                }
           }
         }).catch(function(err){
@@ -211,6 +251,23 @@ export default {
       }
     },
 
+    unique(arr){
+       var res = [arr[0]];
+       for(var i = 1; i < arr.length; i++){
+          var repeat = false;
+          for(var j = 0; j < res.length; j++){
+           if(arr[i].id == res[j].id){
+            repeat = true;
+            break;
+           }
+          }
+        if(!repeat){
+         res.push(arr[i]);
+        }
+       }
+       return res;
+      },
+
 
     //修改用户权限  sid,account,features(1-核心内参,2-讲师观点,3-学习课件,4-股市收评),lmid,deadline
     modifyAuth(type){
@@ -218,14 +275,12 @@ export default {
           sid:this.Sid,
           account:this.account,
           features:'',
-          lmid:'',
+          lmid:this.temp_liveSelected,
           deadline:'',
        };
 
       if(type == 1){
           params.features = 1;
-
-          params.lmid = this.core_liveSelected;
 
           if($("#core_date").val()){
              params.deadline = this.dateToUnix($("#core_date").val());
@@ -233,15 +288,17 @@ export default {
       }else if(type ==2){
           params.features = 2;
 
-          params.lmid = this.tidea_liveSelected;
-
           if($("#tidea_date").val()){
              params.deadline = this.dateToUnix($("#tidea_date").val());
           }
+      }else if(type ==3){
+          params.features = 3;
+
+          if($("#classes_date").val()){
+             params.deadline = this.dateToUnix($("#classes_date").val());
+          }
       }else{
           params.features = 4;
-
-          params.lmid = this.socket_liveSelected;
 
           if($("#socket_date").val()){
              params.deadline = this.dateToUnix($("#socket_date").val());
@@ -289,6 +346,39 @@ export default {
 
     add(m){
         return m<10?'0'+m:m
+     },
+
+
+     changeLiveRoom(item){
+        //清空之前的记录
+        $("#core_date").val('');
+
+        $("#tidea_date").val('');
+
+        $("#classes_date").val('');
+
+        $("#socket_date").val('');
+
+        let len = this.totalObj.length;
+
+        for(let i=0; i<len; i++){
+          if(item == this.totalObj[i].lmid){
+              if(this.totalObj[i].features == 1){
+                  $("#core_date").val(this.dateStamp(this.totalObj[i].deadline));
+
+              }else if(this.totalObj[i].features == 2){
+
+                  $("#tidea_date").val(this.dateStamp(this.totalObj[i].deadline));
+
+              }else if(this.totalObj[i].features == 3){
+
+                  $("#classes_date").val(this.dateStamp(this.totalObj[i].deadline));
+              }else{
+
+                  $("#socket_date").val(this.dateStamp(this.totalObj[i].deadline));
+              }
+          }
+        }
      }
   },
 }
